@@ -5,418 +5,18 @@ HOST: http://localhost/
 
 Testovací verze pro DM v 1.0.
 
-## Teploty [/temperatures]
-Zobrazení informací teplotních čidel
+## Konkrétní Device [/select/devices/{id}]
 
-### Všechny teploměry [GET]
+Vrátí nebo změní konkrétní zařízení, s pořadovým číslem uvedeným v URL. Pořadové číslo může být jiné než ID zařízení.
 
+### Stav zařízeni [GET]
 
-+ Response 200 (application/json)
+GET: vrátí všechny položky konkrétního zařízení.
 
-        [
-             {
-                 "devId": 10010,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devTemp": 11,
-                 "devName": "Paseka"
-             }, {
-                 "devId": 10011,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devTemp": -1,
-                 "devName": "Studna"
-             }, {
-                 "devId": 10012,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devTemp": 87,
-                 "devName": "Kotel"
-             }, {
-                 "devId": 10013,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devTemp": -10,
-                 "devName": "Jezírko"
-             }
-        ]
+Např. zařízení s pořadovým číslem 1 má URL 
+http://localhost:1818/select/devices/1
 
 
-
-## Teplota: konkrétní teploměr [/temperatures/{id}]
-
-### Konkrétní teplota [GET]
-
-+ Parameters
-    + id (number) - konkretni ID device teplomeru ve formátu integer např.  /temperatures/10012,
-
-+ Response 200 (application/json)
-
-        
-             {
-                 "devId": 10013,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devTemp": -5,
-                 "devName": "Jezírko u lesa"
-             }
-        
-
-
-
-
-## Světlo [/lights]
-
-### Všechna světla [GET]
-
-+ Response 200 (application/json)
-
-        [
-             {
-                 "devId": 10020,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devLight": false,
-                 "devName": "Garáž"
-             }, {
-                 "devId": 10021,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devLight": false,
-                 "devName": "Bouda"
-             }, {
-                 "devId": 10022,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devLight": true,
-                 "devName": "Zahrada"
-             }
-        ]
-
-
-
-## Světlo: konkrétní [/lights/{id}]
-
-### Konkrétní světlo [GET]
-
-+ Parameters
-    + id (number) - konkretni ID device světla (integer)
-
-+ Response 200 (application/json)
-
-        
-             {
-                 "devId": 10020,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devLight": false,
-                 "devName": "Garáž" 
-             }
-        
-
-    
-### Změna stavu: Zapnutí / vypnutí světla [PUT]
-
-Je to PUT - protože se mění stav.
-Změna nastavení konrkétního světla (ID je v parameru URL) a v JSON je požadovaný stav
-(false / true). V této verzi není možné měnit název ani se neposílá TimeStamp požadavku.
-
-+ Parameters
-    + id (number) - konkretni ID device světla  (integer)
-    
-+ Request (application/json)
-
-        
-             {
-                 "devLight": true
-             }
-        
-
-+ Response 201 (application/json)
-
-
-
-
-        
-
-## Alarmy [/alarms]
-Zobrazení informací o stavu alarmů
-
-### Všechny alarmy [GET]
-
-
-+ Response 200 (application/json)
-
-        [
-             {
-                 "devId": 10030,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devAlarm": false,
-                 "devName": "Sklep"
-             }, {
-                 "devId": 10031,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devAlarm": false,
-                 "devName": "Chodba"
-             }, {
-                 "devId": 10032,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devAlarm": false,
-                 "devName": "Vstup"
-             }, {
-                 "devId": 10033,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devAlarm": true,
-                 "devName": "Zahrada"
-             }
-        ]
-
-
-
-
-
-## Konkrétní alarm [/alarms/{id}]
-
-### Konkrétní alarm [GET]
-
-+ Parameters
-    + id (number) - konkretni ID device ve formátu integer
-
-+ Response 200 (application/json)
-
-        
-             {
-                 "devId": 10033,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devAlarm": true,
-                 "devName": "Zahrada"
-             }
-        
-
-
-
-
-## Hladina vody [/waterlevels]
-Zobrazení informací o stavu hladiny vody
-
-### Všechny hladiny [GET]
-
-
-+ Response 200 (application/json)
-
-        [
-             {
-                 "devId": 10040,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devWater": 110,
-                 "devName": "Stuna"
-             }, {
-                 "devId": 10041,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devWater": 33,
-                 "devName": "Řeka"
-             }
-        ]
-
-
-## Konkrétní hladinové čidlo [/waterlevels/{id}]
-
-### Hladina [GET]
-
-+ Parameters
-    + id (number) - konkretni ID device ve formátu integer
-
-+ Response 200 (application/json)
-
-        
-             {
-                 "devId": 10041,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devWater": 33,
-                 "devName": "Řeka"
-             }
-
-
-
-
-
-
-## Brána [/gates]
-
-### Všechny brány [GET]
-
-+ Response 200 (application/json)
-
-        [
-             {
-                 "devId": 10050,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devPosition": "closed",
-                 "devName": "Vstupní brána"
-             }, {
-                 "devId": 10051,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devPosition": "open",
-                 "devName": "Jezerní brána"
-             }, {
-                 "devId": 10052,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devPosition": "door",
-                 "devName": "Ovečky"
-             }
-        ]
-
-
-
-
-## Konkrétní brána [/gates/{id}]
-
-### Aktuální stav brány [GET]
-
-+ Parameters
-    + id (number) - konkretni ID brány (integer)
-
-+ Response 200 (application/json)
-
-        
-             {
-                 "devId": 10052,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devPosition": "door",
-                 "devName": "Ovečky"
-             }
-        
-    
-### Změna stavu: Otevření / Dveře / Impuls /  [PUT]
-
-Je to PUT - protože se mění stav.
-Nastavit lze 3 stavy v BODY: JSON parametr devOpen  (open=plné otevření), (door=částečné otevření), (impuls=pošle impuls).
-
-+ Parameters
-    + id (number) - konkretni ID světla  (integer)
-    
-+ Request (application/json)
-
-        
-             {
-                 "devPosition": "door"
-             }
-        
-
-+ Response 201 (application/json)
-
-
-
-
-
-
-## Kamery [/cams]
-Zobrazení informací o kamerách, cesta k obrázku
-
-### Všechny kamery [GET]
-
-
-+ Response 200 (application/json)
-
-        [
-             {
-                 "devId": 10060,
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devCamIP": "http://192.168.0.19/jpg/image.jpg",
-                 "devName": "Paseka"
-             }, {
-                 "devId": 10061,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devCamIP": "http://192.168.0.19/jpg/image.jpg",
-                 "devName": "Studna"
-             }, {
-                 "devId": 10062,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devCamIP": "http://192.168.0.19/jpg/image.jpg",
-                 "devName": "Kotel"
-             }, {
-                 "devId": 10063,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devCamIP": "http://192.168.0.19/jpg/image.jpg",
-                 "devName": "Jezírko"
-             }
-        ]
-
-
-
-## Konkrétní kamera [/cams/{id}]
-
-### Konkrétní kamera [GET]
-
-+ Parameters
-    + id (number) - konkretni ID device kamery ve formátu integer 
-    
-+ Response 200 (application/json)
-
-        
-             {
-                 "devId": 10013,
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devCamIP": "http://192.168.0.19/jpg/image.jpg",
-                 "devName": "Jezírko"
-             }
-             
-             
-             
-             
-             
-             
-    
-## Device [/devices]
-
-budou mít jednotlivé označení typu temperature, light, alarma
-
-Na GET se vrátí poslední stav
-
-Na PUT se aktualizuje stav
-
-
-
-### Všechna zařízení [GET]
-
-+ Response 200 (application/json)
-
-        [
-             {
-                 "devId": 10012,
-                 "devType": "temperature",
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devTemp": 87,
-                 "devName": "Kotel"
-             }, {
-                 "devId": 10020,
-                 "devType": "light",
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devLight": false,
-                 "devName": "Garáž"
-             }, {
-                 "devId": 10030,
-                 "devType": "alarm",
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devAlarm": false,
-                 "devName": "Sklep"
-             }, {
-                 "devId": 10040,
-                 "devType": "water",
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devWater": 110,
-                 "devName": "Stuna"
-             }, {
-                 "devId": 10050,
-                 "devType": "gate",
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devPosition": "closed",
-                 "devName": "Vstupní brána"
-             }, {
-                 "devId": 10060,
-                 "devType": "cam",
-                 "devTime": "2017-08-05T08:40:51.620Z",
-                 "devCamIP": "http://192.168.0.19/jpg/image.jpg",
-                 "devName": "Paseka"
-             }
-        ]
-
-
-
-## Konkrétní zařízení [/devices/{id}]
-
-### Konkrétní [GET]
 
 + Parameters
     + id (number) - konkretni ID device (integer)
@@ -425,29 +25,34 @@ Na PUT se aktualizuje stav
 
         
              {
-                 "devId": 10020,
-                 "devType": "light",
-                 "devTimedevTime": "2017-08-05T08:40:51.620Z",
-                 "devLight": false,
-                 "devName": "Garáž" 
+                "devId": 12345678900,
+                "devType": "Typ_AK40",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -9,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 0"
              }
         
 
     
-### Změna stavu: Zapnutí / vypnutí světla [PUT]
+### Změna stavu [PUT]
 
-Je to PUT - protože se mění stav.
-Změna nastavení konrkétního světla (ID je v parameru URL) a v JSON je požadovaný stav
-(false / true). V této verzi není možné měnit název ani se neposílá TimeStamp požadavku.
+PUT: měníme stav, některé položky, zařízení s pořadovým číslem uvedeným v URL. Stačí jen uvést klíč a hodnotu dané položky. 
+
+Např. Změna jména z "bouda 0" na "Kotelna" se provede takto (PUT)http://localhost:1818/select/devices/1
 
 + Parameters
-    + id (number) - konkretni ID device světla  (integer)
+    + id (number) - konkretni pořadové číslo device  (integer)
     
 + Request (application/json)
 
         
              {
-                 "devLight": true
+                 "devName":"Kotelna"
              }
         
 
@@ -461,48 +66,47 @@ Změna nastavení konrkétního světla (ID je v parameru URL) a v JSON je poža
 
 
 
-## SELECT_ALL [/select/]
+## Všechny Devices [/select/devices/]
 
-Pro testování na DM.EXE a API
-Na GET se vrátí poslední stav všech zařízení.
+Vrací pole, kde všechny prvky mají stejné položky v této stuktuře 
 
-POZOR, je nutné dodržet pořadí 
+(jmeno, typ, ukazka dat) 
 
-vrací pole, kde všechny prvky mají stejné položky v této stuktuře (jmeno, typ, ukazka dat) 
-
-devId       int         12345678900 
-devType     string      --zatim nepouzito 
-devTime     string      2018-01-14 18:25:21    
-devTemp     int         -9      // (-100 - +100)
-devLight    int         2       //0,1,2,3,4 (podle čísla mění barvu
-devAlarm    bool        false   //true je alarm, false není alarm 
-devWater    int         12      // 0 - 100: kolikje procent je voda
-devPosition int         31      // 0 - 100: kolik procent je otevrena brána
-devCamIP    string      http://192.168.0.40/jpg/image.jpg       //adresa na obrázek z kamery. 
-devName     string      bouda 11    //název
+* devId       int         12345678900 
+* devType     string      --zatim nepouzito 
+* devTime     string      2018-01-14 18:25:21    
+* devTemp     int         -9      // (-100 - +100)
+* devLight    int         2       //0,1,2,3,4 (podle čísla mění barvu
+* devAlarm    bool        false   //true je alarm, false není alarm 
+* devWater    int         12      // 0 - 100: kolik procent je voda
+* devPosition int         31      // 0 - 100: kolik procent je otevrena brána
+* devCamIP    string      http://192.168.0.40/jpg/image.jpg       //adresa na obrázek z kamery. 
+* devName     string      bouda 11    //název zařízení
 
 
 ### Fordhand je napsaný ta, že v JSON pole očekává data z těchto senzorů
 
-0:teplota1
-1:teplota2
-2:voda1
-3:voda2
-4:svetlo1
-5:svetlo2
-
-6:alarm1
-7:alarm2
-8:brana
-
-9:kamera1
-10:kamera2
+* 0:teplota1
+* 1:teplota2
+* 2:voda1
+* 3:voda2
+* 4:svetlo1
+* 5:svetlo2
+* 6:alarm1
+* 7:alarm2
+* 8:brana
+* 9:kamera1
+* 10:kamera2
 
 
 
 
 
 ### Všechna zařízení [GET]
+
+GET: vrátí POLE s položkami všech zařízení.
+
+http://localhost:1818/select/devices/
 
 + Response 200 (application/json)
 
