@@ -1,0 +1,238 @@
+FORMAT: 1A
+HOST: http://localhost/
+
+# doomaster API 1.0.5
+
+Testovací verze pro DM v 1.0.
+
+## Konkrétní Device [/select/devices/{id}]
+
+Vrátí nebo změní konkrétní zařízení, s pořadovým číslem uvedeným v URL. Pořadové číslo může být jiné než ID zařízení.
+
+### Stav zařízeni [GET]
+
+GET: vrátí všechny položky konkrétního zařízení.
+
+Např. zařízení s pořadovým číslem 1 má URL 
+http://localhost:1818/select/devices/1
+
+
+
++ Parameters
+    + id (number) - konkretni ID device (integer)
+
++ Response 200 (application/json)
+
+        
+             {
+                "devId": 12345678900,
+                "devType": "Typ_AK40",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -9,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 0"
+             }
+        
+
+    
+### Změna stavu [PUT]
+
+PUT: měníme stav, některé položky, zařízení s pořadovým číslem uvedeným v URL. Stačí jen uvést klíč a hodnotu dané položky. 
+
+Např. Změna jména z "bouda 0" na "Kotelna" se provede takto (PUT)http://localhost:1818/select/devices/1
+
++ Parameters
+    + id (number) - konkretni pořadové číslo device  (integer)
+    
++ Request (application/json)
+
+        
+             {
+                 "devName":"Kotelna"
+             }
+        
+
++ Response 201 (application/json)
+
+
+
+
+
+
+
+
+
+## Všechny Devices [/select/devices/]
+
+Vrací pole, kde všechny prvky mají stejné položky v této stuktuře 
+
+(jmeno, typ, ukazka dat) 
+
+* devId       int         12345678900 
+* devType     string      --zatim nepouzito 
+* devTime     string      2018-01-14 18:25:21    
+* devTemp     int         -9      // (-100 - +100)
+* devLight    int         2       //0,1,2,3,4 (podle čísla mění barvu
+* devAlarm    bool        false   //true je alarm, false není alarm 
+* devWater    int         12      // 0 - 100: kolik procent je voda
+* devPosition int         31      // 0 - 100: kolik procent je otevrena brána
+* devCamIP    string      http://192.168.0.40/jpg/image.jpg       //adresa na obrázek z kamery. 
+* devName     string      bouda 11    //název zařízení
+
+
+### Fordhand je napsaný ta, že v JSON pole očekává data z těchto senzorů
+
+* 0:teplota1
+* 1:teplota2
+* 2:voda1
+* 3:voda2
+* 4:svetlo1
+* 5:svetlo2
+* 6:alarm1
+* 7:alarm2
+* 8:brana
+* 9:kamera1
+* 10:kamera2
+
+
+
+
+
+### Všechna zařízení [GET]
+
+GET: vrátí POLE s položkami všech zařízení.
+
+http://localhost:1818/select/devices/
+
++ Response 200 (application/json)
+
+
+
+         [
+            {
+                "devId": 12345678900,
+                "devType": "Typ_AK40",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -9,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 0"
+            }, {
+                "devId": 12345678901,
+                "devType": "Typ_AK41",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -8,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 1"
+            }, {
+                "devId": 12345678902,
+                "devType": "Typ_AK42",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -7,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 2"
+            }, {
+                "devId": 12345678903,
+                "devType": "Typ_AK43",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -6,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 3"
+            }, {
+                "devId": 12345678904,
+                "devType": "Typ_AK44",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -5,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 4"
+            }, {
+                "devId": 12345678905,
+                "devType": "Typ_AK45",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -4,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 5"
+            }, {
+                "devId": 12345678906,
+                "devType": "Typ_AK46",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -3,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 6"
+            }, {
+                "devId": 12345678907,
+                "devType": "Typ_AK47",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -2,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 7"
+            }, {
+                "devId": 12345678908,
+                "devType": "Typ_AK48",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": -1,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 8"
+            }           , {
+                "devId": 12345678909,
+                "devType": "Typ_AK49",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": 0,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 9"
+            }, {
+                "devId": 12345678910,
+                "devType": "Typ_AK410",
+                "devTime": "2018-01-14 18:25:21",
+                "devTemp": 1,
+                "devLight": 2,
+                "devAlarm": false,
+                "devWater": 35,
+                "devPosition": 35,
+                "devCamIP": "http://192.168.0.40/jpg/image.jpg",
+                "devName": "bouda 10"
+            }]
+        ]
