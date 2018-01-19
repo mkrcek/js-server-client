@@ -1,7 +1,7 @@
 window.Arduino = {};
 window.onload = function() {
   Arduino.axios = axios.create({
-    //baseURL: 'http://192.168.0.25:1818/select/',
+    //baseURL: 'http://192.168.0.25:1818/select/devices/',
     baseURL: 'http://localhost:1818/select/devices/',
     timeout: 100000
   });
@@ -235,7 +235,7 @@ Arduino.showDeviceDetail = function() {
     document.getElementById("devId6").innerHTML = device[6].devId;
     document.getElementById("devName6").innerHTML = device[6].devName;
     document.getElementById("devTime6").innerHTML = device[6].devTime;
-    
+
     if (device[6].devAlarm){
       document.getElementById("alarmLevelIcon").className = "fa fa-exclamation-triangle fa-5x text-danger";
     } else {
