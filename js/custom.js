@@ -3,6 +3,8 @@ window.onload = function() {
   Arduino.axios = axios.create({
     //baseURL: 'http://192.168.0.25:1818/select/devices/',
     baseURL: 'http://localhost:1818/select/devices/',
+    baseURL: 'http://192.168.0.39:1818/select/devices/',
+
     timeout: 100000
   });
 
@@ -154,10 +156,11 @@ $('#device-detail form').submit((event) => {
 Arduino.showDeviceDetail = function() {
 
 //Arduino.axios.get('/temperatures/11')
-  Arduino.axios.get('/all/')
+  Arduino.axios.get('/')
   .then(function (response) {
     var device = response.data;
     console.log(device);
+    console.log("ahoja");
 
     //getElementById je prej rychlejši
     //1.prvni TEPLOTA
