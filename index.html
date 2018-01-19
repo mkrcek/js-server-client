@@ -37,6 +37,11 @@
         <!-- responsive css -->
         <!-- <link rel="stylesheet" type="text/css" href="css/responsive.css"> -->
 
+        <!-- bootstrap-switch -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" /> -->
+             <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+
+
 
     </head>
 
@@ -90,9 +95,24 @@
                   <p>Time: <span id="devTime0"></span></p>
                   <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
                 </div>
+                <div id="device-detail-0">
+                  <div class="device-detail-content">
+                    <form class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                          <label class="control-label" for="deviceName">New Device Name</label>
+                          <input type="text" class="form-control" name="devName">
+                        </div>
+                    </form>
+                  </div>
+                  <div class="action-bar row">
+                    <button class="btn btn-primary btn-xs btn-warning save">SAVE</button>
+                  </div>
+                </div>
+
               </div>
 
             </div>     <!-- KONEC 1.prvni sekce: TEPLOTA -->
+
 
 <!-- 2.prvni sekce: TEPLOTA -->
             <div class="section-2 col-xs-2 well text-center">
@@ -114,6 +134,21 @@
                   <p>Time: <span id="devTime1">24:61</span></p>
                   <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
                 </div>
+
+                <div id="device-detail-1">
+                  <div class="device-detail-content">
+                    <form class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                          <label class="control-label" for="deviceName">New Device Name</label>
+                          <input type="text" class="form-control" name="devName">
+                        </div>
+                    </form>
+                  </div>
+                  <div class="action-bar row">
+                    <button class="btn btn-primary btn-xs btn-warning save">SAVE</button>
+                  </div>
+                </div>
+
               </div>
 
             </div>     <!-- KONEC 2.prvni sekce: TEPLOTA -->
@@ -243,6 +278,9 @@
                 <p>ID: <span id="devId5">LED-11</span></p>
                 <p>Time: <span id="devTime5">24:24</span></p>
                 <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                <div class="pous">
+                  <input type="checkbox" name="my-checkbox" checked>
+                </div>
               </div>
             </div>
           </div>    <!-- KONEC 6.prvni sekce: SVETLO 2 -->
@@ -350,9 +388,39 @@
 
 
 
-            </div>
+
+
+            <!--  4.druha sekce: POKUS FOMRULAR -->
+
+              <!-- <div id="device-detail" class="section-4 col-xs-6 well text-center">
+                <div class="action-bar row">
+                  <button class="btn btn-primary save">SAVE</button>
+                  <button class="btn btn-default cancel">Cancel</button>
+                </div>
+                <div class="">
+                  <p id="puvodni-nazev"></p>
+                </div>
+                <div class="device-detail-content row">
+                  <form class="form-horizontal">
+                    <div class="col-xs-5">
+                      <div class="form-group form-group-sm">
+                        <label class="control-label" for="deviceName">Device Name</label>
+                        <input type="text" class="form-control" name="devName">
+                        <label class="control-label" for="deviceName">Device Light</label>
+                        <input type="text" class="form-control" name="devLight">
+                      </div>
+                  </form>
+                </div>
+              </div>
+            </div> -->
+
+
+
           </div>
         </section>   <!-- KONEC Druhá sekce : 2. řádek na obrazovce -->
+
+
+
 
 
 <!-- Třetí sekce : 3. řádek na obrazovce -->
@@ -363,6 +431,17 @@
 
     <!-- 1.treti sekce: CAMERA -->
               <div  class="section-1 col-xs-6 well text-center">
+
+                <!-- text po rozbalení -->
+                <div class="collapse" id="collapseCam">
+                  <div class="cam-details">
+                    <p>ID: <span id="devId9">CAM-1-2:3</span></p>
+                    <p>Time: <span id="devTime9">24:24</span></p>
+                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+
+                  </div>
+                </div>
+
                 <!-- celé je to tlačítko, kliknutím se rozbalí -->
                 <button class="btn btn-block" data-toggle="collapse" data-target="#collapseCam" aria-expanded="false" aria-controls="collapseCam">
                   <div class="cam-value bg-danger">
@@ -376,17 +455,10 @@
 
                 </button>
 
-                <!-- text po rozbalení -->
-                <div class="collapse" id="collapseCam">
-                  <div class="cam-details">
-                    <p>ID: <span id="devId9">CAM-1-2:3</span></p>
-                    <p>Time: <span id="devTime9">24:24</span></p>
-                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
-                  </div>
-                </div>
+
               </div>    <!-- KONEC 1.treti sekce: Cam -->
 
-    <!-- 1.treti sekce: CAMERA -->
+    <!-- 2.treti sekce: CAMERA -->
               <div  class="section-2 col-xs-6 well text-center">
 
                 <!-- text po rozbalení -->
@@ -411,7 +483,7 @@
                 </button>
 
 
-              </div>    <!-- KONEC 1.treti sekce: Cam -->
+              </div>    <!-- KONEC 2.treti sekce: Cam -->
 
 
 
@@ -429,6 +501,10 @@
 
   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script> -->
         <script src="js/bootstrap.min.js"></script>
+
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script> -->
+        <script src="js/bootstrap-switch.min.js"></script>
+
 
 
         <!-- axios Js -->

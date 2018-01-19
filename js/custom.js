@@ -2,17 +2,34 @@ window.Arduino = {};
 window.onload = function() {
   Arduino.axios = axios.create({
     //baseURL: 'http://192.168.0.25:1818/select/',
-    baseURL: 'http://localhost:1818/select/',
-
+    baseURL: 'http://localhost:1818/select/devices/',
     timeout: 100000
   });
 
 
-
-
   Arduino.initNewDeviceDetail();
   Arduino.showDeviceDetail();
+
+for (var i = 0; i < 2; i++) {
+  Arduino.changeDeviceDetail(i);
 }
+  // Arduino.changeDeviceDetail(0);
+  // Arduino.changeDeviceDetail(1);
+
+
+  Arduino.initDeviceDetail();
+}
+
+
+
+
+//nitialize Bootstrap Switch.
+//puvodni: $("[name='my-checkbox']").bootstrapSwitch();
+//nove:
+$("input[type='checkbox']").bootstrapSwitch();
+
+
+
 
 
 //posunovani modulu za pomoci tlačítek
@@ -69,14 +86,72 @@ Arduino.initNewDeviceDetail = function() {
 //Arduino.showDeviceDetail = function(deviceId) {
 //  Arduino.axios.get('/temperatures/' + deviceId)
 
-function myFunction() {
-   myVar = setInterval(Arduino.showDeviceDetail, 3000);
-}
+
+
+//zmeni polozku a odesle pomoci PUT na API
+Arduino.changeDeviceDetail = function(itemID){
+
+//bylo tady #device-detail-0 .save
+$('#device-detail-'+itemID+' .save').click(() => {
+  console.log("click "+itemID);
+  $('#device-detail-'+itemID+' form').submit();
+});
+
+$('#device-detail-'+itemID+' form').submit((event) => {
+//  Arduino.axios.put ('/hodnota/'+itemID, {
+  Arduino.axios.put ('/'+itemID, {
+    devName: $('#device-detail-'+itemID+' input[name="devName"]').val()
+  })
+    .then(function(response) {
+      console.log('UPDATE PUT' + itemID);
+      Arduino.showDeviceDetail();
+      console.log('Screen is refreshed');
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  event.preventDefault();
+});
+
+}//end changeDeviceDetail
+
+
+
+//specialni TEST místo na webu
+Arduino.initDeviceDetail = function(){
+
+$('#device-detail .save').click(() => {
+  $('#device-detail form').submit();
+});
+
+$('#device-detail form').submit((event) => {
+//  Arduino.axios.put ('/hodnota/5', {
+  Arduino.axios.put ('/temperatures/5', {
+    devName: $('#device-detail input[name="devName"]').val(),
+    devLight: parseInt ($('#device-detail input[name="devLight"]').val())
+    //prevede vlozeny string na cislo//
+
+  })
+    .then(function(response) {
+      console.log('UPDATE PUT');
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  event.preventDefault();
+});
+
+}//end initDeviceDetail
+
+
+
+
+
 
 //zobrazení detailu
 
 Arduino.showDeviceDetail = function() {
-
 
 //Arduino.axios.get('/temperatures/11')
   Arduino.axios.get('/all/')
@@ -160,10 +235,11 @@ Arduino.showDeviceDetail = function() {
     document.getElementById("devId6").innerHTML = device[6].devId;
     document.getElementById("devName6").innerHTML = device[6].devName;
     document.getElementById("devTime6").innerHTML = device[6].devTime;
+    
     if (device[6].devAlarm){
       document.getElementById("alarmLevelIcon").className = "fa fa-exclamation-triangle fa-5x text-danger";
     } else {
-      document.getElementById("alarmLevelIcon").className = "fa fa-exclamation-triangle fa-5x"
+      document.getElementById("alarmLevelIcon").className = "fa fa-exclamation-triangle fa-5x";
     }
 
     //2.druhy Alarma 2
@@ -173,7 +249,7 @@ Arduino.showDeviceDetail = function() {
     if (device[7].devAlarm){
       document.getElementById("alarmLevelIcon2").className = "fa fa-exclamation-triangle fa-5x text-danger";
     } else {
-      document.getElementById("alarmLevelIcon2").className = "fa fa-exclamation-triangle fa-5x"
+      document.getElementById("alarmLevelIcon2").className = "fa fa-exclamation-triangle fa-5x";
     }
 
     //3.druhy VRATA - GATE
