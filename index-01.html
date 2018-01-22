@@ -1,0 +1,527 @@
+<!-- toto je FUNKČNI archivni verze 2018-01-19 20:00 -->
+
+<!DOCTYPE html>
+
+<html>
+
+
+    <head>
+
+        <title>Doomaster 1.01 </title>
+
+        <meta charset="utf-8">
+
+        <meta name="description" content="Simple, clean, responsive website built with html5, CSS3, Js, jQuery and Bootstrap">
+        <meta name="keywords" content="web, design, html, css, html5, css3, javascript, jquery, bootstrap, development">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+         <!-- Google Fonts -->
+         <!-- pokud by byl problem stahovat online - tak zakomentovat -->
+
+        <link href='https://fonts.googleapis.com/css?family=Raleway:500italic,600italic,600,700,700italic,300italic,300,400,400italic,800,900' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600italic,700,900' rel='stylesheet' type='text/css'>
+
+        <!-- favicon -->
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+        <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+        <!-- Fontawesome  -->
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+
+        <!-- Animate CSS -->
+        <link rel="stylesheet" type="text/css" href="css/animate.css">
+
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+
+        <!-- responsive css -->
+        <!-- <link rel="stylesheet" type="text/css" href="css/responsive.css"> -->
+
+        <!-- bootstrap-switch -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" /> -->
+             <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+
+
+
+    </head>
+
+
+    <body>
+
+<!-- Nadpis -->
+      <header id="HEADER" class=" bg-info">
+        <div class="container">
+          <div class="row ">
+
+          <!-- Nadpis -->
+            <div class="header-left col-xs-6">
+              <h2>Doomaster 0.1</h2>
+            </div>
+
+          <!-- HODINY zobrazení času -->
+            <div class="header-right col-xs-6 text-right">
+              <h2 id="hodiny">25:62:62</h2>
+            </div>
+
+          </div>
+
+        </div>
+      </header>
+
+  <!-- První sekce : 1. řádek na obrazovce -->
+      <section class="bg-warning" id="LANE1">
+
+        <div class="container">
+
+          <div class="row">
+
+<!-- 1.prvni sekce: TEPLOTA -->
+            <div class="section-1 col-xs-2 well text-center">
+              <!-- celé je to tlačítko, kliknutím se rozbalí -->
+              <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTemperature" aria-expanded="false" aria-controls="collapseTemperature">
+                <div class="temperature-value">
+                    <h1> <span id="devTemp0">-99</span> &#8451;</h1>
+                </div>
+
+
+
+
+                <div class="temperature-name">
+                    <p id="devName0">Severní pól</p>
+                </div>
+
+              </button>
+
+              <!-- text po rozbalení -->
+              <div class="collapse" id="collapseTemperature">
+                <div class="temperature-details">
+                  <p>ID: <span id="devId0">text z JS</span></p>
+                  <p>Time: <span id="devTime0"></span></p>
+                  <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                </div>
+                <div id="device-detail-0">
+                  <div class="device-detail-content">
+                    <form class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                          <label class="control-label" for="deviceName">New Device Name</label>
+                          <input type="text" class="form-control" name="devName">
+                        </div>
+                    </form>
+                  </div>
+                  <div class="action-bar row">
+                    <button class="btn btn-primary btn-xs btn-warning save">SAVE</button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>     <!-- KONEC 1.prvni sekce: TEPLOTA -->
+
+
+<!-- 2.prvni sekce: TEPLOTA -->
+            <div class="section-2 col-xs-2 well text-center">
+              <!-- celé je to tlačítko, kliknutím se rozbalí -->
+              <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTemperature2" aria-expanded="false" aria-controls="collapseTemperature2">
+                <div class="temperature-value2">
+                    <h1> <span id="devTemp1">100</span> &#8451;</h1>
+                </div>
+                <div class="temperature-name2">
+                    <p id="devName1">Letadlo</p>
+                </div>
+
+              </button>
+
+              <!-- text po rozbalení -->
+              <div class="collapse" id="collapseTemperature2">
+                <div class="temperature-details2">
+                  <p>ID: <span id="devId1">1-2-3-4</span></p>
+                  <p>Time: <span id="devTime1">24:61</span></p>
+                  <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                </div>
+
+                <div id="device-detail-1">
+                  <div class="device-detail-content">
+                    <form class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                          <label class="control-label" for="deviceName">New Device Name</label>
+                          <input type="text" class="form-control" name="devName">
+                        </div>
+                    </form>
+                  </div>
+                  <div class="action-bar row">
+                    <button class="btn btn-primary btn-xs btn-warning save">SAVE</button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>     <!-- KONEC 2.prvni sekce: TEPLOTA -->
+
+
+  <!-- 3.prvni sekce: VODA -->
+            <div class="section-3 col-xs-2 well text-center" id="textbox">  <!-- textbox: pro posunovani  -->
+              <!-- celé je to tlačítko, kliknutím se rozbalí -->
+              <button class="btn btn-block" data-toggle="collapse" data-target="#collapseWater" aria-expanded="false" aria-controls="collapseWater">
+
+                <div class="progress progress-bar-vertical">
+                  <!-- animovaný = class = "ress-bar-striped active" -->
+                  <div id="vodaLevelBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="height: 100%;">
+                    <span id="vodaLevelNumb">101%</span>
+                  </div>
+                </div>
+
+
+                <div class="water-name">
+                    <p id="devName2">Sopka</p>
+                </div>
+
+              </button>
+
+              <!-- text po rozbalení -->
+              <div class="collapse" id="collapseWater">
+                <div class="water-details">
+                  <!-- <div class="water-value">
+                      <h1> <span id="devWaterLevel">999</span></h1>
+                  </div> -->
+                  <p>Hladina: <span id="devWaterLevel">999</span> </p>
+                  <p>ID: <span id="devId2">1-2-3-4</span></p>
+                  <p>Time: <span id="devTime2">24:61</span></p>
+                  <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+
+                  <div style="padding:20px;">
+                    <button type="button" class="btn btn-xs btn-primary" id="moveleft">&#x2190;</button>
+                    <button type="button" class="btn btn-xs btn-primary" id="moveup">&#x2191;</button>
+                    <button type="button" class="btn btn-xs btn-primary" id="moveright">&#x2192;</button>
+                    <button type="button" class="btn btn-xs btn-primary" id="movedown">&#x2193;</button>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>     <!-- KONEC 3.prvni sekce: VODA -->
+
+
+  <!-- 4.prvni sekce: VODA -->
+            <div class="section-4 col-xs-2 well text-center">
+              <!-- celé je to tlačítko, kliknutím se rozbalí -->
+              <button class="btn btn-block" data-toggle="collapse" data-target="#collapseWater2" aria-expanded="false" aria-controls="collapseWater2">
+
+                <div class="progress progress-bar-vertical text-center">
+                  <!-- animovaný = class = "ress-bar-striped active" -->
+                  <div id="vodaLevelBar2" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">
+                    <span id="vodaLevelNumb2">44%</span>
+                  </div>
+                </div>
+
+
+                <div class="water-name">
+                    <p id="devName3">Palivo</p>
+                </div>
+
+              </button>
+
+              <!-- text po rozbalení -->
+              <div class="collapse" id="collapseWater2">
+                <div class="water-details">
+                  <!-- <div class="water-value">
+                      <h1> <span id="devWaterLevel">999</span></h1>
+                  </div> -->
+                  <p>Hladina: <span id="vodaLevel2">999</span> </p>
+                  <p>ID: <span id="devId3">1-2-3-4</span></p>
+                  <p>Time: <span id="devTime3">24:61</span></p>
+                  <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+
+                </div>
+              </div>
+            </div>
+                <!-- KONEC 4.prvni sekce: VODA -->
+
+
+  <!-- 5.prvni sekce: SVETLO -->
+            <div class="section-5 col-xs-2 well text-center">
+              <!-- celé je to tlačítko, kliknutím se rozbalí -->
+              <button class="btn btn-block" data-toggle="collapse" data-target="#collapseLight" aria-expanded="false" aria-controls="collapseLight">
+                <div class="light-value">
+                    <!-- <h1> <span id="devLight"></span> ON/OFF</h1> -->
+                    <i id="svetloLevelIcon" class="fa fa-lightbulb-o fa-5x"></i>
+                </div>
+                <div class="light-name">
+                    <p id="devName4">Žárovka</p>
+                </div>
+
+              </button>
+
+              <!-- text po rozbalení -->
+              <div class="collapse" id="collapseLight">
+                <div class="light-details">
+                  <p>ID: <span id="devId4">LED-11</span></p>
+                  <p>Time: <span id="devTime4">24:24</span></p>
+                  <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                </div>
+              </div>
+
+            </div>
+
+<!-- 6.prvni sekce: SVETLO 2 -->
+          <div class="section-6 col-xs-2 well text-center">
+            <!-- celé je to tlačítko, kliknutím se rozbalí -->
+            <button class="btn btn-block" data-toggle="collapse" data-target="#collapseLight2" aria-expanded="false" aria-controls="collapseLight2">
+              <div class="light-value">
+                  <!-- <h1> <span id="devLight"></span> ON/OFF</h1> -->
+                  <i id="svetloLevelIcon2" class="fa fa-lightbulb-o fa-5x " ></i>
+              </div>
+              <div class="light-name">
+                  <p id="devName5">Reflektor</p>
+              </div>
+
+            </button>
+
+            <!-- text po rozbalení -->
+            <div class="collapse" id="collapseLight2">
+              <div class="light-details">
+                <p>ID: <span id="devId5">LED-11</span></p>
+                <p>Time: <span id="devTime5">24:24</span></p>
+                <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                <div class="pous">
+                  <input type="checkbox" name="my-checkbox" checked>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- KONEC 6.prvni sekce: SVETLO 2 -->
+
+
+
+
+
+          </div>
+        </div>
+    </section> <!-- KONEC První sekce : 1. řádek na obrazovce -->
+
+
+<!-- Druhá sekce : 2. řádek na obrazovce -->
+        <section class="bg-success"id="LANE2">
+          <div class="container">
+            <div class="row">
+
+
+    <!-- 1.druha sekce: ALARM -->
+              <div class="section-1 col-xs-2 well text-center">
+                <!-- celé je to tlačítko, kliknutím se rozbalí -->
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseAlarm" aria-expanded="false" aria-controls="collapseAlarm">
+                  <div class="alarm-value">
+                      <!-- <h1> <span id="devLight"></span> ON/OFF</h1> -->
+                      <i id="alarmLevelIcon" class="fa fa-exclamation-triangle fa-5x" ></i>
+                  </div>
+                  <div class="alarm-name">
+                      <p id="devName6">Zóna 1</p>
+                  </div>
+
+                </button>
+
+                <!-- text po rozbalení -->
+                <div class="collapse" id="collapseAlarm">
+                  <div class="alarm-details">
+                    <p>ID: <span id="devId6">ZONA-1</span></p>
+                    <p>Time: <span id="devTime6">24:24</span></p>
+                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                  </div>
+                </div>
+              </div>    <!-- KONEC 1.druha sekce: Alarm -->
+
+    <!-- 2.druha sekce: ALARM -->
+              <div class="section-2 col-xs-2 well text-center">
+                <!-- celé je to tlačítko, kliknutím se rozbalí -->
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseAlarm2" aria-expanded="false" aria-controls="collapseAlarm2">
+                  <div class="alarm-value">
+                      <!-- <h1> <span id="devLight"></span> ON/OFF</h1> -->
+                      <i id="alarmLevelIcon2" class="fa fa-exclamation-triangle fa-5x text-danger" ></i>
+                  </div>
+                  <div class="alarm-name">
+                      <p id="devName7">Trezor</p>
+                  </div>
+
+                </button>
+
+                <!-- text po rozbalení -->
+                <div class="collapse" id="collapseAlarm2">
+                  <div class="alarm-details">
+                    <p>ID: <span id="devId7">ZONA-1</span></p>
+                    <p>Time: <span id="devTime7">24:24</span></p>
+                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                  </div>
+                </div>
+              </div>    <!-- KONEC 2.druha sekce: Alarm -->
+
+
+    <!-- 3.druha sekce: GATE -->
+              <div class="section-3 col-xs-2 well text-center">
+                <!-- celé je to tlačítko, kliknutím se rozbalí -->
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseGate" aria-expanded="false" aria-controls="collapseGate">
+                  <div class="gate-value">
+                      <!-- <h1> <span id="devLight"></span> ON/OFF</h1> -->
+
+                      <div class="progress progress-bar-horizontal">
+                        <div id="gateLevelBar-left" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%">
+                        </div>
+                        <div id="gateLevelBar-right" class="progress-bar progress-bar-success" role="progressbar" style="width:70%">
+                        </div>
+                      </div>
+
+
+                  </div>
+                  <div class="gate-name">
+                      <p id="devName8">Garáž</p>
+                  </div>
+
+                </button>
+
+                <!-- text po rozbalení -->
+                <div class="collapse" id="collapseGate">
+                  <div class="gate-details">
+                    <p>Stav: <span id="gateLevel">40%</span> </p>
+                    <p>ID: <span id="devId8">Vstup na stadion 21</span></p>
+                    <p>Time: <span id="devTime8">24:24</span></p>
+                    <button type="button" class="btn btn btn-warning" disabled="disabled">Open</button>
+                    <button type="button" class="btn btn btn-warning" disabled="disabled">Door</button>
+                    <button type="button" class="btn btn btn-warning" disabled="disabled">Impuls</button>
+                    <p></p>
+                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                  </div>
+                </div>
+              </div>    <!-- KONEC 3.druha sekce: GATE -->
+
+
+
+
+
+            <!--  4.druha sekce: POKUS FOMRULAR -->
+
+              <!-- <div id="device-detail" class="section-4 col-xs-6 well text-center">
+                <div class="action-bar row">
+                  <button class="btn btn-primary save">SAVE</button>
+                  <button class="btn btn-default cancel">Cancel</button>
+                </div>
+                <div class="">
+                  <p id="puvodni-nazev"></p>
+                </div>
+                <div class="device-detail-content row">
+                  <form class="form-horizontal">
+                    <div class="col-xs-5">
+                      <div class="form-group form-group-sm">
+                        <label class="control-label" for="deviceName">Device Name</label>
+                        <input type="text" class="form-control" name="devName">
+                        <label class="control-label" for="deviceName">Device Light</label>
+                        <input type="text" class="form-control" name="devLight">
+                      </div>
+                  </form>
+                </div>
+              </div>
+            </div> -->
+
+
+
+          </div>
+        </section>   <!-- KONEC Druhá sekce : 2. řádek na obrazovce -->
+
+
+
+
+
+<!-- Třetí sekce : 3. řádek na obrazovce -->
+        <section class="bg-warning"id="LANE3">
+          <div class="container">
+            <div class="row">
+
+
+    <!-- 1.treti sekce: CAMERA -->
+              <div  class="section-1 col-xs-6 well text-center">
+
+                <!-- text po rozbalení -->
+                <div class="collapse" id="collapseCam">
+                  <div class="cam-details">
+                    <p>ID: <span id="devId9">CAM-1-2:3</span></p>
+                    <p>Time: <span id="devTime9">24:24</span></p>
+                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+
+                  </div>
+                </div>
+
+                <!-- celé je to tlačítko, kliknutím se rozbalí -->
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseCam" aria-expanded="false" aria-controls="collapseCam">
+                  <div class="cam-value bg-danger">
+                      <!-- <h1> <span id="devCam"></span>CAM</h1> -->
+                      <img id="devCamUrl" src="images/image.jpg" alt="haha" class="img-rounded img-responsive  img-cam">
+
+                  </div>
+                  <div class="cam-name">
+                      <p id="devName9">KAMERA 1</p>
+                  </div>
+
+                </button>
+
+
+              </div>    <!-- KONEC 1.treti sekce: Cam -->
+
+    <!-- 2.treti sekce: CAMERA -->
+              <div  class="section-2 col-xs-6 well text-center">
+
+                <!-- text po rozbalení -->
+                <div class="collapse" id="collapseCam2">
+                  <div class="cam-details">
+                    <p>ID: <span id="devId10">CAM-1-2:3</span></p>
+                    <p>Time: <span id="devTime10">24:24</span></p>
+                    <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
+                  </div>
+                </div>
+
+                <!-- celé je to tlačítko, kliknutím se rozbalí -->
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseCam2" aria-expanded="false" aria-controls="collapseCam2">
+                  <div class="cam-value bg-danger">
+                      <img id="devCamUrl2" src="images/image.jpg" alt="haha" class="img-cam">
+
+                  </div>
+                  <div class="cam-name">
+                      <p id="devName10">KAMERA 2</p>
+                  </div>
+
+                </button>
+
+
+              </div>    <!-- KONEC 2.treti sekce: Cam -->
+
+
+
+
+            </div>
+          </div>
+        </section>   <!-- KONEC Třetí sekce : 3. řádek na obrazovce -->
+
+
+
+
+
+        <!-- Bootstrap JavaScript -->
+        <script src="js/jquery.js"></script>
+
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script> -->
+        <script src="js/bootstrap.min.js"></script>
+
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script> -->
+        <script src="js/bootstrap-switch.min.js"></script>
+
+
+
+        <!-- axios Js -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+        <!-- Custom Js -->
+        <script src="js/custom-01.js"></script>
+
+
+    </body>
+
+
+</html>

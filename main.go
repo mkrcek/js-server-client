@@ -12,6 +12,7 @@ import (
 )
 
 type DeviceSetup struct {//for JSON
+	DevSerTime	string 	`json:"devSerTime"`
 	DevId		int 	`json:"devId"`
 	DevType		string 	`json:"devType"`
 	DevTime   	string 	`json:"devTime"`
@@ -22,6 +23,7 @@ type DeviceSetup struct {//for JSON
 	DevPosition int 	`json:"devPosition"`	//dveře//
 	DevCamIP	string 	`json:"devCamIP"`
 	DevName 	string 	`json:"devName"`
+	DevWeather	string 	`json:"devWeatherIP"`
 
 }
 
@@ -32,7 +34,7 @@ var hodnotaPut = DeviceSetup{				//testovaci
 	DevAlarm:  false,
 	}
 
-var numberOfRows = 12                                     //pocet zarizeni
+var numberOfRows = 22                                     //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
 
@@ -45,8 +47,9 @@ func main() {
 
 
 
-	http.HandleFunc("/select/hodnota/", HandleItem) //uprava dat z webu
-	http.HandleFunc("/select/devices/", HandleAllData)      //vrati vsechna data - celou tabulku
+	//http.HandleFunc("/select/hodnota/", HandleItem) //uprava dat z webu
+
+	http.HandleFunc("/select/devices/", HandleAllData)      //vrati vsechna data - nebo jen položku za lomítkem
 
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("."))))		//webserver pro localhost
 
@@ -60,21 +63,37 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	for i:=0;i<numberOfRows ;i++  {
 		t := time.Now()
 		myHomeDeviceSetup[i]= DeviceSetup{
+			DevSerTime: t.Format("2006-01-02 15:04:05"),
 			DevId:      12345678900+i,
-			DevType:	"Typ_AK4"+strconv.Itoa(i),
+			DevType:	"teplota",
 			DevTime:    t.Format("2006-01-02 15:04:05"),
 			DevTemp:  	t.Second()+i-30,
 			DevLight:	t.Second()/10,
 			DevAlarm:	t.Second()%2 == 0,
 			DevWater:	time.Now().Second()*100/60,
 			DevPosition: time.Now().Second()*100/60,
-			DevCamIP:	"http://192.168.0.40/jpg/image.jpg",
+			DevCamIP:	"http://192.168.0.26/jpg/image.jpg",
 			DevName:  	"bouda " + strconv.Itoa(i),
+			DevWeather: "http://http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
 		}
 
-//		myHomeDeviceSetup[9].DevCamIP = "http://192.168.0.19/jpg/image.jpg"
-		myHomeDeviceSetup[9].DevCamIP = "http://192.168.0.40/jpg/image.jpg"
-		myHomeDeviceSetup[10].DevCamIP = "http://192.168.0.26/jpg/image.jpg"
+		myHomeDeviceSetup[0].DevType = "teplota"
+		myHomeDeviceSetup[1].DevType = "teplota"
+		myHomeDeviceSetup[2].DevType = "brana"
+		myHomeDeviceSetup[3].DevType = "voda"
+		myHomeDeviceSetup[4].DevType = "alarm"
+		myHomeDeviceSetup[5].DevType = "pocasi"
+		myHomeDeviceSetup[6].DevType = "kamera"
+		myHomeDeviceSetup[7].DevType = "kamera"
+		myHomeDeviceSetup[8].DevType = "voda"
+		myHomeDeviceSetup[9].DevType = "teplota"
+		myHomeDeviceSetup[10].DevType = "teplota"
+		myHomeDeviceSetup[11].DevType = "voda"
+
+
+		myHomeDeviceSetup[6].DevCamIP = "http://192.168.0.19/jpg/image.jpg"
+		//myHomeDeviceSetup[9].DevCamIP = "http://192.168.0.40/jpg/image.jpg"
+		myHomeDeviceSetup[7].DevCamIP = "http://192.168.0.26/jpg/image.jpg"
 	}
 
 }
@@ -85,12 +104,15 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
 	for i:=0;i<numberOfRows ;i++  {
 		t := time.Now()
-		myHomeDeviceSetup[i].DevTime = t.Format("2006-01-02 15:04:05")
+		myHomeDeviceSetup[i].DevSerTime = t.Format("2006-01-02 15:04:05")
+		myHomeDeviceSetup[i].DevTime = t.Format("15:04:05")
+
 		myHomeDeviceSetup[i].DevTemp = t.Second()+i-30
 		myHomeDeviceSetup[i].DevLight =	t.Second()/10
 		myHomeDeviceSetup[i].DevAlarm =	t.Second()%2 == 0
 		myHomeDeviceSetup[i].DevWater =	time.Now().Second()*100/60
 		myHomeDeviceSetup[i].DevPosition = time.Now().Second()*100/60
+		myHomeDeviceSetup[i].DevWeather = "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png"
 	}
 
 
@@ -118,7 +140,9 @@ func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 
 	myDeviceSetup := DeviceSetup{}
 
+	var t = time.Now()
 	myDeviceSetup = DeviceSetup{
+		DevSerTime: (t.Format(time.Kitchen)),
 		DevId:      12345678901,
 		DevTime:    "19:00",
 		DevTemp:  	time.Now().Second(),

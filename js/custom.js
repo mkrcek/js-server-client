@@ -1,74 +1,40 @@
+// verze 2.0: HTML
+// HTML boxíky jsou generované podle JSON (typ informace a velikost)
+// na pořadí JSON již nezáleží
+// kamera má rozmer 6, jinak ostatni jsou 2
+
 window.Arduino = {};
+
 window.onload = function() {
   Arduino.axios = axios.create({
     //baseURL: 'http://192.168.0.25:1818/select/devices/',
     baseURL: 'http://localhost:1818/select/devices/',
-    baseURL: 'http://192.168.0.39:1818/select/devices/',
+    //baseURL: 'http://192.168.0.39:1818/select/devices/',
 
     timeout: 100000
   });
 
+  Arduino.generateWeb();
+  //vygeneruje HTML pro všechny BOXíky v JSON
 
-  Arduino.initNewDeviceDetail();
   Arduino.showDeviceDetail();
+  //vygeneruje obsah pro všechny HTML-BOXíky v JSON
 
-for (var i = 0; i < 2; i++) {
-  Arduino.changeDeviceDetail(i);
-}
-  // Arduino.changeDeviceDetail(0);
-  // Arduino.changeDeviceDetail(1);
+  Arduino.changeDeviceDetail(0);
+  //umožní zmenit jmeno zařízení číslo -0
 
 
-  Arduino.initDeviceDetail();
 }
 
 
 
 
-//nitialize Bootstrap Switch.
-//puvodni: $("[name='my-checkbox']").bootstrapSwitch();
-//nove:
-$("input[type='checkbox']").bootstrapSwitch();
-
-
-
-
-
-//posunovani modulu za pomoci tlačítek
-$(document).ready(function() {
-    $('#moveleft').click(function() {
-        $('#textbox').animate({
-        'marginLeft' : "-=30px" //moves left
-        });
-    });
-    $('#moveright').click(function() {
-        $('#textbox').animate({
-        'marginLeft' : "+=30px" //moves right
-        });
-    });
-    $('#movedown').click(function() {
-        $('#textbox').animate({
-        'marginTop' : "+=30px" //moves down
-        });
-    });
-    $('#moveup').click(function() {
-        $('#textbox').animate({
-        'marginTop' : "-=30px" //moves up
-        });
-    });
-})
-
-//a
-
-
-
-//spusteni kazdou senkundu
+//spusteni funkcíkazdou senkundu
 
 var myVar = setInterval(function(){ myTimer() }, 1000);
 function myTimer() {
-
     Arduino.hodiny ();
-    Arduino.showDeviceDetail();                    //kartičky
+    Arduino.showDeviceDetail();                    //box na obrazovce
 }
 
 
@@ -80,20 +46,14 @@ Arduino.hodiny = function () {
   document.getElementById("hodiny").innerHTML = t; //hodiny
 }
 
-Arduino.initNewDeviceDetail = function() {
-}
 
 
 
-//Arduino.showDeviceDetail = function(deviceId) {
-//  Arduino.axios.get('/temperatures/' + deviceId)
-
-
-
-//zmeni polozku a odesle pomoci PUT na API
+//Aktualizace PUT: zmeni polozku (devName) a odesle pomoci PUT na API
 Arduino.changeDeviceDetail = function(itemID){
 
-//bylo tady #device-detail-0 .save
+//puvodni pracovni verze - jen pro prvni MODULek
+
 $('#device-detail-'+itemID+' .save').click(() => {
   console.log("click "+itemID);
   $('#device-detail-'+itemID+' form').submit();
@@ -120,171 +80,182 @@ $('#device-detail-'+itemID+' form').submit((event) => {
 
 
 
-//specialni TEST místo na webu
-Arduino.initDeviceDetail = function(){
 
-$('#device-detail .save').click(() => {
-  $('#device-detail form').submit();
-});
 
-$('#device-detail form').submit((event) => {
-//  Arduino.axios.put ('/hodnota/5', {
-  Arduino.axios.put ('/temperatures/5', {
-    devName: $('#device-detail input[name="devName"]').val(),
-    devLight: parseInt ($('#device-detail input[name="devLight"]').val())
-    //prevede vlozeny string na cislo//
 
+
+//vytvoreni template z HTML a uprava dle noveho ID
+
+Arduino.generateWeb = function(){
+
+var boxik = $("#vzorBoxu").html();
+
+Arduino.axios.get("/")
+.then (function (response){
+  var device = response.data;
+  for (var i = 0; i < device.length; i++) {
+    var boxikNew = boxik.replace (/sensor-ID/g, "sensor-" + i);
+    //parametr  /g  znamena globalne - vsechny vyskyty, ne jen prvni
+
+    $("#vzorBoxu").append(boxikNew);
+    //generuje HTML a vloží ho nakonec
+  }
   })
-    .then(function(response) {
-      console.log('UPDATE PUT');
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  event.preventDefault();
-});
+  .catch(function (error) {
+    console.log(error);
+  });
 
-}//end initDeviceDetail
+}
 
 
 
-
-
-
-//zobrazení detailu
+//zobrazení detailu - naplnění HTML teplate hodnotami z JSON
 
 Arduino.showDeviceDetail = function() {
 
-//Arduino.axios.get('/temperatures/11')
   Arduino.axios.get('/')
   .then(function (response) {
     var device = response.data;
-    console.log(device);
-    console.log("ahoja");
+
+
+    //zobrazení casu, který je na serveru
+
+    document.getElementById("server-time").innerHTML = device[0].devSerTime; //hodiny
 
     //getElementById je prej rychlejši
-    //1.prvni TEPLOTA
-    document.getElementById("devId0").innerHTML = device[0].devId;
-    document.getElementById("devTemp0").innerHTML = device[0].devTemp;
-    document.getElementById("devName0").innerHTML = device[0].devName;
-    document.getElementById("devTime0").innerHTML = device[0].devTime;
 
-    //2.prvni TEPLOTA 2
-      document.getElementById("devId1").innerHTML = device[1].devId;
-    document.getElementById("devTemp1").innerHTML = device[1].devTemp;
-    document.getElementById("devName1").innerHTML = device[1].devName;
-    document.getElementById("devTime1").innerHTML = device[1].devTime;
+    for (var i = 0; i < device.length; i++) {
 
-    //3.prvni VODA
-    document.getElementById("devId2").innerHTML = device[2].devId;
-    document.getElementById("devWaterLevel").innerHTML = device[2].devWater;
-    document.getElementById("devName2").innerHTML = device[2].devName;
-    document.getElementById("devTime2").innerHTML = device[2].devTime;
-    if (device[2].devWater > 40){
-      document.getElementById("vodaLevelBar").className = "progress-bar progress-bar-striped active progress-bar-success";
-    } else {
-      document.getElementById("vodaLevelBar").className = "progress-bar progress-bar-striped active progress-bar-danger"
-    }
-    document.getElementById("vodaLevelBar").style.height = device[2].devWater+"%";
-    document.getElementById("vodaLevelNumb").innerHTML = device[2].devWater+" %";
+        $(".vlastniBox:gt(0)").removeClass('hidden');
+        $(".vlastniBox:gt(0)").removeClass('hidden');
+        //zobrazi cely box, kromě vzorového s císlem - greater than 0, tedy od 1
 
-    //4.prvni VODA 2
-    document.getElementById("devId3").innerHTML = device[3].devId;
-    document.getElementById("vodaLevel2").innerHTML = device[3].devWater;
-    document.getElementById("devName3").innerHTML = device[3].devName;
-    document.getElementById("devTime3").innerHTML = device[3].devTime;
-    if (device[3].devWater > 60){
-      document.getElementById("vodaLevelBar2").className = "progress-bar progress-bar-striped active progress-bar-danger";
-    } else {
-      document.getElementById("vodaLevelBar2").className = "progress-bar progress-bar-striped active progress-bar-success"
-    }
-    document.getElementById("vodaLevelBar2").style.height = device[3].devWater+"%";
-    document.getElementById("vodaLevelNumb2").innerHTML = device[3].devWater+" %";
+        //schování všecho nepotřebného ...nasledne v kodu SWITCH bude zobrazeno
+        $('#sensor-'+i+'-module-teplota').addClass('hidden');
+        $('#sensor-'+i+'-module-voda').addClass('hidden');
+        $('#sensor-'+i+'-module-svetlo').addClass('hidden');
+        $('#sensor-'+i+'-module-alarm').addClass('hidden');
+        $('#sensor-'+i+'-module-brana').addClass('hidden');
+        $('#sensor-'+i+'-module-kamera').addClass('hidden');
+        $('#sensor-'+i+'-module-pocasi').addClass('hidden');
 
-    //5.prvni SVETLO
-    document.getElementById("devId4").innerHTML = device[4].devId;
-    document.getElementById("devName4").innerHTML = device[4].devName;
-    document.getElementById("devTime4").innerHTML = device[4].devTime;
-    switch (device[4].devLight) {
-      case 0:
-          document.getElementById("svetloLevelIcon").className = "fa fa-lightbulb-o fa-5x";
-          break;
-      case 1:
-          document.getElementById("svetloLevelIcon").className = "fa fa-lightbulb-o fa-5x text-warning";
-          break;
-      case 2:
-            document.getElementById("svetloLevelIcon").className = "fa fa-lightbulb-o fa-5x text-primary";
+
+
+        // podle typu device zobrazí položky - ostatní jsou stále neviditelné
+        switch (device[i].devType) {
+          case "teplota":
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+
+               $('#sensor-'+i+'-module-teplota').removeClass('hidden');
+               $('#sensor-'+i+'-module-teplota').addClass('show');
+               document.getElementById("sensor-"+i+"-teplota").innerHTML = device[i].devTemp;
+
+              break;
+
+          case "voda":
+
+              $('#sensor-'+i+'-module-voda').removeClass('hidden');
+              $('#sensor-'+i+'-voda-modul').addClass('show');
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+              document.getElementById("sensor-"+i+"-voda-numb").innerHTML = device[i].devWater;
+              document.getElementById("sensor-"+i+"-voda").style.height = device[i].devWater+"%"; //plneni progressbaru
+
+              //změna barvy po dosažení 60%
+              if (device[i].devWater > 60){
+                document.getElementById("sensor-"+i+"-voda").className = "progress-bar progress-bar-striped active progress-bar-danger";
+              } else {
+                document.getElementById("sensor-"+i+"-voda").className = "progress-bar progress-bar-striped active progress-bar-success"
+              }
+              break;
+
+          case "svetlo":
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+
+              $('#sensor-'+i+'-module-svetlo').removeClass('hidden');
+              $('#sensor-'+i+'-module-svetlo').addClass('show');
+
+              //jakože bliká
+              if ((device[i].devLight % 2) == 0){
+                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o fa-4x";
+              } else
+              {
+                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o fa-4x text-warning";
+              }
+
+              break;
+
+          case "alarm":
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+
+              $('#sensor-'+i+'-module-alarm').removeClass('hidden');
+              $('#sensor-'+i+'-module-alarm').addClass('show');
+
+              if (device[i].devAlarm){
+                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle fa-4x text-danger";
+              } else {
+                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle fa-4x";
+              }
+
+
+              break;
+
+            case "brana":
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+
+              $('#sensor-'+i+'-module-brana').removeClass('hidden');
+              $('#sensor-'+i+'-module-brana').addClass('show');
+
+              document.getElementById("sensor-"+i+"-brana-left").style.width = device[8].devPosition+"%";
+              document.getElementById("sensor-"+i+"-brana-right").style.width = 100-device[8].devPosition+"%";
+
+
+              break;
+
+            case "kamera":
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+
+              //zmeni rozmery BOXu, pokud se jedná o obrazek. Kamera má 6, ostatní jen 2
+              $('#sensor-'+i+'-size').removeClass('col-xs-2');
+              $('#sensor-'+i+'-size').addClass('col-xs-6');
+
+              $('#sensor-'+i+'-module-kamera').removeClass('hidden');
+              $('#sensor-'+i+'-module-kamera').addClass('show');
+
+              d = new Date();
+              document.getElementById("sensor-"+i+"-kamera-url").src = device[i].devCamIP+"?"+d.getTime();
             break;
-      case 3:
-          document.getElementById("svetloLevelIcon").className = "fa fa-lightbulb-o fa-5x text-success";
-          break;
-      default:
-          document.getElementById("svetloLevelIcon").className = "fa fa-lightbulb-o fa-5x text-danger";
-    }
+
+            case "pocasi":
+
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
 
 
-    //6.prvni Svetlo
-    document.getElementById("devId5").innerHTML = device[5].devId;
-    document.getElementById("devName5").innerHTML = device[5].devName;
-    document.getElementById("devTime5").innerHTML = device[5].devTime;
-    if (device[5].devLight < 3){
-      document.getElementById("svetloLevelIcon2").className = "fa fa-lightbulb-o fa-5x";
-    } else {
-      document.getElementById("svetloLevelIcon2").className = "fa fa-lightbulb-o fa-5x text-warning"
-    }
+              $('#sensor-'+i+'-module-pocasi').removeClass('hidden');
+              $('#sensor-'+i+'-module-pocasi').addClass('show');
 
+              d = new Date();
+              document.getElementById("sensor-"+i+"-pocasi-url").src = device[i].devWeatherIP+"?"+d.getTime();
 
-    //1.druhy Alarma
-    document.getElementById("devId6").innerHTML = device[6].devId;
-    document.getElementById("devName6").innerHTML = device[6].devName;
-    document.getElementById("devTime6").innerHTML = device[6].devTime;
+            break;
 
-    if (device[6].devAlarm){
-      document.getElementById("alarmLevelIcon").className = "fa fa-exclamation-triangle fa-5x text-danger";
-    } else {
-      document.getElementById("alarmLevelIcon").className = "fa fa-exclamation-triangle fa-5x";
-    }
+          //default:
+            //něco
+        } //konec :switch:
 
-    //2.druhy Alarma 2
-    document.getElementById("devId7").innerHTML = device[7].devId;
-    document.getElementById("devName7").innerHTML = device[7].devName;
-    document.getElementById("devTime7").innerHTML = device[7].devTime;
-    if (device[7].devAlarm){
-      document.getElementById("alarmLevelIcon2").className = "fa fa-exclamation-triangle fa-5x text-danger";
-    } else {
-      document.getElementById("alarmLevelIcon2").className = "fa fa-exclamation-triangle fa-5x";
-    }
-
-    //3.druhy VRATA - GATE
-    document.getElementById("devId8").innerHTML = device[8].devId;
-    document.getElementById("devName8").innerHTML = device[8].devName;
-    document.getElementById("gateLevel").innerHTML = device[8].devPosition;
-    document.getElementById("devTime8").innerHTML = device[8].devTime;
-
-    document.getElementById("gateLevelBar-left").style.width = device[8].devPosition+"%";
-    document.getElementById("gateLevelBar-right").style.width = 100-device[8].devPosition+"%";
-
-
-    //1.treti KAMERA - CAM
-    document.getElementById("devId9").innerHTML = device[9].devId;
-    document.getElementById("devName9").innerHTML = device[9].devName;
-    document.getElementById("devTime9").innerHTML = device[9].devTime;
-    d = new Date();
-    document.getElementById("devCamUrl").src = device[9].devCamIP+"?"+d.getTime();
-
-    //document.getElementById("devCamUrl").src = "https://apl.brno.cz/kamery/mn3/image.jpg"+"?"+d.getTime();
-    //document.getElementById("devCamUrl2").src = device[9].devCamIP+"?"+device[9].devTemp;
-
-    //na pozadí se obrázek se třepe při načítání
-    //reseni: https://www.nccgroup.trust/uk/about-us/newsroom-and-events/blogs/2016/may/why-background-images-are-slow-to-display-and-how-to-make-them-appear-faster/
-    //document.getElementById("devCamUrl").style.backgroundImage = "url(" + device[9].devCamIP +'?'+d.getTime() + ")";
-
-    //2.treti KAMERA - CAM
-    document.getElementById("devId10").innerHTML = device[10].devId;
-    document.getElementById("devName10").innerHTML = device[10].devName;
-    document.getElementById("devTime10").innerHTML = device[10].devTime;
-    document.getElementById("devCamUrl2").src = device[10].devCamIP+"?"+d.getTime();
-
+    }  //konec cyklu pro kreslení obsahu
 
   })
   .catch(function (error) {
