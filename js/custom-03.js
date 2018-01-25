@@ -1,4 +1,4 @@
-  // verze 2.0: HTML
+// verze 2.0: HTML
 // HTML boxíky jsou generované podle JSON (typ informace a velikost)
 // na pořadí JSON již nezáleží
 // kamera má rozmer 6, jinak ostatni jsou 2
@@ -144,39 +144,13 @@ Arduino.showDeviceDetail = function() {
         // podle typu device zobrazí položky - ostatní jsou stále neviditelné
         switch (device[i].devType) {
           case "teplota":
-              var tempVal = device[i].devTemp;
+
               document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
               document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
 
                $('#sensor-'+i+'-module-teplota').removeClass('hidden');
                $('#sensor-'+i+'-module-teplota').addClass('show');
-               document.getElementById("sensor-"+i+"-teplota").innerHTML = tempVal;
-
-               switch (true) {
-                 case tempVal<3:
-                      $('#sensor-'+i+'-module-teplota').css("background-color", "Blue");
-                      $('#sensor-'+i+'-module-teplota').css("color", "AliceBlue");
-
-                 break;
-                 case tempVal<16:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "CornflowerBlue");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
-                 break;
-                 case tempVal<21:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "BlueViolet");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
-                 break;
-                 case tempVal<31:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "Orange");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
-                 break;
-                 case tempVal>30:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "Red");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
-                 break;
-                 default:
-
-               }
+               document.getElementById("sensor-"+i+"-teplota").innerHTML = device[i].devTemp;
 
               break;
 
@@ -185,15 +159,10 @@ Arduino.showDeviceDetail = function() {
               $('#sensor-'+i+'-module-voda').removeClass('hidden');
               $('#sensor-'+i+'-voda-modul').addClass('show');
 
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
-              $("#sensor-"+i+"-voda-numb").html(device[i].devWater);
-
-              // document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
-              // document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
-              // document.getElementById("sensor-"+i+"-voda-numb").innerHTML = device[i].devWater;
-              //document.getElementById("sensor-"+i+"-voda").style.height = device[i].devWater+"%"; //plneni progressbaru
-              $("#sensor-"+i+"-voda").height(device[i].devWater+"%");
+              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+              document.getElementById("sensor-"+i+"-voda-numb").innerHTML = device[i].devWater;
+              document.getElementById("sensor-"+i+"-voda").style.height = device[i].devWater+"%"; //plneni progressbaru
 
               //změna barvy po dosažení 60%
               if (device[i].devWater > 60){
@@ -263,7 +232,6 @@ Arduino.showDeviceDetail = function() {
 
               $('#sensor-'+i+'-module-kamera').removeClass('hidden');
               $('#sensor-'+i+'-module-kamera').addClass('show');
-
 
               d = new Date();
               document.getElementById("sensor-"+i+"-kamera-url").src = device[i].devCamIP+"?"+d.getTime();

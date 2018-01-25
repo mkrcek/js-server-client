@@ -12,17 +12,48 @@ p span {
     font-size: 14px;
 }
 
+h2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 .hodiny {
   background: rgba(250, 254, 254, 0.5)
+}
+
+#LANE1 {
+  /* background-color: red; */
+  background-image: url("../images/image.jpg");
+   background-repeat: no-repeat;
+   background-position: left top;
+   background-attachment: fixed;
+   /* background-size: cover; */
+   background-size: contain;
+
 }
 
 
 
 /* parametry kamery */
-.img-cam {
+/* .img-cam {
   width: 100%;
 }
 
+.vlastniBox  {
+  height: 250px;
+}
+
+.vlastniBox2  {
+  height: 250px;
+}
+
+.kameraBox {
+  height: 500px;
+}
+
+.div {
+  height: 100 %;
+} */
 
 
 //test TEPLOTA v kulatém kroužku
@@ -133,4 +164,20 @@ p span {
 }
 
 #footer {
+}
+
+.vlastniBox {
+  border: 1px solid gray;
+
+}
+
+/* .button-teplota { */
+
+.temperature-value{
+  /* border: 2px solid red; */
+    padding: 10px;
+    border-radius: 50px;
+    background-color:rgba(192,192,192,0.9);
+    color: white;
+    padding: 20px;
 }

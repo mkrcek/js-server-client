@@ -78,7 +78,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		}
 
 		myHomeDeviceSetup[0].DevType = "teplota"
-		myHomeDeviceSetup[1].DevType = "teplota"
+		myHomeDeviceSetup[1].DevType = "svetlo"
 		myHomeDeviceSetup[2].DevType = "brana"
 		myHomeDeviceSetup[3].DevType = "voda"
 		myHomeDeviceSetup[4].DevType = "alarm"
@@ -87,7 +87,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		myHomeDeviceSetup[7].DevType = "kamera"
 		myHomeDeviceSetup[8].DevType = "voda"
 		myHomeDeviceSetup[9].DevType = "teplota"
-		myHomeDeviceSetup[10].DevType = "teplota"
+		myHomeDeviceSetup[10].DevType = "svetlo"
 		myHomeDeviceSetup[11].DevType = "voda"
 
 
