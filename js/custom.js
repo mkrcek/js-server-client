@@ -8,8 +8,8 @@ window.Arduino = {};
 window.onload = function() {
   Arduino.axios = axios.create({
     //baseURL: 'http://192.168.0.25:1818/select/devices/',
-    baseURL: 'http://localhost:1818/select/devices/',
-    //baseURL: 'http://192.168.0.20:1818/select/devices/',
+    // baseURL: 'http://localhost:1818/select/devices/',
+    baseURL: 'http://192.168.0.20:1818/select/devices/',
 
     timeout: 100000
   });
@@ -342,6 +342,23 @@ Arduino.showDeviceDetail = function() {
 
 
 //kliknutím na cokoliv se zobrazí čas v 1. čidlu
-$("#vzorBoxu").click(function(){
-    $("#sensor-0-time").toggle();
+// $("#vzorBoxu").click(function(){
+//     $("#sensor-0-time").toggle();
+// });
+
+
+$(function() {
+    var $log = $('#log');
+    $('#sensor-5-module-pocasi').on('click dblclick', function(e) {
+        $log.append(' ' + e.type);
+        if (e.type == 'mousedown') {
+            if (e.which == 1) {
+                $log.append(' Left Button');
+            } else if (e.which == 3) {
+                $log.append(' Right Button');
+            } else if (e.which == 2) {
+                $log.append(' Middle Button');
+            }
+        }
+    });
 });

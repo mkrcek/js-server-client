@@ -34,7 +34,7 @@ var hodnotaPut = DeviceSetup{				//testovaci
 	DevAlarm:  false,
 	}
 
-var numberOfRows = 22                                     //pocet zarizeni
+var numberOfRows = 13                                     //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
 
