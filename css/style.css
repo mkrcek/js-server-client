@@ -3,16 +3,18 @@
     padding: 0;
 }
 body {
-    font-family: 'Raleway', sans-serif;
+    /* font-family: 'Raleway', sans-serif; */
     overflow-y: scroll;
     overflow-x: hidden;
 }
 p span {
-
-    font-size: 14px;
+/* font: inherit; */
+    /* font-size: 14px; */
+    margin-bottom: 0px;
 }
 
 h2 {
+  /* font-size: 2vw; */
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -34,12 +36,9 @@ h2 {
 
 
 
-/* parametry kamery */
-/* .img-cam {
-  width: 100%;
-}
 
-.vlastniBox  {
+
+/* .vlastniBox  {
   height: 250px;
 }
 
@@ -53,16 +52,9 @@ h2 {
 
 .div {
   height: 100 %;
-} */
+}  */
 
 
-//test TEPLOTA v kulatém kroužku
-
-.temperature-detail__ {
-  border: 2px solid red;
-  border-style: solid;
-  border-radius:50%;
-}
 
 /* ============= Generic CSS ============== */
 
@@ -167,17 +159,32 @@ h2 {
 }
 
 .vlastniBox {
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
+  /* border-radius: 10%; */
+  /* padding: 10; */
+  /* width: 100px;
+  height: 100px;
+  font-size: 1vw; */
+  /* margin: 3px; */
+  padding: 10px;
+}
+
+.vnitrniBox{
+  padding: 10px;
+  /* border: 2px solid Black; */
+  border-radius: 10%;
+  background-color:rgba(192,192,192,0.7);
 
 }
 
 /* .button-teplota { */
 
-.temperature-value{
+.temperature-value, .light-value, .alarm-value{
   /* border: 2px solid red; */
-    padding: 10px;
-    border-radius: 50px;
-    background-color:rgba(192,192,192,0.9);
-    color: white;
-    padding: 20px;
+    padding-top: 1vw;
+    font-size: 3vw;
+}
+
+.sensor-name {
+  font-size: 1.2vw;
 }

@@ -109,6 +109,27 @@ Arduino.axios.get("/")
 
 
 
+// // $('#sensor-'+i+'-time').addClass('hidden');  //schová informaci o čase Aktualizace
+// $('#sensor-'+i+'-size').click(function(){
+//     // $('#sensor-'+i+'-time').toggle();       //prohodi stav hide - show
+//     stav = $('#sensor-'+i+'-time').is(":visible");
+//     console.log(stav);
+//     if (stav) {
+//
+//       $('#sensor-'+i+'-time').removeClass('show');
+//       $('#sensor-'+i+'-time').addClass('hidden');
+//       console.log("stav-A");
+//     } else {
+//       $('#sensor-'+i+'-time').removeClass('hidden');
+//       $('#sensor-'+i+'-time').addClass('show');
+//       console.log("stav");
+//     }
+//
+// });
+
+
+
+
 //zobrazení detailu - naplnění HTML teplate hodnotami z JSON
 
 Arduino.showDeviceDetail = function() {
@@ -139,40 +160,54 @@ Arduino.showDeviceDetail = function() {
         $('#sensor-'+i+'-module-kamera').addClass('hidden');
         $('#sensor-'+i+'-module-pocasi').addClass('hidden');
 
+        sirka = $('#sensor-'+i+'-size').css("width");
+        $('#sensor-'+i+'-size').css("height", sirka);
 
 
         // podle typu device zobrazí položky - ostatní jsou stále neviditelné
         switch (device[i].devType) {
+
+
+
           case "teplota":
               var tempVal = device[i].devTemp;
-              document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
-              document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
+
+              $('#sensor-'+i+'-name').html(device[i].devName);
+
+              $('#sensor-'+i+'-time').html(device[i].devTime);
+
+
+              // document.getElementById("sensor-"+i+"-name").innerHTML = device[i].devName;
+              // document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
 
                $('#sensor-'+i+'-module-teplota').removeClass('hidden');
                $('#sensor-'+i+'-module-teplota').addClass('show');
-               document.getElementById("sensor-"+i+"-teplota").innerHTML = tempVal;
+               $('#sensor-'+i+'-teplota').html(tempVal);
+               // document.getElementById("sensor-"+i+"-teplota").innerHTML = tempVal;
+
+
 
                switch (true) {
                  case tempVal<3:
-                      $('#sensor-'+i+'-module-teplota').css("background-color", "Blue");
-                      $('#sensor-'+i+'-module-teplota').css("color", "AliceBlue");
+                      $('#sensor-'+i+'-size').css("background-color", "Blue");
+                      $('#sensor-'+i+'-size').css("color", "AliceBlue");
 
                  break;
                  case tempVal<16:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "CornflowerBlue");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
+                   $('#sensor-'+i+'-size').css("background-color", "CornflowerBlue");
+                   $('#sensor-'+i+'-size').css("color", "Black");
                  break;
                  case tempVal<21:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "BlueViolet");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
+                   $('#sensor-'+i+'-size').css("background-color", "BlueViolet");
+                   $('#sensor-'+i+'-size').css("color", "Black");
                  break;
                  case tempVal<31:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "Orange");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
+                   $('#sensor-'+i+'-size').css("background-color", "Orange");
+                   $('#sensor-'+i+'-size').css("color", "Black");
                  break;
                  case tempVal>30:
-                   $('#sensor-'+i+'-module-teplota').css("background-color", "Red");
-                   $('#sensor-'+i+'-module-teplota').css("color", "Black");
+                   $('#sensor-'+i+'-size').css("background-color", "Red");
+                   $('#sensor-'+i+'-size').css("color", "Black");
                  break;
                  default:
 
@@ -213,10 +248,10 @@ Arduino.showDeviceDetail = function() {
 
               //jakože bliká
               if ((device[i].devLight % 2) == 0){
-                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o fa-4x";
+                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o ";
               } else
               {
-                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o fa-4x text-warning";
+                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o text-warning";
               }
 
               break;
@@ -230,9 +265,9 @@ Arduino.showDeviceDetail = function() {
               $('#sensor-'+i+'-module-alarm').addClass('show');
 
               if (device[i].devAlarm){
-                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle fa-4x text-danger";
+                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle  text-danger";
               } else {
-                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle fa-4x";
+                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle ";
               }
 
 
@@ -258,8 +293,10 @@ Arduino.showDeviceDetail = function() {
               document.getElementById("sensor-"+i+"-time").innerHTML = device[i].devTime;
 
               //zmeni rozmery BOXu, pokud se jedná o obrazek. Kamera má 6, ostatní jen 2
-              $('#sensor-'+i+'-size').removeClass('col-xs-2');
-              $('#sensor-'+i+'-size').addClass('col-xs-6');
+              // $('#sensor-'+i+'-size').removeClass('col-xs-2');
+              // $('#sensor-'+i+'-size').addClass('col-xs-6');
+              $('#sensor-'+i+'-size-big').removeClass('col-xs-4 col-sm-2');
+              $('#sensor-'+i+'-size-big').addClass('col-xs-12 col-sm-6');
 
               $('#sensor-'+i+'-module-kamera').removeClass('hidden');
               $('#sensor-'+i+'-module-kamera').addClass('show');
@@ -278,8 +315,15 @@ Arduino.showDeviceDetail = function() {
               $('#sensor-'+i+'-module-pocasi').removeClass('hidden');
               $('#sensor-'+i+'-module-pocasi').addClass('show');
 
+              $('#sensor-'+i+'-name').removeClass('show');
+              $('#sensor-'+i+'-name').addClass('hidden');
+              $('#sensor-'+i+'-time').removeClass('show');
+              $('#sensor-'+i+'-time').addClass('hidden');
+
               d = new Date();
-              document.getElementById("sensor-"+i+"-pocasi-url").src = device[i].devWeatherIP+"?"+d.getTime();
+              document.getElementById("sensor-"+i+"-pocasi-url").src = device[i].devWeatherIP+"?"+d.getHours();  //aktualizuje každou hodinu
+
+
 
             break;
 
@@ -295,3 +339,9 @@ Arduino.showDeviceDetail = function() {
   });
 
 }
+
+
+//kliknutím na cokoliv se zobrazí čas v 1. čidlu
+$("#vzorBoxu").click(function(){
+    $("#sensor-0-time").toggle();
+});
