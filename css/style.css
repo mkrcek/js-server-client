@@ -23,7 +23,7 @@ h2 {
   background: rgba(250, 254, 254, 0.5)
 }
 
-#LANE1 {
+#lane1 {
   /* background-color: red; */
   background-image: url("../images/image.jpg");
    background-repeat: no-repeat;
@@ -148,18 +148,9 @@ h2 {
 }
 
 
-/* footer */
-#footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
 
-#footer {
-}
-
-.vlastniBox {
-  /* border: 1px solid gray; */
+.boxWrap{
+  /* border: 1px solid red; */
   /* border-radius: 10%; */
   /* padding: 10; */
   /* width: 100px;
@@ -169,7 +160,7 @@ h2 {
   padding: 10px;
 }
 
-.vnitrniBox{
+.boxContent{
   padding: 10px;
   /* border: 2px solid Black; */
   border-radius: 10%;

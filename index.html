@@ -6,7 +6,7 @@
 
     <head>
 
-        <title>Doomaster 1.01 </title>
+        <title>Doomaster 1.02 </title>
 
         <meta charset="utf-8">
 
@@ -15,24 +15,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-         <!-- Google Fonts -->
+     <!-- Google Fonts -->
          <!-- pokud by byl problem stahovat online - tak zakomentovat -->
 
         <link href='https://fonts.googleapis.com/css?family=Raleway:500italic,600italic,600,700,700italic,300italic,300,400,400italic,800,900' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600italic,700,900' rel='stylesheet' type='text/css'>
 
-        <!-- favicon -->
+      <!-- favicon -->
         <link rel="icon" type="image/png" href="images/favicon.png">
 
-        <!-- CSS -->
+      <!-- CSS -->
 
         <!-- reset -->
         <link rel="stylesheet" href="css/mcleod-reset.css">
 
 
-                <!-- bootstrap-switch -->
-                <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" /> -->
-                     <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+        <!-- bootstrap-switch -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" /> -->
+             <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
 
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 
@@ -42,15 +42,17 @@
         <!-- Animate CSS -->
         <link rel="stylesheet" type="text/css" href="css/animate.css">
 
+
+    <!-- muj vlastní CSS -->
         <link rel="stylesheet" type="text/css" href="css/style.css">
 
         <!-- responsive css -->
         <!-- <link rel="stylesheet" type="text/css" href="css/responsive.css"> -->
 
-
-
-
     </head>
+
+
+
 
     <body>
 
@@ -80,143 +82,85 @@
       </header>
 
 
-  <!-- První sekce : 1. řádek na obrazovce -->
-      <section class="" id="LANE1">
+<!-- templates -->
+  <section id="myTemplate" class="hidden">
 
+        <!-- teplota -->
+        <div id="templateTemp">
+        <div id="sensor-ID-module-teplota" class=" temperature-value text-left" >
+            <span id="sensor-ID-teplota" class="button-teplota" >-99</span>&deg;
+            <i class="hidden fa fa-exclamation-triangle text-right"> </i>
+        </div>
+        </div>
 
-        <div class="container">
-
-          <div id="vzorBoxu" class="row ">
-
-          <!-- Univerzalni modul pro zobrazení detailu -->
-            <!-- do class pridat well pro sedy ramecek. Jinak je pruhledny"> -->
-
-            <div id="sensor-ID-size-big" class="vlastniBox hidden  section-1 col-xs-4 col-sm-2">
-              <!--
-              <div id="sensor-ID-size" class="vlastniBox hidden  section-1 col-xs-4      col-sm-3 col-xs-4  "> -->
-              <!-- <button class="btn btn-block" data-toggle="collapse" data-target="#collapseFooter" aria-expanded="false" aria-controls="collapseFooter"> -->
-
-
-              <div id="sensor-ID-size" class="vnitrniBox">
-
-
-                              <!-- teplota -->
-                              <div id="sensor-ID-module-teplota" class="hidden temperature-value text-left " >
-                                  <span id="sensor-ID-teplota" class="button-teplota" >-99</span>&deg;
-                                  <i class="fa fa-exclamation-triangle aria-hidden="true" text-right "> </i>
-                              </div>
-
-
-                              <!-- voda -->
-                              <div id="sensor-ID-module-voda" class=" hidden progress progress-bar-vertical text-center">
-                                <div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">
-                                  <span id="sensor-ID-voda-numb">44%</span>
-                                </div>
-                              </div>
-
-                              <!-- svetlo -->
-                              <div id="sensor-ID-module-svetlo" class=" hidden light-value">
-                                  <i id="sensor-ID-svetlo-stav" class="fa fa-lightbulb-o "></i>
-                              </div>
-
-
-
-                              <!-- alarm -->
-                              <div id="sensor-ID-module-alarm" class=" hidden alarm-value">
-                                  <i id="sensor-ID-alarm-stav" class="" ></i>
-                              </div>
-
-
-                              <!-- brána -->
-                              <div id="sensor-ID-module-brana" class="  progress progress-bar-horizontal">
-                                <div id="sensor-ID-brana-left" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%">
-                                </div>
-                                <div id="sensor-ID-brana-right" class="progress-bar progress-bar-success" role="progressbar" style="width:70%">
-                                </div>
-                              </div>
-
-
-                              <!-- nazev a teplota -->
-                              <div class="vlastniBox2 sensor-name">
-                                  <p id="sensor-ID-name">Severní pól
-                                    <br>Updating</p>
-                                  <i id="sensor-ID-time">25:61</i>
-                              </div>
-
-                              <!-- kamera -->
-                              <div id="sensor-ID-module-kamera" class=" kameraBox hidden kamera-value">
-                                  <div class="cam-value bg-danger">
-                                      <img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-responsive">
-                                  </div>
-                              </div>
-
-
-
-                              <!-- pocasi -->
-                              <div id="sensor-ID-module-pocasi" class=" hidden pocasi-value">
-                                  <div class="cam-value bg-danger">
-                                      <img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">
-                                  </div>
-                              </div>
-
-                      </div>  <!-- nitrniBox -->
-
-              <!-- </button> -->
-
-            </div>     <!-- KONEC Univerzalni modul pro zobrazení detailu -->
-
+        <!-- voda -->
+        <div id="templateWater">
+          <div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">
+            <div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">
+              <span id="sensor-ID-voda-numb">44%</span>
+            </div>
           </div>
         </div>
-    </section> <!-- KONEC První sekce :  -->
 
+        <!-- svetlo -->
+        <div id="templateLight">
+          <div id="sensor-ID-module-svetlo" class="  light-value">
+              <i id="sensor-ID-svetlo-stav" class="fa fa-lightbulb-o "></i>
+          </div>
+        </div>
 
+        <!-- alarm -->
+        <div id="templateAlarm">
+          <div id="sensor-ID-module-alarm" class="  alarm-value">
+              <i id="sensor-ID-alarm-stav" class="" ></i>
+          </div>
+        </div>
 
-
-
-
-
-
-
-        <!-- <footer>
-        po kliknutní na libovoný box, se zde zobrazí detail.
-        V této verzi jen data pro modul číslo [0]
-
-        Je to testovaci verze
-        </footer> -->
-
-        <header id="footer" class=" bg-danger">
-          <div class="container">
-            <div class="row ">
-
-              <div class="collapse" id="collapseFooter">
-                <div class="temperature-details">
-                  <p>ID: <span id="devId0">text z JS</span></p>
-                  <p>Time: <span id="devTime0"></span></p>
-                  <button type="button" class="btn btn-xs btn-primary" disabled="disabled">Refresh</button>
-                </div>
-                <div id="device-detail-0">
-                  <div class="device-detail-content">
-                    <form class="form-horizontal">
-                        <div class="form-group form-group-sm">
-                          <label class="control-label" for="deviceName">New Device Name</label>
-                          <input type="text" class="form-control" name="devName">
-                        </div>
-                    </form>
-                  </div>
-                  <div class="action-bar row">
-                    <button class="btn btn-primary btn-xs btn-warning save">SAVE</button>
-                  </div>
-                </div>
-
-              </div>
-
-
-
-
+        <!-- brána -->
+        <div id="templateGate">
+          <div id="sensor-ID-module-brana" class="  progress progress-bar-horizontal">
+            <div id="sensor-ID-brana-left" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%">
             </div>
+            <div id="sensor-ID-brana-right" class="progress-bar progress-bar-success" role="progressbar" style="width:70%">
+            </div>
+          </div>
+        </div>
+
+        <!-- kamera -->
+        <div id="templateCam">
+          <div id="sensor-ID-module-kamera" class=" kameraBox kamera-value">
+              <div class="cam-value bg-danger">
+                  <img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-responsive">
+              </div>
+          </div>
+        </div>
+
+      <!-- pocasi -->
+      <div id="templateWeather">
+        <div id="sensor-ID-module-pocasi" class="pocasi-value">
+            <div class="cam-value bg-danger">
+                <img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">
+            </div>
+        </div>
+      </div>
+
+  </section>
+<!-- konec ttemplates -->
+
+
+<!-- HLAVNÍ STRÁNKA -->
+      <section id="lane1" class="lane1">
+
+          <div id="boxScreen" class="boxScreen row">
 
           </div>
-        </header>
+
+      </section>
+
+<!-- HLAVNÍ STRÁNKA KONEC -->
+
+
+
 
 
 
@@ -230,15 +174,11 @@
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script> -->
         <script src="js/bootstrap-switch.min.js"></script>
 
-
-
         <!-- axios Js -->
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-
         <!-- Custom Js -->
         <script src="js/custom.js"></script>
-
 
     </body>
 
