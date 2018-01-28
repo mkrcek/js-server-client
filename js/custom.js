@@ -5,6 +5,11 @@
 
 //todo: využití kontejneru na jednotlive HTML senzory (teplota, hladina a tak)
 
+//udelat
+//- URL senzoru je jeho UUID (DONE)
+//- sensor-ID pojmenovat ne podle "i" ale podle UUID
+//- tim pak můhu přesne vyhledat BOX a s nim pracovat. Smazat, posunout...nahradit.
+
 window.Arduino = {};
 
 window.onload = function() {
@@ -140,13 +145,15 @@ switch (sensorType) {
 Arduino.kontejnerShow = function() {
 
     var sensorType = "";
+    var sensorID = 0; //cislo senzoru UNID
 
     Arduino.axios.get("/")
     .then( function (response) {
         var device = response.data;
 
         for (var i = 0; i < device.length; i++) {
-          console.log(device[i].devType);
+          // console.log(device[i].devType);
+          sensorID = device[i].devId;
           switch (device[i].devType) {
             case "teplota": sensorType = "templateTemp";
                 break;
@@ -164,7 +171,19 @@ Arduino.kontejnerShow = function() {
                 break;
             default:
           }
-          $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType,i));
+          $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
+
+          //rezervace budouciho kliku
+          $(document).on("click", "#sensor-"+sensorID+"-boxWrap" , function() {
+            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+            //tak se provede to, co je ve funkci:
+              console.log($(this).attr("id")); //tisk cisla senzoru
+
+              // alert($(this).attr("value"));
+          });
+
+
+
         }
     })
     .catch(function (error) {
@@ -179,10 +198,11 @@ Arduino.kontejnerShow = function() {
 
 Arduino.showDeviceDetail = function() {
 
+  var sensorID = 0; //unikatni sensorID
+
   Arduino.axios.get('/')
   .then(function (response) {
     var device = response.data;
-
 
     //zobrazení casu, který je na serveru
     $('#server-time').html(device[0].devSerTime);
@@ -191,96 +211,96 @@ Arduino.showDeviceDetail = function() {
     for (var i = 0; i < device.length; i++) {
 
         // //aby byl box stejně široký jako vysoky
-
         // sirka = $('#sensor-'+i+'-boxWrap').css("width");
         // $('#sensor-'+i+'-boxWrap').css("height", sirka);
 
-        // podle typu device zobrazí položky - ostatní jsou stále neviditelné
+        sensorID = device[i].devId;
+
         switch (device[i].devType) {
 
           case "teplota":
               var tempVal = device[i].devTemp;
 
-              $('#sensor-'+i+'-name').html(device[i].devName);
-              $('#sensor-'+i+'-time').html(device[i].devTime);
-              $('#sensor-'+i+'-teplota').html(tempVal);
+              $('#sensor-'+sensorID+'-name').html(device[i].devName);
+              $('#sensor-'+sensorID+'-time').html(device[i].devTime);
+              $('#sensor-'+sensorID+'-teplota').html(tempVal);
 
                switch (true) {
                  case tempVal<3:
-                      $('#sensor-'+i+'-boxContent').css("background-color", "Blue");
-                      $('#sensor-'+i+'-boxContent').css("color", "AliceBlue");
+                      $('#sensor-'+sensorID+'-boxContent').css("background-color", "Blue");
+                      $('#sensor-'+sensorID+'-boxContent').css("color", "AliceBlue");
                  break;
                  case tempVal<16:
-                   $('#sensor-'+i+'-boxContent').css("background-color", "CornflowerBlue");
-                   $('#sensor-'+i+'-boxContent').css("color", "Black");
+                   $('#sensor-'+sensorID+'-boxContent').css("background-color", "CornflowerBlue");
+                   $('#sensor-'+sensorID+'-boxContent').css("color", "Black");
                  break;
                  case tempVal<21:
-                   $('#sensor-'+i+'-boxContent').css("background-color", "BlueViolet");
-                   $('#sensor-'+i+'-boxContent').css("color", "Black");
+                   $('#sensor-'+sensorID+'-boxContent').css("background-color", "BlueViolet");
+                   $('#sensor-'+sensorID+'-boxContent').css("color", "Black");
                  break;
                  case tempVal<31:
-                   $('#sensor-'+i+'-boxContent').css("background-color", "Orange");
-                   $('#sensor-'+i+'-boxContent').css("color", "Black");
+                   $('#sensor-'+sensorID+'-boxContent').css("background-color", "Orange");
+                   $('#sensor-'+sensorID+'-boxContent').css("color", "Black");
                  break;
                  case tempVal>30:
-                   $('#sensor-'+i+'-boxContent').css("background-color", "Red");
-                   $('#sensor-'+i+'-boxContent').css("color", "Black");
+                   $('#sensor-'+sensorID+'-boxContent').css("background-color", "Red");
+                   $('#sensor-'+sensorID+'-boxContent').css("color", "Black");
                  break;
                  default:
                }
             break; //teplota
           case "voda":
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
-              $("#sensor-"+i+"-voda-numb").html(device[i].devWater);
-              $("#sensor-"+i+"-voda").height(device[i].devWater+"%");
+              $("#sensor-"+sensorID+"-name").html(device[i].devName);
+              $("#sensor-"+sensorID+"-time").html(device[i].devTime);
+              $("#sensor-"+sensorID+"-voda-numb").html(device[i].devWater);
+              $("#sensor-"+sensorID+"-voda").height(device[i].devWater+"%");
 
               //změna barvy po dosažení 60%
               if (device[i].devWater > 60){
-                document.getElementById("sensor-"+i+"-voda").className = "progress-bar progress-bar-striped active progress-bar-danger";
+                document.getElementById("sensor-"+sensorID+"-voda").className = "progress-bar progress-bar-striped active progress-bar-danger";
               } else {
-                document.getElementById("sensor-"+i+"-voda").className = "progress-bar progress-bar-striped active progress-bar-success"
+                document.getElementById("sensor-"+sensorID+"-voda").className = "progress-bar progress-bar-striped active progress-bar-success"
               }
               break;
           case "svetlo":
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
+              $("#sensor-"+sensorID+"-name").html(device[i].devName);
+              $("#sensor-"+sensorID+"-time").html(device[i].devTime);
 
               //jakože bliká
               if ((device[i].devLight % 2) == 0){
-                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o ";
+                document.getElementById("sensor-"+sensorID+"-svetlo-stav").className = "fa fa-lightbulb-o ";
               } else
               {
-                document.getElementById("sensor-"+i+"-svetlo-stav").className = "fa fa-lightbulb-o text-warning";
+                document.getElementById("sensor-"+sensorID+"-svetlo-stav").className = "fa fa-lightbulb-o text-warning";
               }
             break;
         case "alarm":
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
+              $("#sensor-"+sensorID+"-name").html(device[i].devName);
+              $("#sensor-"+sensorID+"-time").html(device[i].devTime);
               if (device[i].devAlarm){
-                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle  text-danger";
+                document.getElementById("sensor-"+sensorID+"-alarm-stav").className = "fa fa-exclamation-triangle  text-danger";
               } else {
-                document.getElementById("sensor-"+i+"-alarm-stav").className = "fa fa-exclamation-triangle ";
+                document.getElementById("sensor-"+sensorID+"-alarm-stav").className = "fa fa-exclamation-triangle ";
               }
             break;
         case "brana":
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
-              document.getElementById("sensor-"+i+"-brana-left").style.width = device[8].devPosition+"%";
-              document.getElementById("sensor-"+i+"-brana-right").style.width = 100-device[8].devPosition+"%";
+              $("#sensor-"+sensorID+"-name").html(device[i].devName);
+              $("#sensor-"+sensorID+"-time").html(device[i].devTime);
+              document.getElementById("sensor-"+sensorID+"-brana-left").style.width = device[8].devPosition+"%";
+              document.getElementById("sensor-"+sensorID+"-brana-right").style.width = 100-device[8].devPosition+"%";
             break;
         case "kamera":
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
+              $("#sensor-"+sensorID+"-name").html(device[i].devName);
+              $("#sensor-"+sensorID+"-time").html(device[i].devTime);
               d = new Date();
-              document.getElementById("sensor-"+i+"-kamera-url").src = device[i].devCamIP+"?"+d.getTime();
+              document.getElementById("sensor-"+sensorID+"-kamera-url").src = device[i].devCamIP+"?"+d.getTime();
               // $('#sensor-'+i+'-boxWrap').css("height",auto);
             break;
         case "pocasi":
-              $("#sensor-"+i+"-name").html(device[i].devName);
-              $("#sensor-"+i+"-time").html(device[i].devTime);
+              $("#sensor-"+sensorID+"-name").html(device[i].devName);
+              $("#sensor-"+sensorID+"-time").html(device[i].devTime);
               d = new Date();
-              document.getElementById("sensor-"+i+"-pocasi-url").src = device[i].devWeatherIP+"?"+d.getHours();  //aktualizuje každou hodinu
+              document.getElementById("sensor-"+sensorID+"-pocasi-url").src = device[i].devWeatherIP+"?"+d.getHours();  //aktualizuje každou hodinu
         break;
         } //konec :switch:
 
@@ -292,3 +312,26 @@ Arduino.showDeviceDetail = function() {
   });
 
 }
+
+
+// animace tlačítka
+
+$( "#sensor-0-module-teplota" ).click(function() {
+  // $( "#box" ).addClass('animated pulse');
+  console.log("KLIKKKKKK");
+  $( "#sensor-0-module-teplota" ).animateCss('pulse');
+});
+
+$.fn.extend({
+  animateCss: function(animationName, callback) {
+    var animationEnd =
+      'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+    this.addClass('animated ' + animationName).one(animationEnd, function() {
+      $(this).removeClass('animated ' + animationName);
+      if (callback) {
+        callback();
+      }
+    });
+    return this;
+  },
+});
