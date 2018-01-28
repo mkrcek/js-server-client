@@ -1,18 +1,4 @@
-  // verze 2.0: HTML
-// HTML boxíky jsou generované podle JSON (typ informace a velikost)
-// na pořadí JSON již nezáleží
-// kamera má rozmer 6, jinak ostatni jsou 2
-
-//todo: využití kontejneru na jednotlive HTML senzory (teplota, hladina a tak)
-
-//udelat
-//- URL senzoru je jeho UUID (DONE)
-//- sensor-ID pojmenovat ne podle "i" ale podle UUID
-//- tim pak můhu přesne vyhledat BOX a s nim pracovat. Smazat, posunout...nahradit.
-
-
-// animace po kliknutí jednou na MAC alena iOS ne - jen obrázky
-
+<!-- //verze 2018-1-28 - kontejnery s HTML + klikaci tlačítka-->
 
 window.Arduino = {};
 
@@ -113,20 +99,20 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 switch (sensorType) {
   case "templateCam":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div id="sensor-ID-boxWrap" class="boxWrap col-xs-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-12 col-sm-6">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       tmpBoxName = '<div class="vlastniBox2 sensor-name"><span id="sensor-ID-name">Severní pól</span><span>  ---  </span> <i id="sensor-ID-time">25:61</i></div>';
       tmpBoxSensor = tmpBoxName + $("#"+sensorType).html();
     break;
   case "templateWeather":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       tmpBoxName = '<div class="vlastniBox2 sensor-name"><span id="sensor-ID-name">Severní pól</span><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxSensor = $("#"+sensorType).html();
      break;
    default:
-      tmpBoxWrap = '<div id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       tmpBoxName = '<div class="vlastniBox2 sensor-name"><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxSensor = $("#"+sensorType).html() + tmpBoxName;
@@ -179,8 +165,17 @@ Arduino.kontejnerShow = function() {
           $(document).on("click", "#sensor-"+sensorID+"-boxWrap" , function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
-              console.log($(this).attr("id")); //tisk cisla senzoru
-              $(this).animateCss('pulse');
+              // console.log($(this).attr("id")); //tisk cisla senzoru
+
+              // $(this).animateCss('pulse');
+              // $(this).addClass("fa fa-lightbulb-o");
+
+              alert("BOxík bude vymazán. ID: " + $(this).attr("id"));
+              $(this).addClass("hidden");
+
+
+              // alert("klik");
+
 
 //nejede na mobilu - je s obrazky. Ale jejich web jede.
 
