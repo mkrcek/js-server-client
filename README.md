@@ -1,12 +1,12 @@
-#Doomaster
+# Doomaster
 
 
 ----------
 
 
-##Co nového ve verzi
+## Co nového ve verzi
 
-###2018-1-28
+### 2018-1-28
 -------------
 
 
@@ -15,10 +15,10 @@ Verze obsahuje velké změny v kódu JS. Nově používám vlastní kontejnery p
 Druhou funkcí je klikatelný BOX/senzor
 
 
-##Podrobnosti:
+## Podrobnosti:
 
 
-###JSON
+### JSON
  ----------
 
 - nezáleží na pořadí, jen na UNID
@@ -27,7 +27,7 @@ device[i].devId
 ```
 
 
-###HTML
+### HTML
  ----------
 
 Kompletně nová práce s obsahem
@@ -51,7 +51,7 @@ Kompletně nová práce s obsahem
 . tím pak mohu přesně vyhledat BOX a s nim pracovat. Smazat, posunout... nahradit.
 
 
-###BUTTON
+### BUTTON
  ---------------
 
 - každý BoxWrap je tlačítkem
