@@ -10,6 +10,10 @@
 //- sensor-ID pojmenovat ne podle "i" ale podle UUID
 //- tim pak můhu přesne vyhledat BOX a s nim pracovat. Smazat, posunout...nahradit.
 
+
+// animace po kliknutí jednou na MAC alena iOS ne - jen obrázky
+
+
 window.Arduino = {};
 
 window.onload = function() {
@@ -96,8 +100,6 @@ $('#device-detail-'+itemID+' form').submit((event) => {
 
 
 
-
-
 // ***********************************
 
 var tmpBoxWrap = '';
@@ -178,9 +180,17 @@ Arduino.kontejnerShow = function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
               console.log($(this).attr("id")); //tisk cisla senzoru
+              $(this).animateCss('pulse');
+
+//nejede na mobilu - je s obrazky. Ale jejich web jede.
+
+              // $(this).css("background-color", "Blue");
+              // $(this).addClass('animated bounceOutLeft');
+              // $( this ).hide("display": "none");
 
               // alert($(this).attr("value"));
           });
+
 
 
 
@@ -314,13 +324,7 @@ Arduino.showDeviceDetail = function() {
 }
 
 
-// animace tlačítka
-
-$( "#sensor-0-module-teplota" ).click(function() {
-  // $( "#box" ).addClass('animated pulse');
-  console.log("KLIKKKKKK");
-  $( "#sensor-0-module-teplota" ).animateCss('pulse');
-});
+// animace tlačítka - přidání rozšíření do jQuery
 
 $.fn.extend({
   animateCss: function(animationName, callback) {
