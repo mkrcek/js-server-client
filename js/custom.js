@@ -191,8 +191,9 @@ Arduino.showDeviceDetail = function() {
     for (var i = 0; i < device.length; i++) {
 
         // //aby byl box stejně široký jako vysoky
-        sirka = $('#sensor-'+i+'-boxWrap').css("width");
-        $('#sensor-'+i+'-boxWrap').css("height", sirka);
+
+        // sirka = $('#sensor-'+i+'-boxWrap').css("width");
+        // $('#sensor-'+i+'-boxWrap').css("height", sirka);
 
         // podle typu device zobrazí položky - ostatní jsou stále neviditelné
         switch (device[i].devType) {
@@ -273,6 +274,7 @@ Arduino.showDeviceDetail = function() {
               $("#sensor-"+i+"-time").html(device[i].devTime);
               d = new Date();
               document.getElementById("sensor-"+i+"-kamera-url").src = device[i].devCamIP+"?"+d.getTime();
+              // $('#sensor-'+i+'-boxWrap').css("height",auto);
             break;
         case "pocasi":
               $("#sensor-"+i+"-name").html(device[i].devName);

@@ -25,12 +25,12 @@ h2 {
 
 #lane1 {
   /* background-color: red; */
-  background-image: url("../images/image.jpg");
+  /* background-image: url("../images/image.jpg"); */
    background-repeat: no-repeat;
    background-position: left top;
    background-attachment: fixed;
    /* background-size: cover; */
-   background-size: contain;
+   /* background-size: contain; */
 
 }
 
@@ -147,24 +147,22 @@ h2 {
   margin:0px;
 }
 
-
-
 .boxWrap{
-  /* border: 1px solid red; */
+  /* border: 1px solid gray; */
   /* border-radius: 10%; */
   /* padding: 10; */
   /* width: 100px;
   height: 100px;
   font-size: 1vw; */
   /* margin: 3px; */
-  padding: 10px;
+  padding: 5px;
 }
 
 .boxContent{
   padding: 10px;
   /* border: 2px solid Black; */
   border-radius: 10%;
-  background-color:rgba(192,192,192,0.7);
+  background-color:rgba(192,192,192,0.2);
 
 }
 
