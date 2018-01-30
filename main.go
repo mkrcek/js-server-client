@@ -91,7 +91,8 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		myHomeDeviceSetup[11].DevType = "voda"
 
 
-		myHomeDeviceSetup[6].DevCamIP = "http://192.168.0.19/jpg/image.jpg"
+		//myHomeDeviceSetup[6].DevCamIP = "http://192.168.0.19/jpg/image.jpg"
+		myHomeDeviceSetup[6].DevCamIP = "http://10.66.1.85/jpg/image.jpg"
 		//myHomeDeviceSetup[9].DevCamIP = "http://192.168.0.40/jpg/image.jpg"
 		myHomeDeviceSetup[7].DevCamIP = "http://192.168.0.26/jpg/image.jpg"
 	}

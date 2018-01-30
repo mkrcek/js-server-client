@@ -4,11 +4,15 @@
 window.Arduino = {};
 
 window.onload = function() {
+
+   var mojeUrl = window.location.protocol + "//" + window.location.host+'/select/devices';
   Arduino.axios = axios.create({
     //baseURL: 'http://192.168.0.25:1818/select/devices/',
-    // baseURL: 'http://localhost:1818/select/devices/',
-    baseURL: 'http://192.168.0.20:1818/select/devices/',
 
+     //baseURL: 'http://localhost:1818/select/devices/',
+    //baseURL: 'http://192.168.0.20:1818/select/devices/',
+    //baseURL: 'http://10.66.1.71:1818/select/devices/',
+    baseURL: mojeUrl,
     timeout: 100000
   });
 
@@ -233,11 +237,11 @@ Arduino.showDeviceDetail = function() {
 
                switch (true) {
                  case tempVal<3:
-                      $('#sensor-'+sensorID+'-boxContent').css("background-color", "Blue");
+                      $('#sensor-'+sensorID+'-boxContent').css("background-color", "CornflowerBlue");
                       $('#sensor-'+sensorID+'-boxContent').css("color", "AliceBlue");
                  break;
                  case tempVal<16:
-                   $('#sensor-'+sensorID+'-boxContent').css("background-color", "CornflowerBlue");
+                   $('#sensor-'+sensorID+'-boxContent').css("background-color", "DeepSkyBlue");
                    $('#sensor-'+sensorID+'-boxContent').css("color", "Black");
                  break;
                  case tempVal<21:
