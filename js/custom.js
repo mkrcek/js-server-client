@@ -6,12 +6,13 @@ window.Arduino = {};
 window.onload = function() {
 
    var mojeUrl = window.location.protocol + "//" + window.location.host+'/select/devices';
-  Arduino.axios = axios.create({
-    //baseURL: 'http://192.168.0.25:1818/select/devices/',
+   //baseURL: 'http://192.168.0.25:1818/select/devices/',
 
-     //baseURL: 'http://localhost:1818/select/devices/',
-    //baseURL: 'http://192.168.0.20:1818/select/devices/',
-    //baseURL: 'http://10.66.1.71:1818/select/devices/',
+    //baseURL: 'http://localhost:1818/select/devices/',
+   //baseURL: 'http://192.168.0.20:1818/select/devices/',
+   mojeUrl = 'http://localhost:1818/select/devices/',
+
+   Arduino.axios = axios.create({
     baseURL: mojeUrl,
     timeout: 100000
   });
@@ -133,6 +134,13 @@ switch (sensorType) {
 
 }
 
+function compare(a,b) {
+   if (a.devOrder < b.devOrder)
+     return -1;
+   if (a.devOrder > b.devOrder)
+     return 1;
+   return 0;
+ }
 
 
 Arduino.kontejnerShow = function() {
@@ -143,6 +151,29 @@ Arduino.kontejnerShow = function() {
     Arduino.axios.get("/")
     .then( function (response) {
         var device = response.data;
+
+        console.log(device);
+        //setřídění podle devOrder
+         device = device.sort(function(a,b) {
+            // return a.devOrder - b.devOrder;
+            if (a.devOrder < b.devOrder)
+              return -1;
+            if (a.devOrder > b.devOrder)
+              return 1;
+            return 0;
+         });
+
+         console.log(device);
+        //  console.log(setridene);
+        //  console.log("-----------");
+        //
+        //  setridene.sort(compare);
+
+         //
+         // setridene.sort(function(a,b) {
+         //   return a[1].devOrder - b[1].devOrder;
+         // });
+         // console.log(setridene);
 
         for (var i = 0; i < device.length; i++) {
           // console.log(device[i].devType);
