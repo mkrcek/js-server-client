@@ -144,15 +144,15 @@ Arduino.kontejnerShow = function() {
     .then( function (response) {
         var device = response.data;
 
-        //setřídění podle devOrder
-         // device = device.sort(function(a,b) {
-         //    // return a.devOrder - b.devOrder;
-         //    if (a.devOrder < b.devOrder)
-         //      return -1;
-         //    if (a.devOrder > b.devOrder)
-         //      return 1;
-         //    return 0;
-         // });
+        // setřídění podle devOrder
+         device = device.sort(function(a,b) {
+            // return a.devOrder - b.devOrder;
+            if (a.devOrder < b.devOrder)
+              return -1;
+            if (a.devOrder > b.devOrder)
+              return 1;
+            return 0;
+         });
 
 
         for (var i = 0; i < device.length; i++) {
