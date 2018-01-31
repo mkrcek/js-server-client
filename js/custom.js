@@ -302,9 +302,10 @@ Arduino.showDeviceDetail = function() {
         case "kamera":
               $("#sensor-"+sensorID+"-name").html(device[i].devName);
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
+              $("#sensor-"+sensorID+"-time").addClass ("top-left");  //zobrazení času v rohu obrázku
               d = new Date();
               document.getElementById("sensor-"+sensorID+"-kamera-url").src = device[i].subtype+"?"+d.getTime();
-              // $("#sensor-"+sensorID+"-time").addClass ("top-left");
+
               // $('#sensor-'+i+'-boxWrap').css("height",auto);
             break;
         case "pocasi":

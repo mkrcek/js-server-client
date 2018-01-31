@@ -202,3 +202,12 @@ h2 {
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
+
+
+/* kamera text LIVE v rohu */
+.top-left {
+    position: absolute;
+    top: 5rem;
+    left: 18px;
+    background-color: white;
+}
