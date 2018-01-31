@@ -6,6 +6,21 @@
 
 ## Co nového ve verzi
 
+### 2018-1-31
+
+Změna API
+- Nové API, které obsahuje nove polozky, zejmena hodnotu "value", "subtype"
+- Pořadí senzorů je dáno proměnou "devOrder"
+- příklad noveho JSON v adresari /vzory/vzorova-server-data.json
+- další detaily v dm105.docs.apiary.io
+
+
+Frontend
+- Všechny položky jsou setříděné podle parametru "devOrder" (dříve podle počadí v JSON)
+- Kamera: v levém rohu fotky zobrazuje čas pořízení snímku
+
+==================================
+
 ### 2018-1-28
 -------------
 

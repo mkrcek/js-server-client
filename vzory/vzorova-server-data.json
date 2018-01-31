@@ -1,0 +1,111 @@
+[{
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678900,
+	"devOrder": 0,
+	"devPriority": 0,
+	"devType": "teplota",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": -20,
+	"devName": "0 - Zahradní teploměr",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678901,
+	"devOrder": 4,
+	"devPriority": 0,
+	"devType": "voda",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": 16,
+	"devName": "1 - bazén",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678902,
+	"devOrder": 5,
+	"devPriority": 0,
+	"devType": "svetlo",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": 1,
+	"devName": "2 - Vanocni stromek",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678903,
+	"devOrder": 6,
+	"devPriority": 0,
+	"devType": "alarm",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": 0,
+	"devName": "3 - Pohyb zahrada",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678904,
+	"devOrder": 11,
+	"devPriority": 0,
+	"devType": "brana",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": 16,
+	"devName": "4 - Brána",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678905,
+	"devOrder": 8,
+	"devPriority": 0,
+	"devType": "kamera",
+	"subtype": "http://192.168.0.26/jpg/image.jpg",
+	"devTime": "18:00:10",
+	"value": 0,
+	"devName": "5 - Kamera Terasa",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678906,
+	"devOrder": 9,
+	"devPriority": 0,
+	"devType": "kamera",
+	"subtype": "http://192.168.0.19/jpg/image.jpg",
+	"devTime": "18:00:10",
+	"value": 0,
+	"devName": "6 - Kamera strom",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678907,
+	"devOrder": 10,
+	"devPriority": 0,
+	"devType": "pocasi",
+	"subtype": "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
+	"devTime": "18:00:10",
+	"value": 0,
+	"devName": "7 - Počasí",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 1234567898,
+	"devOrder": 1,
+	"devPriority": 0,
+	"devType": "teplota",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": -12,
+	"devName": "8 - Zahradní teploměr 2",
+	"visible": true
+}, {
+	"devSerTime": "2018-01-31 18:00:10",
+	"devId": 12345678909,
+	"devOrder": 2,
+	"devPriority": 0,
+	"devType": "teplota",
+	"subtype": "",
+	"devTime": "18:00:10",
+	"value": -11,
+	"devName": "9 - Zahradní teploměr 3",
+	"visible": true
+}]
