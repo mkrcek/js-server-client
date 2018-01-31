@@ -17,26 +17,30 @@ type DeviceSetup struct {//for JSON
 	DevOrder	int		`json:"devOrder"`			//** pořadí 1-31//
 	DevPriority	int		`json:"devPriority"`		//** priorita 1-31//
 	DevType		string 	`json:"devType"`
+	Subtype		string 	`json:"subtype"`
 	DevTime   	string 	`json:"devTime"`
-	DevTemp  	int 	`json:"devTemp"`
-	DevLight 	int 	`json:"devLight"`
-	DevAlarm 	bool 	`json:"devAlarm"`
-	DevWater	int 	`json:"devWater"`
-	DevPosition int 	`json:"devPosition"`	//dveře//
-	DevCamIP	string 	`json:"devCamIP"`
+	Value 		int		`json:"value"`
 	DevName 	string 	`json:"devName"`
-	DevWeather	string 	`json:"devWeatherIP"`
+	Visible		bool	`json:"visible"`
 
+	//zrušeno:
+		// devTemp = value
+		// devWater = value
+		// devLight = value
+		// devAlarm = value
+		// devPosition = value
+		//devCamIP = subtype
+		//devWeatherIP = subtype
+	//
 }
 
 var hodnotaPut = DeviceSetup{				//testovaci
 	DevId:      1000001,
 	DevTime:  	time.Now().Format("2006-01-02 15:04:05"),
 	DevName:  	"testovacka",
-	DevAlarm:  false,
 	}
 
-var numberOfRows = 13                                     //pocet zarizeni
+var numberOfRows = 7                                     //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
 
@@ -61,43 +65,152 @@ func main() {
 
 
 func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
+	t := time.Now()
 
-	for i := 0; i < numberOfRows; i++ {
-		t := time.Now()
-		myHomeDeviceSetup[i] = DeviceSetup{
+	//teplota zahrada
+	 	myHomeDeviceSetup[0] = DeviceSetup{
 			DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678900 + i,
-			DevOrder:    rand.Intn(numberOfRows+100), //****1-31
-			DevPriority: 0,                       //****1-31
+			DevId:       12345678900,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
 			DevType:     "teplota",
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			DevTemp:     t.Second() + i - 30,
-			DevLight:    t.Second() / 10,
-			DevAlarm:    t.Second()%2 == 0,
-			DevWater:    time.Now().Second() * 100 / 60,
-			DevPosition: time.Now().Second() * 100 / 60,
-			DevCamIP:    "http://192.168.0.26/jpg/image.jpg",
-			DevName:     "bouda " + strconv.Itoa(i),
-			DevWeather:  "http://http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
+			Value:     	t.Second() - 30,
+			DevName:     "0 - Zahradní teploměr",
+			Visible:	true,
 		}
-	}
-	myHomeDeviceSetup[0].DevType = "teplota"
-	myHomeDeviceSetup[1].DevType = "svetlo"
-	myHomeDeviceSetup[2].DevType = "brana"
-	myHomeDeviceSetup[3].DevType = "voda"
-	myHomeDeviceSetup[4].DevType = "alarm"
-	myHomeDeviceSetup[5].DevType = "pocasi"
-	myHomeDeviceSetup[6].DevType = "kamera"
-	myHomeDeviceSetup[7].DevType = "kamera"
-	myHomeDeviceSetup[8].DevType = "voda"
-	myHomeDeviceSetup[9].DevType = "teplota"
-	myHomeDeviceSetup[10].DevType = "svetlo"
-	myHomeDeviceSetup[11].DevType = "voda"
 
-	myHomeDeviceSetup[6].DevCamIP = "http://192.168.0.19/jpg/image.jpg"
-	//myHomeDeviceSetup[6].DevCamIP = "http://10.66.1.85/jpg/image.jpg"
-	myHomeDeviceSetup[9].DevCamIP = "http://192.168.0.40/jpg/image.jpg"
-	myHomeDeviceSetup[7].DevCamIP = "http://192.168.0.26/jpg/image.jpg"
+	//voda
+		myHomeDeviceSetup[1] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678901,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "voda",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       time.Now().Second() * 100 / 60,
+			DevName:     "1 - bazén",
+			Visible:	true,
+		}
+
+	//svetlo
+		myHomeDeviceSetup[2] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678902,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "svetlo",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       0,
+			DevName:     "2 - Vanocni stromek",
+			Visible:	true,
+		}
+	//alarm
+		myHomeDeviceSetup[3] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678903,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "alarm",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       0,
+			DevName:     "3 - Pohyb zahrada",
+			Visible:	true,
+		}
+	//brana
+		myHomeDeviceSetup[4] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678904,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "brana",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       44,
+			DevName:     "4 - Brána",
+			Visible:	true,
+		}
+	//kamera
+		myHomeDeviceSetup[5] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678905,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "kamera",
+			Subtype:	 "http://192.168.0.26/jpg/image.jpg",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       0,
+			DevName:     "5 - Kamera Terasa",
+			Visible:	true,
+		}
+
+	//kamera 2
+		myHomeDeviceSetup[6] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678906,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "kamera",
+			Subtype:	 "http://192.168.0.40/jpg/image.jpg",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       0,
+			DevName:     "6 - Kamera strom",
+			Visible:	true,
+		}
+
+	//pocasi
+		myHomeDeviceSetup[6] = DeviceSetup{
+			DevSerTime:  t.Format("2006-01-02 15:04:05"),
+			DevId:       12345678907,
+			DevOrder:    rand.Intn(numberOfRows+100), //****1/31
+			DevPriority: 0,                       //****1/31
+			DevType:     "pocasi",
+			Subtype:	 "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
+			DevTime:     t.Format("2006-01-02 15:04:05"),
+			Value:       0,
+			DevName:     "7 - Počasí",
+			Visible:	true,
+		}
+
+
+
+
+
+	//for i := 0; i < numberOfRows; i++ {
+	//	t := time.Now()
+	//	myHomeDeviceSetup[i] = DeviceSetup{
+	//		DevSerTime:  t.Format("2006-01-02 15:04:05"),
+	//		DevId:       12345678900 + i,
+	//		DevOrder:    rand.Intn(numberOfRows+100), //****1-31
+	//		DevPriority: 0,                       //****1-31
+	//		DevType:     "teplota",
+	//		DevTime:     t.Format("2006-01-02 15:04:05"),
+	//		DevTemp:     t.Second() + i - 30,
+	//		DevLight:    t.Second() / 10,
+	//		DevAlarm:    t.Second()%2 == 0,
+	//		DevWater:    time.Now().Second() * 100 / 60,
+	//		DevPosition: time.Now().Second() * 100 / 60,
+	//		DevCamIP:    "http://192.168.0.26/jpg/image.jpg",
+	//		DevName:     "bouda " + strconv.Itoa(i),
+	//		DevWeather:  "http://http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
+	//	}
+	//}
+	//myHomeDeviceSetup[0].DevType = "teplota"
+	//myHomeDeviceSetup[1].DevType = "svetlo"
+	//myHomeDeviceSetup[2].DevType = "brana"
+	//myHomeDeviceSetup[3].DevType = "voda"
+	//myHomeDeviceSetup[4].DevType = "alarm"
+	//myHomeDeviceSetup[5].DevType = "pocasi"
+	//myHomeDeviceSetup[6].DevType = "kamera"
+	//myHomeDeviceSetup[7].DevType = "kamera"
+	//myHomeDeviceSetup[8].DevType = "voda"
+	//myHomeDeviceSetup[9].DevType = "teplota"
+	//myHomeDeviceSetup[10].DevType = "svetlo"
+	//myHomeDeviceSetup[11].DevType = "voda"
+	//
+	//myHomeDeviceSetup[6].DevCamIP = "http://192.168.0.19/jpg/image.jpg"
+	////myHomeDeviceSetup[6].DevCamIP = "http://10.66.1.85/jpg/image.jpg"
+	//myHomeDeviceSetup[9].DevCamIP = "http://192.168.0.40/jpg/image.jpg"
+	//myHomeDeviceSetup[7].DevCamIP = "http://192.168.0.26/jpg/image.jpg"
 
 
 	fmt.Println(myHomeDeviceSetup)
@@ -112,12 +225,20 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		myHomeDeviceSetup[i].DevSerTime = t.Format("2006-01-02 15:04:05")
 		myHomeDeviceSetup[i].DevTime = t.Format("15:04:05")
 
-		myHomeDeviceSetup[i].DevTemp = t.Second()+i-30
-		myHomeDeviceSetup[i].DevLight =	t.Second()/10
-		myHomeDeviceSetup[i].DevAlarm =	t.Second()%2 == 0
-		myHomeDeviceSetup[i].DevWater =	time.Now().Second()*100/60
-		myHomeDeviceSetup[i].DevPosition = time.Now().Second()*100/60
-		myHomeDeviceSetup[i].DevWeather = "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png"
+		switch myHomeDeviceSetup[i].DevType {
+		case "teplota":
+			myHomeDeviceSetup[i].Value = t.Second() + i - 30
+		case "voda":
+			myHomeDeviceSetup[i].Value = time.Now().Second() * 100 / 60
+		case "svetlo":
+			myHomeDeviceSetup[i].Value = t.Second() / 10
+		case "alarm":
+			myHomeDeviceSetup[i].Value = t.Second()%2
+		case "brana":
+			myHomeDeviceSetup[i].Value = time.Now().Second() * 100 / 60
+		}
+
+		fmt.Println(myHomeDeviceSetup[i])
 	}
 
 
@@ -150,7 +271,6 @@ func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 		DevSerTime: (t.Format(time.Kitchen)),
 		DevId:      12345678901,
 		DevTime:    "19:00",
-		DevTemp:  	time.Now().Second(),
 		DevName:  	"bouda",
 	}
 
@@ -320,7 +440,7 @@ func ApiPutIdem(w http.ResponseWriter, r *http.Request, itemID int) {
 	if (post.DevName != "") {
 		myHomeDeviceSetup[itemID].DevName = post.DevName
 	}  //jinak se zachová se puvodní název
-	myHomeDeviceSetup[itemID].DevLight = post.DevLight
+	myHomeDeviceSetup[itemID].Value = post.Value
 
 
 	//úprava hlavičky
@@ -351,7 +471,6 @@ func UpdateHodnota_old(w http.ResponseWriter, r *http.Request) {
 
 	hodnotaPut.DevTime = time.Now().Format("2006-01-02 15:04:05")
 	hodnotaPut.DevName = post.DevName
-	hodnotaPut.DevLight = post.DevLight
 
 
 	//úprava hlavičky

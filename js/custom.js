@@ -134,14 +134,6 @@ switch (sensorType) {
 
 }
 
-function compare(a,b) {
-   if (a.devOrder < b.devOrder)
-     return -1;
-   if (a.devOrder > b.devOrder)
-     return 1;
-   return 0;
- }
-
 
 Arduino.kontejnerShow = function() {
 
@@ -152,28 +144,16 @@ Arduino.kontejnerShow = function() {
     .then( function (response) {
         var device = response.data;
 
-        console.log(device);
         //setřídění podle devOrder
-         device = device.sort(function(a,b) {
-            // return a.devOrder - b.devOrder;
-            if (a.devOrder < b.devOrder)
-              return -1;
-            if (a.devOrder > b.devOrder)
-              return 1;
-            return 0;
-         });
-
-         console.log(device);
-        //  console.log(setridene);
-        //  console.log("-----------");
-        //
-        //  setridene.sort(compare);
-
-         //
-         // setridene.sort(function(a,b) {
-         //   return a[1].devOrder - b[1].devOrder;
+         // device = device.sort(function(a,b) {
+         //    // return a.devOrder - b.devOrder;
+         //    if (a.devOrder < b.devOrder)
+         //      return -1;
+         //    if (a.devOrder > b.devOrder)
+         //      return 1;
+         //    return 0;
          // });
-         // console.log(setridene);
+
 
         for (var i = 0; i < device.length; i++) {
           // console.log(device[i].devType);
@@ -209,17 +189,6 @@ Arduino.kontejnerShow = function() {
               alert("BOxík bude vymazán. ID: " + $(this).attr("id"));
               $(this).addClass("hidden");
 
-
-              // alert("klik");
-
-
-//nejede na mobilu - je s obrazky. Ale jejich web jede.
-
-              // $(this).css("background-color", "Blue");
-              // $(this).addClass('animated bounceOutLeft');
-              // $( this ).hide("display": "none");
-
-              // alert($(this).attr("value"));
           });
 
 
@@ -260,7 +229,7 @@ Arduino.showDeviceDetail = function() {
         switch (device[i].devType) {
 
           case "teplota":
-              var tempVal = device[i].devTemp;
+              var tempVal = device[i].value;
 
               $('#sensor-'+sensorID+'-name').html(device[i].devName);
               $('#sensor-'+sensorID+'-time').html(device[i].devTime);
@@ -293,11 +262,11 @@ Arduino.showDeviceDetail = function() {
           case "voda":
               $("#sensor-"+sensorID+"-name").html(device[i].devName);
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
-              $("#sensor-"+sensorID+"-voda-numb").html(device[i].devWater);
-              $("#sensor-"+sensorID+"-voda").height(device[i].devWater+"%");
+              $("#sensor-"+sensorID+"-voda-numb").html(device[i].value);
+              $("#sensor-"+sensorID+"-voda").height(device[i].value+"%");
 
               //změna barvy po dosažení 60%
-              if (device[i].devWater > 60){
+              if (device[i].value > 60){
                 document.getElementById("sensor-"+sensorID+"-voda").className = "progress-bar progress-bar-striped active progress-bar-danger";
               } else {
                 document.getElementById("sensor-"+sensorID+"-voda").className = "progress-bar progress-bar-striped active progress-bar-success"
@@ -308,7 +277,7 @@ Arduino.showDeviceDetail = function() {
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
 
               //jakože bliká
-              if ((device[i].devLight % 2) == 0){
+              if (device[i].value % 2 == 0){
                 document.getElementById("sensor-"+sensorID+"-svetlo-stav").className = "fa fa-lightbulb-o ";
               } else
               {
@@ -318,7 +287,7 @@ Arduino.showDeviceDetail = function() {
         case "alarm":
               $("#sensor-"+sensorID+"-name").html(device[i].devName);
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
-              if (device[i].devAlarm){
+              if (device[i].value == 0){
                 document.getElementById("sensor-"+sensorID+"-alarm-stav").className = "fa fa-exclamation-triangle  text-danger";
               } else {
                 document.getElementById("sensor-"+sensorID+"-alarm-stav").className = "fa fa-exclamation-triangle ";
@@ -327,21 +296,22 @@ Arduino.showDeviceDetail = function() {
         case "brana":
               $("#sensor-"+sensorID+"-name").html(device[i].devName);
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
-              document.getElementById("sensor-"+sensorID+"-brana-left").style.width = device[8].devPosition+"%";
-              document.getElementById("sensor-"+sensorID+"-brana-right").style.width = 100-device[8].devPosition+"%";
+              document.getElementById("sensor-"+sensorID+"-brana-left").style.width = device[i].value+"%";
+              document.getElementById("sensor-"+sensorID+"-brana-right").style.width = 100-device[i].value+"%";
             break;
         case "kamera":
               $("#sensor-"+sensorID+"-name").html(device[i].devName);
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
               d = new Date();
-              document.getElementById("sensor-"+sensorID+"-kamera-url").src = device[i].devCamIP+"?"+d.getTime();
+              document.getElementById("sensor-"+sensorID+"-kamera-url").src = device[i].subtype+"?"+d.getTime();
+              // $("#sensor-"+sensorID+"-time").addClass ("top-left");
               // $('#sensor-'+i+'-boxWrap').css("height",auto);
             break;
         case "pocasi":
               $("#sensor-"+sensorID+"-name").html(device[i].devName);
               $("#sensor-"+sensorID+"-time").html(device[i].devTime);
               d = new Date();
-              document.getElementById("sensor-"+sensorID+"-pocasi-url").src = device[i].devWeatherIP+"?"+d.getHours();  //aktualizuje každou hodinu
+              document.getElementById("sensor-"+sensorID+"-pocasi-url").src = device[i].subtype+"?"+d.getHours();  //aktualizuje každou hodinu
         break;
         } //konec :switch:
 
@@ -355,8 +325,8 @@ Arduino.showDeviceDetail = function() {
 }
 
 
-// animace tlačítka - přidání rozšíření do jQuery
 
+// animace tlačítka - přidání rozšíření do jQuery
 $.fn.extend({
   animateCss: function(animationName, callback) {
     var animationEnd =
