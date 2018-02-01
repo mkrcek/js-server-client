@@ -6,18 +6,28 @@
 
 ## Co nového ve verzi
 
-### 2018-1-31
+### 2018-2-1
 
 Změna API
-- Nové API, které obsahuje nove polozky, zejmena hodnotu "value", "subtype"
+- Nové API, které obsahuje nové položky, zejmena hodnotu "value", "subtype"
 - Pořadí senzorů je dáno proměnou "devOrder"
 - příklad noveho JSON v adresari /vzory/vzorova-server-data.json
-- další detaily v dm105.docs.apiary.io
+- další detaily v http://dm105.docs.apiary.io
+- v další verzi se sjednotí a učešou názvy
+
+- main.go program generuje a aktualizuje tado data.
 
 
 Frontend
-- Všechny položky jsou setříděné podle parametru "devOrder" (dříve podle počadí v JSON)
+- Všechny položky (senzory) jsou setříděné podle parametru "devOrder" (dříve podle pořadí v JSON)
 - Kamera: v levém rohu fotky zobrazuje čas pořízení snímku
+
+AlarmCam - DEMO
+- přidal jsem natvrdo ukázku video alarmu
+- nová html šablona: templateAlertcam
+- OBR: nova složka pro alarm obrazky: /activitylog/, v ní jsou uloženy obrázky pojmenované image-0.jpg až ... image-32.jpg
+- JS vykresluje a aktualizuje nový modul a v něm jsou zobrazené obrazky 0-32
+- pohyb pomocí tlačítek "Před" a "Další".
 
 ==================================
 

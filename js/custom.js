@@ -10,7 +10,9 @@ window.onload = function() {
 
     //baseURL: 'http://localhost:1818/select/devices/',
    //baseURL: 'http://192.168.0.20:1818/select/devices/',
-   mojeUrl = 'http://localhost:1818/select/devices/',
+
+   //pro interní testování pro refresh JS
+   //mojeUrl = 'http://localhost:1818/select/devices/',
 
    Arduino.axios = axios.create({
     baseURL: mojeUrl,
@@ -20,8 +22,14 @@ window.onload = function() {
   // Arduino.generateWeb();
 
 
+  //test generovani AlertCam
+  Arduino.alercamShow();
+
   //vygeneruje HTML pro všechny BOXíky v JSON
   Arduino.kontejnerShow();
+
+  //test generovani pro AlertCam
+  Arduino.showAlarmCam();
 
   Arduino.showDeviceDetail();
   //vygeneruje obsah pro všechny HTML-BOXíky v JSON
@@ -43,6 +51,7 @@ window.onload = function() {
 var myVar = setInterval(function(){ myTimer() }, 1000);
 function myTimer() {
     Arduino.hodiny ();
+    Arduino.showAlarmCam();   //test AlertCam
     Arduino.showDeviceDetail();                    //box na obrazovce
 }
 
@@ -103,6 +112,16 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 //vloži HTML podle template TEPLOTA dle sensorID
 
 switch (sensorType) {
+
+    // test securitycap
+  case "templateAlertcam":
+      //jine rozlozeni NAZVU a sirka GRIDU
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
+      tmpBoxName = '<div class="vlastniBox2 sensor-name"><span id="sensor-ID-name">Severní pól</span><span>  ---  </span> <i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxSensor = tmpBoxName + $("#"+sensorType).html();
+    break;
+
   case "templateCam":
       //jine rozlozeni NAZVU a sirka GRIDU
       tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-12 col-sm-6">\n   OBSAH\n</div>';
@@ -133,6 +152,48 @@ switch (sensorType) {
     return generatePage;
 
 }
+
+
+Arduino.alercamShow = function() {
+
+    var sensorType = "";
+    var sensorID = 0; //cislo senzoru UNID
+
+    var device;
+    //načtení z JSON bude zde
+    // device.devType = "alertcam";
+    // device.devId = 0;
+
+    sensorID = 0;
+    sensorType = "templateAlertcam";
+
+
+    $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
+        //rezervace budouciho kliku
+          $(document).on("click", "#sensor-"+sensorID+"-alertcam-btn-left" , function() {
+            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+            //tak se provede to, co je ve funkci:
+              if (poziceObrazkuAlertCam > 0) {
+                poziceObrazkuAlertCam --;
+              } else {
+                poziceObrazkuAlertCam = (pocetObratkuAlertCam -1 );
+              }
+              Arduino.showAlarmCam();//aktualizace obrazovky
+          });
+          $(document).on("click", "#sensor-"+sensorID+"-alertcam-btn-right" , function() {
+
+              if (poziceObrazkuAlertCam < pocetObratkuAlertCam-1) {
+                poziceObrazkuAlertCam ++;
+              } else {
+                poziceObrazkuAlertCam = 0;
+              }
+              Arduino.showAlarmCam();//aktualizace obrazovky
+          });
+
+
+
+}
+
 
 
 Arduino.kontejnerShow = function() {
@@ -192,8 +253,6 @@ Arduino.kontejnerShow = function() {
           });
 
 
-
-
         }
     })
     .catch(function (error) {
@@ -202,6 +261,42 @@ Arduino.kontejnerShow = function() {
 }
 
 
+
+
+var poziceObrazkuAlertCam = 0;
+var pocetObratkuAlertCam = 33;
+//pozice a celkovy obrazku na ALARMU
+
+Arduino.showAlarmCam = function() {
+
+  var sensorID = 0; //unikatni sensorID
+  var device;
+  var sensorType;
+  //bude načtení z JSON
+
+  sensorID = 0;
+  sensorType = "alertcam";
+  adresaObrazku = "activitylog/image"  //celá adresa pak bude /activitylog/image-1.jpg
+
+
+  switch (sensorType) {
+        case "alertcam":
+              $("#sensor-"+sensorID+"-name").html("AKCE v HALE");
+              $("#sensor-"+sensorID+"-time").html("31.12.2017 23:59");
+              $("#sensor-"+sensorID+"-time").addClass ("top-left");  //zobrazení času v rohu obrázku
+              $('#sensor-'+sensorID+'-boxContent').css("background-color", "Red");
+              //progress bar
+              document.getElementById("sensor-"+sensorID+"-alertcam-progress-l").style.width = ((poziceObrazkuAlertCam * 100)/pocetObratkuAlertCam) +"%";
+              //novy obrazek
+              document.getElementById("sensor-"+sensorID+"-alertcam-url").src = adresaObrazku+"-"+poziceObrazkuAlertCam+".jpg";
+
+            break;
+
+        } //konec :switch:
+
+
+
+}
 
 
 
