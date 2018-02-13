@@ -6,181 +6,293 @@
 
 <html>
 
-    <head>
+<head>
 
-        <title>Doomaster 1.02 </title>
+  <title>Doomaster 1.02 </title>
 
-        <meta charset="utf-8">
+  <meta charset="utf-8">
 
-        <meta name="description" content="Simple, clean, responsive website built with html5, CSS3, Js, jQuery and Bootstrap">
-        <meta name="keywords" content="web, design, html, css, html5, css3, javascript, jquery, bootstrap, development">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-     <!-- Google Fonts -->
-         <!-- pokud by byl problem stahovat online - tak zakomentovat -->
-
-        <link href='https://fonts.googleapis.com/css?family=Raleway:500italic,600italic,600,700,700italic,300italic,300,400,400italic,800,900' rel='stylesheet' type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600italic,700,900' rel='stylesheet' type='text/css'>
-
-      <!-- favicon -->
-        <link rel="icon" type="image/png" href="images/favicon.png">
-
-      <!-- CSS -->
-
-        <!-- reset -->
-        <link rel="stylesheet" href="css/mcleod-reset.css">
+  <meta name="description" content="Simple, clean, responsive website built with html5, CSS3, Js, jQuery and Bootstrap">
+  <meta name="keywords" content="web, design, html, css, html5, css3, javascript, jquery, bootstrap, development">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <!-- bootstrap-switch -->
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" /> -->
-             <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+  <!-- Google Fonts -->
+  <!-- pokud by byl problem stahovat online - tak zakomentovat -->
 
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Raleway:500italic,600italic,600,700,700italic,300italic,300,400,400italic,800,900' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600italic,700,900' rel='stylesheet' type='text/css'>
 
-        <!-- Fontawesome  -->
-        <link rel="stylesheet" href="css/font-awesome.min.css">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
 
-        <!-- Animate CSS -->
-        <link rel="stylesheet" type="text/css" href="css/animate.css">
+  <!-- CSS -->
 
-
-    <!-- muj vlastní CSS -->
-        <link rel="stylesheet" type="text/css" href="css/style.css">
-
-        <!-- responsive css -->
-        <!-- <link rel="stylesheet" type="text/css" href="css/responsive.css"> -->
-
-    </head>
+  <!-- reset -->
+  <link rel="stylesheet" href="css/mcleod-reset.css">
 
 
+  <!-- bootstrap-switch -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" /> -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+  <!-- Fontawesome  -->
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+  <!-- https://fontawesome.com/icons?d=gallery&q=cam -->
 
 
-    <body>
+  <!-- Animate CSS -->
+  <link rel="stylesheet" type="text/css" href="css/animate.css">
 
-<!-- Nadpis -->
-      <header id="HEADER" class=" bg-info">
-        <div class="container">
-          <div class="row ">
 
-          <!-- Nadpis -->
-            <div class="header-left col-xs-6 ">
-              <h3>Doomaster 0.12</h3>
-            </div>
+  <!-- muj vlastní CSS -->
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 
-          <!-- HODINY zobrazení času na SERVERZ -->
-            <div class="header-right col-xs-6 text-right">
-              <h4 id="server-time">25:62:62</h4>
-              <span>Lokální čas: </span>
-              <span id="hodiny">25:62:62</span>
+  <!-- responsive css -->
+  <!-- <link rel="stylesheet" type="text/css" href="css/responsive.css"> -->
 
-            </div>
+</head>
 
-<div id="log"></div>
 
-          </div>
 
+
+<body>
+
+  <!-- Nadpis -->
+  <header id="HEADER" class=" bg-info">
+    <div class="container">
+      <div class="row ">
+
+        <!-- Nadpis -->
+        <div class="header-left col-xs-4 ">
+          <p>+</p>
         </div>
-      </header>
+        <div class="header-center col-xs-4 ">
+          <p id="server-time">25:62:62</p>
+        </div>
+        <div class="header-right text-right col-xs-4 ">
+          <p>Edit</p>
+        </div>
+      </div>
+
+    </div>
+  </header>
 
 
-<!-- HTML templates -->
+  <!-- HTML templates -->
   <section id="myTemplate" class="hidden">
 
-        <!-- teplota -->
-        <div id="templateTemp">
-        <div id="sensor-ID-module-teplota" class=" temperature-value text-left" >
-            <span id="sensor-ID-teplota" class="button-teplota" >-99</span>&deg;
+    <!-- teplota -->
+    <div id="templateTemp">
+      <div id="sensor-ID-module-teplota" class="text-left">
+        <h1>
+            <span id="sensor-ID-teplota">-99</span>&deg;
             <i class="hidden fa fa-exclamation-triangle text-right"> </i>
-        </div>
-        </div>
+          </h1>
+      </div>
+    </div>
 
-        <!-- voda -->
-        <div id="templateWater">
-          <div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">
-            <div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">
-              <span id="sensor-ID-voda-numb">44%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- svetlo -->
-        <div id="templateLight">
-          <div id="sensor-ID-module-svetlo" class="  light-value">
-              <i id="sensor-ID-svetlo-stav" class="fa fa-lightbulb-o "></i>
-          </div>
-        </div>
-
-        <!-- alarm -->
-        <div id="templateAlarm">
-          <div id="sensor-ID-module-alarm" class="  alarm-value">
-              <i id="sensor-ID-alarm-stav" class="" ></i>
-          </div>
-        </div>
-
-        <!-- brána -->
-        <div id="templateGate">
-          <div id="sensor-ID-module-brana" class="  progress progress-bar-horizontal">
-            <div id="sensor-ID-brana-left" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%">
-            </div>
-            <div id="sensor-ID-brana-right" class="progress-bar progress-bar-success" role="progressbar" style="width:70%">
-            </div>
-          </div>
-        </div>
-
-        <!-- kamera -->
-        <div id="templateCam">
-          <div id="sensor-ID-module-kamera" class=" kameraBox kamera-value">
-              <div class="cam-value bg-danger">
-                  <img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-responsive">
-              </div>
-          </div>
-        </div>
-
-      <!-- pocasi -->
-      <div id="templateWeather">
-        <div id="sensor-ID-module-pocasi" class="pocasi-value">
-            <div class="cam-value bg-danger">
-                <img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">
-            </div>
+    <!-- voda -->
+    <div id="templateWater">
+      <div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">
+        <div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">
+          <span id="sensor-ID-voda-numb">44%</span>
         </div>
       </div>
+    </div>
 
-      <!-- security cam TEST -->
-      <div id="templateAlertcam">
-        <div id="sensor-ID-module-alertcam" class="alertcam-value">
-            <div class="alertcam-value bg-danger">
-                <img id="sensor-ID-alertcam-url" style="width:90%" src="activitylog/image-0.jpg" alt="POZOR" class="img-responsive">
-            </div>
-            <div class="progress progress-bar-horizontal">
-              <div id="sensor-ID-alertcam-progress-l" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%"></div>
-              </div>
-            <div class="text-center">
-              <button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> <<< - Před</button>
-              <button id="sensor-ID-alertcam-btn-right" type="button" class="btn ">Další - >>></button>
-            </div>
+    <!-- svetlo -->
+    <div id="templateLight">
+      <div id="sensor-ID-module-svetlo">
+        <i id="sensor-ID-svetlo-stav" class="fa fa-lightbulb-o "></i>
+      </div>
+    </div>
+
+    <!-- alarm -->
+    <div id="templateAlarm">
+      <div id="sensor-ID-module-alarm">
+        <i id="sensor-ID-alarm-stav" class=""></i>
+      </div>
+    </div>
+
+    <!-- brána -->
+    <div id="templateGate">
+      <div id="sensor-ID-module-brana" class="  progress progress-bar-horizontal">
+        <div id="sensor-ID-brana-left" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%">
+        </div>
+        <div id="sensor-ID-brana-right" class="progress-bar progress-bar-success" role="progressbar" style="width:70%">
         </div>
       </div>
-      <!-- security cam TEST -->
+    </div>
+
+    <!-- kamera -->
+    <div id="templateCam">
+      <div id="sensor-ID-module-kamera" class=" kameraBox kamera-value">
+        <div class="cam-value bg-danger">
+          <img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-responsive">
+        </div>
+      </div>
+    </div>
+
+    <!-- pocasi -->
+    <div id="templateWeather">
+      <div id="sensor-ID-module-pocasi" class="pocasi-value">
+        <div class="cam-value bg-danger">
+          <img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">
+        </div>
+      </div>
+    </div>
+
+    <!-- security cam TEST -->
+    <div id="templateAlertcam">
+      <div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">
+        <!-- <div class="">
+              <i class="fas fa-star"></i><i class="fas fa-video"></i><i class="fas fa-thermometer-empty"></i><i class="fas fa-lightbulb"></i>
+            </div> -->
+        <div class="alertcam-value bg-danger">
+          <img id="sensor-ID-alertcam-url" src="activitylog/image-0.jpg" alt="POZOR" class="img-thumbnail img-fluid" style="object-fit:cover; height:220px">
+        </div>
+        <div class="progress progress-bar-horizontal">
+          <div id="sensor-ID-alertcam-progress-l" class="progress-bar progress-bar-danger" role="progressbar" style="width:30%"></div>
+        </div>
+        <div class="text-center">
+          <button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> <<< - Před</button>
+          <button id="sensor-ID-alertcam-btn-right" type="button" class="btn ">Další - >>></button>
+        </div>
+      </div>
+    </div>
+    <!-- security cam TEST -->
 
 
   </section>
-<!-- konec templates -->
+  <!-- konec templates -->
 
 
 
 
-<!-- HLAVNÍ STRÁNKA -->
-      <section id="lane1" class="lane1 container">
-          <div id="boxScreen" class="boxScreen row">
+  <!-- HLAVNÍ STRÁNKA -->
+  <section id="lane1" class="lane1 container">
+    <div id="boxScreen" class="boxScreen row">
 
-            <!-- sem se vkládá obsah -->
+      <!-- sem se vkládá obsah -->
 
+
+      <!-- security content TEST -->
+      <div id="templateAlertcam" class="col-xs-12">
+        <div id="sensor-ID-module-alertcam" class="alertcam-value">
+          <div class="btn-group btn-group-justified">
+            <a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a>
+            <a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a>
+            <a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a>
+            <a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></a>
           </div>
 
-      </section>
+          <ul class="media-list alertList">
+            <li class="media force-overflow">
+              <div class="media-left ">
+                <a href="#">
+                          <img class="media-object" width="64" src="activitylog/image-0.jpg" alt="...">
+                        </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">04/12 Monday night</h4>
+                <p>05:21 - 05:26 (2 minutes)</p>
+              </div>
+              <div class="media-right">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </li>
+            <li class="media force-overflow">
+              <div class="media-left ">
+                <a href="#">
+                          <img class="media-object" width="64" src="activitylog/image-0.jpg" alt="...">
+                        </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">04/12 Monday night</h4>
+                <p>05:21 - 05:26 (2 minutes)</p>
+              </div>
+              <div class="media-right">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </li>
+            <li class="media force-overflow">
+              <div class="media-left ">
+                <a href="#">
+                          <img class="media-object" width="64" src="activitylog/image-0.jpg" alt="...">
+                        </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">04/12 Monday night</h4>
+                <p>05:21 - 05:26 (2 minutes)</p>
+              </div>
+              <div class="media-right">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </li>
+            <li class="media force-overflow">
+              <div class="media-left ">
+                <a href="#">
+                          <img class="media-object" width="64" src="activitylog/image-0.jpg" alt="...">
+                        </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">04/12 Monday night</h4>
+                <p>05:21 - 05:26 (2 minutes)</p>
+              </div>
+              <div class="media-right">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </li>
 
-<!-- HLAVNÍ STRÁNKA KONEC -->
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- security cam TEST -->
+
+
+
+    </div>
+
+  </section>
+
+  <!-- HLAVNÍ STRÁNKA KONEC -->
+
+<div class="fixed-bottom">...</div>
+
+  <!-- patička -->
+  <footer id="FOOTER" class="fixed-bottom">
+    <div class="container">
+      <div class="row ">
+
+        <nav class="navbar fixed-bottom navbar-light bg-light">
+          <a class="navbar-brand" href="#">Fixed bottom</a>
+        </nav>
+
+
+
+        <!-- Nadpis -->
+        <!-- <div class="header-left col-xs-4 ">
+          <p>+</p>
+        </div>
+        <div class="header-center col-xs-4 ">
+          <p id="server-time">25:62:62</p>
+        </div>
+        <div class="header-right text-right col-xs-4 ">
+          <p>Edit</p>
+        </div> -->
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- patička konec -->
 
 
 
@@ -188,22 +300,23 @@
 
 
 
-        <!-- Bootstrap JavaScript -->
-        <script src="js/jquery.js"></script>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="js/jquery.js"></script>
 
   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script> -->
-        <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
 
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script> -->
-        <script src="js/bootstrap-switch.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script> -->
+  <script src="js/bootstrap-switch.min.js"></script>
 
-        <!-- axios Js -->
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <!-- axios Js -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-        <!-- Custom Js -->
-        <script src="js/custom.js"></script>
+  <!-- Custom Js -->
+  <script src="js/custom.js"></script>
 
-    </body>
+</body>
 
 
 </html>
