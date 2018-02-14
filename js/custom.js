@@ -1,5 +1,3 @@
-<!-- //verze 2018-1-28 - kontejnery s HTML + klikaci tlačítka-->
-
 
 window.Arduino = {};
 
