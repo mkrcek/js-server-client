@@ -9,6 +9,12 @@
 
 ## 2018-2-14
 
+HTML moduly Templates
+- z index.HTML přesunuté do custom.js
+- nové pole tmpHtmlBox[] kde pozice je TYP polede API
+- vypnuté showAlarmCam, alercamShow (JS)
+- v index.HTML vypnute (komentovane) templateAlertcam
+
 bootstrap
 - migrace na 4.0
 - css3

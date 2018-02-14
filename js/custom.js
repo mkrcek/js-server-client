@@ -9,7 +9,7 @@ window.onload = function() {
   //baseURL: 'http://192.168.0.25:1818/select/devices/',
 
   //baseURL: 'http://localhost:1818/select/devices/',
-  //baseURL: 'http://192.168.0.20:1818/select/devices/',
+  // baseURL: 'http://192.168.0.22:1818/select/devices/',
 
   //pro interní testování pro refresh JS
   mojeUrl = 'http://localhost:1818/select/devices/',
@@ -186,7 +186,6 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
   ];
 
-
   switch (sensorType) {
 
     // test securitycap
@@ -284,8 +283,8 @@ Arduino.alercamShow = function() {
 
   var device;
   //načtení z JSON bude zde
-  // device.devType = "alertcam";
-  // device.devId = 0;
+  // device.webtype = "alertcam";
+  // device.unid = 0;
 
   sensorID = 0;
   sensorType = "templateAlertcam";
@@ -340,10 +339,10 @@ Arduino.kontejnerShow = function() {
 
 
       for (var i = 0; i < device.length; i++) {
-        // console.log(device[i].devType);
-        sensorID = device[i].devId;
-        switch (device[i].devType) {
-          case "teplota":
+        // console.log(device[i].webtype);
+        sensorID = device[i].unid;
+        switch (device[i].webtype) {
+          case "1": //teplota
             sensorType = "templateTemp";
             break;
           case "voda":
@@ -450,11 +449,11 @@ Arduino.showDeviceDetail = function() {
         // sirka = $('#sensor-'+i+'-boxWrap').css("width");
         // $('#sensor-'+i+'-boxWrap').css("height", sirka);
 
-        sensorID = device[i].devId;
+        sensorID = device[i].unid;
 
-        switch (device[i].devType) {
+        switch (device[i].webtype) {
 
-          case "teplota":
+          case "1":   //teplota
             var tempVal = device[i].value;
 
             $('#sensor-' + sensorID + '-name').html(device[i].devName);

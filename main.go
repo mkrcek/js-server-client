@@ -13,10 +13,10 @@ import (
 
 type DeviceSetup struct {//for JSON
 	DevSerTime	string 	`json:"devSerTime"`
-	DevId		int 	`json:"devId"`
+	DevId		int 	`json:"unid"`		//OK
 	DevOrder	int		`json:"devOrder"`			//** pořadí 1-31//
 	DevPriority	int		`json:"devPriority"`		//** priorita 1-31//
-	DevType		string 	`json:"devType"`
+	DevType		string 	`json:"webtype"`	//OK
 	Subtype		string 	`json:"subtype"`
 	DevTime   	string 	`json:"devTime"`
 	Value 		int		`json:"value"`
@@ -73,7 +73,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678900,
 			DevOrder:    0, // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
 			DevPriority: 0,                       //****1/31
-			DevType:     "teplota",
+			DevType:     "1",	//teplota
 			DevTime:     t.Format("2006-01-02 15:04:05"),
 			Value:     	t.Second() - 30,
 			DevName:     "0 - Zahradní teploměr",
@@ -177,7 +177,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       1234567898,
 			DevOrder:    1,
 			DevPriority: 0,                       //****1/31
-			DevType:     "teplota",
+			DevType:     "1", //teplota
 			DevTime:     t.Format("2006-01-02 15:04:05"),
 			Value:     	t.Second() - 30,
 			DevName:     "8 - Zahradní teploměr 2",
@@ -190,7 +190,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678909,
 			DevOrder:    2,
 			DevPriority: 0,                       //****1/31
-			DevType:     "teplota",
+			DevType:     "1",	//teplota
 			DevTime:     t.Format("2006-01-02 15:04:05"),
 			Value:     	t.Second() - 30,
 			DevName:     "9 - Zahradní teploměr 3",
@@ -214,7 +214,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		myHomeDeviceSetup[i].DevTime = t.Format("15:04:05")
 
 		switch myHomeDeviceSetup[i].DevType {
-		case "teplota":
+		case "1":
 			myHomeDeviceSetup[i].Value = t.Second() + i - 30
 		case "voda":
 			myHomeDeviceSetup[i].Value = time.Now().Second() * 100 / 60
