@@ -7,7 +7,9 @@
 ## Co nového ve verzi
 
 
-## 2018-2-14
+## 2018-2-14 
+
+Pěkná verze !!
 
 * nový bootstrap 4
 * podpora pro nové API JSON

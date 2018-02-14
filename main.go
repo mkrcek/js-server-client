@@ -71,7 +71,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//teplota zahrada
 	 	myHomeDeviceSetup[0] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678900,
+			DevId:       5678900,
 			DevOrder:    0, // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
 			DevPriority: 0,                       //****1/31
 			DevType:     "1",	//teplota
@@ -85,7 +85,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//voda
 		myHomeDeviceSetup[1] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678901,
+			DevId:       678901,
 			DevOrder:    4,
 			DevPriority: 0,                       //****1/31
 			DevType:     "5",	//voda
@@ -98,7 +98,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//svetlo
 		myHomeDeviceSetup[2] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678902,
+			DevId:       78902,
 			DevOrder:    5,
 			DevPriority: 0,                       //****1/31
 			DevType:     "6", //světlo
@@ -110,7 +110,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//alarm
 		myHomeDeviceSetup[3] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678903,
+			DevId:       678903,
 			DevOrder:    6,
 			DevPriority: 0,                       //****1/31
 			DevType:     "3",	//alarm - PIR
@@ -122,7 +122,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//brana
 		myHomeDeviceSetup[4] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678904,
+			DevId:       678904,
 			DevOrder:    11,
 			DevPriority: 0,                       //****1/31
 			DevType:     "7",	//brána
@@ -134,7 +134,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//kamera
 		myHomeDeviceSetup[5] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678905,
+			DevId:       678905,
 			DevOrder:    8,
 			DevPriority: 0,                       //****1/31
 			DevType:     "2",	//kamera - ne počasí
@@ -148,7 +148,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//kamera 2
 		myHomeDeviceSetup[6] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678906,
+			DevId:       78906,
 			DevOrder:    9,
 			DevPriority: 0,                       //****1/31
 			DevType:     "2",	//kamera - ne počasí
@@ -162,7 +162,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//pocasi
 		myHomeDeviceSetup[7] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678907,
+			DevId:       78907,
 			DevOrder:    10,
 			DevPriority: 0,                       //****1/31
 			DevType:     "8",		//počasí - ne kamera
@@ -176,7 +176,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//teplota zahrada2
 		myHomeDeviceSetup[8] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       1234567898,
+			DevId:       67898,
 			DevOrder:    1,
 			DevPriority: 0,                       //****1/31
 			DevType:     "1", //teplota
@@ -190,7 +190,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//teplota zahrada3
 		myHomeDeviceSetup[9] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       12345678909,
+			DevId:       78909,
 			DevOrder:    2,
 			DevPriority: 0,                       //****1/31
 			DevType:     "1",	//teplota
@@ -278,7 +278,7 @@ func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 	//var t = time.Now()
 	myDeviceSetup = DeviceSetup{
 		//DevSerTime: (t.Format(time.Kitchen)),
-		DevId:      12345678901,
+		DevId:      78901,
 		DevTime:    "19:00",
 		DevName:  	"bouda",
 	}
