@@ -5,15 +5,16 @@ window.Arduino = {};
 
 window.onload = function() {
 
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/select/devices';
-  //baseURL: 'http://192.168.0.25:1818/select/devices/',
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/doomaster/sensors/';
+  //baseURL: 'http://192.168.0.25:1818//doomaster/sensors/',
 
-  //baseURL: 'http://localhost:1818/select/devices/',
-  // baseURL: 'http://192.168.0.22:1818/select/devices/',
+  //baseURL: 'http://localhost:1818//doomaster/sensors/',
+  // baseURL: 'http://192.168.0.22:1818//doomaster/sensors/',
 
   //pro interní testování pro refresh JS
-  mojeUrl = 'http://localhost:1818/select/devices/',
+  // mojeUrl = 'http://localhost:1818/doomaster/sensors/',
 
+console.log(mojeUrl);
     Arduino.axios = axios.create({
       baseURL: mojeUrl,
       timeout: 100000
@@ -558,10 +559,8 @@ Arduino.showDeviceDetail = function() {
 
             //změna barvy po dosažení 60%
             if (device[i].value > 60) {
-              console.log("aho");
               document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-danger";
             } else {
-              console.log("ne");
               document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-success";
             }
             break;

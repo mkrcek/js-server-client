@@ -43,6 +43,9 @@ subtype (1 = Teplota)
 Implementace unid:0
 - tedy zobrazení systémového času
 
+Implementace nové adresy
+- /doomaster/sensors
+
 HTML moduly Templates
 - z index.HTML přesunuté do custom.js
 - nové pole tmpHtmlBox[] kde pozice je TYP podle API webtype
@@ -51,7 +54,7 @@ HTML moduly Templates
 
 
 bootstrap
-- migrace na 4.0
+- migrace na 4.0 + nové soubory v adresářích !!!
 - css3
 - jQuery
 - fontawesome
@@ -61,6 +64,10 @@ Layout
 - nový layout podle grafických "boxíků"
 - menu horní
 - menu spodní (patička)
+
+
+* chyby:
+- stránka má dole patičku - a tak se nezobrazí celá stránka. a počasí je přeplácnuté
 
 ### 2018-2-1
 

@@ -1,0 +1,35 @@
+API:
+
+aktivní a používané položky
+- unid
+- webtype
+- subtype
+- lrespiot
+- value
+- webname
+- weborder
+
+
+
+webtype
+//zde menší úprava v kameře vs počasí + další typy (pro testování)
+
+- 0 = NILL BOX
+
+- 1=Teplota,
+- 2=HTTP outDOOM Obrázek, //jen kamera
+- 3=PIR,
+- 4=PIR obrázek
+
+- 5 = voda
+- 6 = svetlo
+- 7 = brana
+- 8 = počasí
+
+
+Barevné schéma pro teplotu:
+
+subtype (1 = Teplota)
+- "1" = vzduch
+- "2" = kotel
+- "3" = bazén
