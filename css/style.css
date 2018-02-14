@@ -21,7 +21,6 @@ h1 {
   margin-bottom: 0px;
 }
 
-
 .hodiny {
   background: rgba(250, 254, 254, 0.5)
 }
@@ -35,9 +34,6 @@ h1 {
   /* background-size: cover; */
   /* background-size: contain; */
 }
-
-
-
 
 /* ========= Progress Bar vertical ============= */
 
@@ -97,6 +93,7 @@ h1 {
 }
 
 /* nejmenší box  1 x 1*/
+
 .boxContent {
   padding: 10px;
   /* border: 2px solid Black; */
@@ -104,24 +101,32 @@ h1 {
   border-radius: 10px;
   height: 106px;
   /* width: 106px; */
+  /* font-size: 14px; */
+  /* standardně je 1rem */
+  line-height: 1.2;
+  /* standardne je  */
+  /* line-height:1.5; */
   background-color: rgba(192, 192, 192, 0.2);
 }
 
 /*  odstranění mezery pod "<p>" pouze v této třídě*/
+
 .boxContent p {
-    margin: 0px;
+  margin: 0px;
 }
 
 /* box pro kameru 3 x kousek*/
+
 .boxContent-camera {
   padding: 10px;
   border-radius: 10px;
-  height: 302px;
+  /* height: 302px; */
   /* width: 358px; */
   background-color: rgba(192, 192, 192, 0.2);
 }
 
 /*  box 2 x 2*/
+
 .boxContent-pocasi {
   padding: 10px;
   border-radius: 10px;
@@ -135,8 +140,6 @@ h1 {
   /* padding-top: 1vw; */
   /* font-size: 3vw; */
 }
-
-
 
 .button {
   padding: 15px 25px;

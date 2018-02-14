@@ -23,13 +23,15 @@ window.onload = function() {
 
 
   //test generovani AlertCam
-  Arduino.alercamShow();
+  //ted jeste ne
+  // Arduino.alercamShow();
 
   //vygeneruje HTML pro všechny BOXíky v JSON
   Arduino.kontejnerShow();
 
   //test generovani pro AlertCam
-  Arduino.showAlarmCam();
+  //ted ješte ne:
+  // Arduino.showAlarmCam();
 
   Arduino.showDeviceDetail();
   //vygeneruje obsah pro všechny HTML-BOXíky v JSON
@@ -54,7 +56,7 @@ var myVar = setInterval(function() {
 
 function myTimer() {
   // Arduino.hodiny();
-  Arduino.showAlarmCam(); //test AlertCam
+  // Arduino.showAlarmCam(); //test AlertCam
   Arduino.showDeviceDetail(); //box na obrazovce
 }
 
@@ -114,32 +116,145 @@ var tmpBoxSensor = '';
 Arduino.kontejnerTemplate = function(sensorType, sensorID) {
   //vloži HTML podle templatů
 
+  //pole, ve kterém jsou HTML vzory jednotlivých čidel.
+
+  var tmpHtmlBox = [
+    // 0 = teplota
+    '<div id="sensor-ID-module-null" class="text-left">' +
+    '<h1>' +
+    '<span id="sensor-ID-null">NULL</span>' +
+    '</h1>' +
+    '</div>',
+    // 1 = Teplota
+    '<div id="sensor-ID-module-teplota" class="text-left">' +
+    '<h1>' +
+    '<span id="sensor-ID-teplota">-99</span>&deg;' +
+    '</h1>' +
+    '</div>',
+    // 2 = HTTP outDOOM Obrázek  (kamera nebo počasí)
+    '<div id="sensor-ID-module-kamera" class=" kameraBox kamera-value">' +
+    '<div class="cam-value bg-danger">' +
+    '<img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">' +
+    '</div>' +
+    '</div>',
+    //3 = PIR
+    '<div id="sensor-ID-module-alarm">' +
+    '<i id="sensor-ID-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>' +
+    '</div>',
+    //4 = PIR obrázek
+    '<div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">' +
+    '<div class="alertcam-value bg-danger">' +
+    '<img id="sensor-ID-alertcam-url" style="width:100%" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >' +
+    '</div>' +
+    '<div class="progress">' +
+    '<div id="sensor-ID-alertcam-progress-l" class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>' +
+    '</div>' +
+    '<div class="text-center">' +
+    '<button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> <<< - Před</button>' +
+    '<button id="sensor-ID-alertcam-btn-right" type="button" class="btn ">Další - >>></button>' +
+    '</div>' +
+    '</div>',
+
+    //další nové ne-0menové
+    // 5 = VODA
+    '<div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">' +
+    '<div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">' +
+    '  <span id="sensor-ID-voda-numb">44%</span>' +
+    '</div>' +
+    '</div>',
+
+    // 6 = svetlo
+    '<div id="sensor-ID-module-svetlo">' +
+    '<i id="sensor-ID-svetlo-stav" class="far fa-lightbulb"></i>' +
+    '</div>',
+
+    // 7 = brána
+    '<div id="sensor-ID-module-brana" class="progress">' +
+    '<div id="sensor-ID-brana-left" class="progress-bar bg-warning" role="progressbar" style="width:30%">' +
+    '</div>' +
+    '<div id="sensor-ID-brana-right" class="progress-bar bg-success" role="progressbar" style="width:70%">' +
+    '</div>' +
+    '</div>',
+
+    //8 = počasí : mělo by se sjednotit s KAMERA
+    '<div id="sensor-ID-module-pocasi" class="pocasi-value">' +
+    '<div class="cam-value bg-danger">' +
+    '<img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">' +
+    '</div>' +
+    '</div>'
+
+
+  ];
+
+
   switch (sensorType) {
 
     // test securitycap
     case "templateAlertcam":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-12 col-sm-6">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span>  ---  </span> <i id="sensor-ID-time">25:61</i></div>';
       tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
-      tmpBoxSensor = tmpBoxName + tmlIkony + $("#" + sensorType).html();
+      tmpBoxSensor = tmpBoxName + tmlIkony + tmpHtmlBox[4];
       break;
 
     case "templateCam":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-12 col-sm-6">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span>  ---  </span> <i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxSensor = tmpBoxName + $("#" + sensorType).html();
+      tmpBoxSensor = tmpBoxName + tmpHtmlBox[2];
       break;
     case "templateWeather":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-8 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-pocasi">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxSensor = $("#" + sensorType).html();
+      tmpBoxSensor = tmpHtmlBox[8];
       break;
+
+    case "templateTemp":
+      // teplota
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxSensor = tmpHtmlBox[1] + tmpBoxName;
+      break;
+
+    case "templateAlarm":
+      //PIR alarm
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxSensor = tmpHtmlBox[3] + tmpBoxName;
+      break;
+
+    case "templateWater":
+      //VODA
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
+      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxSensor = tmpHtmlBox[5] + tmpBoxName;
+      break;
+
+    case "templateLight":
+      //SVETLO
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxSensor = tmpHtmlBox[6] + tmpBoxName;
+      break;
+
+
+    case "templateGate":
+      //Brána
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName;
+      break;
+
 
       //a pro všechny ostatní typy: jako je třeba TEPLOTA
     default:
@@ -150,7 +265,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       //načte HTML template z index.html - casem se vloží přímo sem.
   } //end switch
 
-// generatePage: proměná s HTML kodem dle Template podle typu senzoru
+  // generatePage: proměná s HTML kodem dle Template podle typu senzoru
 
   generatePage = tmpBoxContent.replace("OBSAH", tmpBoxSensor);
   generatePage = tmpBoxWrap.replace("OBSAH", generatePage);
@@ -378,9 +493,9 @@ Arduino.showDeviceDetail = function() {
 
             //změna barvy po dosažení 60%
             if (device[i].value > 60) {
-              document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active progress-bar-danger";
+              document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-danger";
             } else {
-              document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active progress-bar-success"
+              document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-success";
             }
             break;
           case "svetlo":
@@ -389,19 +504,14 @@ Arduino.showDeviceDetail = function() {
 
             //jakože bliká
             if (device[i].value % 2 == 0) {
-              document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "fa fa-lightbulb-o ";
+              document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "far fa-lightbulb ";
             } else {
-              document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "fa fa-lightbulb-o text-warning";
+              document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "ffar fa-lightbulb text-warning";
             }
             break;
           case "alarm":
             $("#sensor-" + sensorID + "-name").html(device[i].devName);
             $("#sensor-" + sensorID + "-time").html(device[i].devTime);
-            if (device[i].value == 0) {
-              document.getElementById("sensor-" + sensorID + "-alarm-stav").className = "fa fa-exclamation-triangle  text-danger";
-            } else {
-              document.getElementById("sensor-" + sensorID + "-alarm-stav").className = "fa fa-exclamation-triangle ";
-            }
             break;
           case "brana":
             $("#sensor-" + sensorID + "-name").html(device[i].devName);

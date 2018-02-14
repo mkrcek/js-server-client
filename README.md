@@ -6,6 +6,19 @@
 
 ## Co nového ve verzi
 
+
+## 2018-2-14
+
+bootstrap
+- migrace na 4.0
+- css3
+- jQuery
+- fontawesome
+
+
+Layout
+- nový layout podle grafických "boxíků"
+
 ### 2018-2-1
 
 Změna API
