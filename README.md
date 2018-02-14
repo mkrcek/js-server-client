@@ -9,11 +9,46 @@
 
 ## 2018-2-14
 
+* nový bootstrap 4
+* podpora pro nové API JSON
+* grafika & layout
+
+podrobněji:
+
+API
+- unid
+- webtype
+- subtype
+- lrespiot
+- value
+- webname
+- weborder
+
+webtype
+- 0 = NILL BOX
+- 1=Teplota,
+- 2=HTTP outDOOM Obrázek, //jen kamera
+- 3=PIR,
+- 4=PIR obrázek
+- 5 = voda
+- 6 = svetlo
+- 7 = brana
+- 8 = počasí
+
+subtype (1 = Teplota)
+- "1" = vzduch
+- "2" = kotel
+- "3" = bazén
+
+Implementace unid:0
+- tedy zobrazení systémového času
+
 HTML moduly Templates
 - z index.HTML přesunuté do custom.js
-- nové pole tmpHtmlBox[] kde pozice je TYP polede API
+- nové pole tmpHtmlBox[] kde pozice je TYP podle API webtype
 - vypnuté showAlarmCam, alercamShow (JS)
 - v index.HTML vypnute (komentovane) templateAlertcam
+
 
 bootstrap
 - migrace na 4.0
@@ -24,6 +59,8 @@ bootstrap
 
 Layout
 - nový layout podle grafických "boxíků"
+- menu horní
+- menu spodní (patička)
 
 ### 2018-2-1
 

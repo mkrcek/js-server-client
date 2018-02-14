@@ -164,6 +164,10 @@ h1 {
   transform: translateY(4px);
 }
 
+.btn-center-text {
+  text-align: center;
+}
+
 /* kamera text LIVE v rohu */
 
 .top-left {

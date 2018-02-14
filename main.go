@@ -14,14 +14,14 @@ import (
 type DeviceSetup struct {//for JSON
 	DevSerTime	string 	`json:"devSerTime"`
 	DevId		int 	`json:"unid"`		//OK
-	DevOrder	int		`json:"devOrder"`			//** pořadí 1-31//
-	DevPriority	int		`json:"devPriority"`		//** priorita 1-31//
+	DevOrder	int		`json:"weborder"`	//OK
+	DevPriority	int		`json:"priority"`	//OK
 	DevType		string 	`json:"webtype"`	//OK
-	Subtype		string 	`json:"subtype"`
-	DevTime   	string 	`json:"devTime"`
-	Value 		int		`json:"value"`
-	DevName 	string 	`json:"devName"`
-	Visible		bool	`json:"visible"`
+	Subtype		string 	`json:"subtype"`	//OK
+	DevTime   	string 	`json:"lrespiot"`	//OK
+	Value 		string		`json:"value"`		//OK
+	DevName 	string 	`json:"webname"`	//OK
+	InVisible		int		`json:"invisible"`
 
 	//zrušeno:
 		// devTemp = value
@@ -40,7 +40,7 @@ var hodnotaPut = DeviceSetup{				//testovaci
 	DevName:  	"testovacka",
 	}
 
-var numberOfRows = 10                                     //pocet zarizeni
+var numberOfRows = 11                                     //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
 
@@ -74,10 +74,11 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevOrder:    0, // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
 			DevPriority: 0,                       //****1/31
 			DevType:     "1",	//teplota
+			Subtype:	 "1",   // vzduch
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:     	t.Second() - 30,
+			Value:     	 strconv.Itoa(t.Second() - 30),
 			DevName:     "0 - Zahradní teploměr",
-			Visible:	true,
+			InVisible:	0,
 		}
 
 	//voda
@@ -86,11 +87,11 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678901,
 			DevOrder:    4,
 			DevPriority: 0,                       //****1/31
-			DevType:     "voda",
+			DevType:     "5",	//voda
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       time.Now().Second() * 100 / 60,
+			Value:       strconv.Itoa(time.Now().Second() * 100 / 60),
 			DevName:     "1 - bazén",
-			Visible:	true,
+			InVisible:	0,
 		}
 
 	//svetlo
@@ -99,11 +100,11 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678902,
 			DevOrder:    5,
 			DevPriority: 0,                       //****1/31
-			DevType:     "svetlo",
+			DevType:     "6", //světlo
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       0,
+			Value:       "0",
 			DevName:     "2 - Vanocni stromek",
-			Visible:	true,
+			InVisible:	0,
 		}
 	//alarm
 		myHomeDeviceSetup[3] = DeviceSetup{
@@ -111,11 +112,11 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678903,
 			DevOrder:    6,
 			DevPriority: 0,                       //****1/31
-			DevType:     "alarm",
+			DevType:     "3",	//alarm - PIR
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       0,
+			Value:       "0",
 			DevName:     "3 - Pohyb zahrada",
-			Visible:	true,
+			InVisible:	0,
 		}
 	//brana
 		myHomeDeviceSetup[4] = DeviceSetup{
@@ -123,11 +124,11 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678904,
 			DevOrder:    11,
 			DevPriority: 0,                       //****1/31
-			DevType:     "brana",
+			DevType:     "7",	//brána
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       44,
+			Value:       "44",
 			DevName:     "4 - Brána",
-			Visible:	true,
+			InVisible:	0,
 		}
 	//kamera
 		myHomeDeviceSetup[5] = DeviceSetup{
@@ -135,12 +136,12 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678905,
 			DevOrder:    8,
 			DevPriority: 0,                       //****1/31
-			DevType:     "kamera",
+			DevType:     "2",	//kamera - ne počasí
 			Subtype:	 "http://192.168.0.26/jpg/image.jpg",
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       0,
+			Value:       "0",
 			DevName:     "5 - Kamera Terasa",
-			Visible:	true,
+			InVisible:	0,
 		}
 
 	//kamera 2
@@ -149,12 +150,12 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678906,
 			DevOrder:    9,
 			DevPriority: 0,                       //****1/31
-			DevType:     "kamera",
+			DevType:     "2",	//kamera - ne počasí
 			Subtype:	 "http://192.168.0.19/jpg/image.jpg",
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       0,
+			Value:       "0",
 			DevName:     "6 - Kamera strom",
-			Visible:	true,
+			InVisible:	0,
 		}
 
 	//pocasi
@@ -163,12 +164,12 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevId:       12345678907,
 			DevOrder:    10,
 			DevPriority: 0,                       //****1/31
-			DevType:     "pocasi",
+			DevType:     "8",		//počasí - ne kamera
 			Subtype:	 "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       0,
+			Value:       "0",
 			DevName:     "7 - Počasí",
-			Visible:	true,
+			InVisible:	0,
 		}
 
 	//teplota zahrada2
@@ -178,10 +179,11 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevOrder:    1,
 			DevPriority: 0,                       //****1/31
 			DevType:     "1", //teplota
+			Subtype:	 "3",   // bazen
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:     	t.Second() - 30,
-			DevName:     "8 - Zahradní teploměr 2",
-			Visible:	true,
+			Value:     	 strconv.Itoa(t.Second() - 10),
+			DevName:     "8 - Bazén 2",
+			InVisible:	0,
 		}
 
 	//teplota zahrada3
@@ -191,12 +193,21 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevOrder:    2,
 			DevPriority: 0,                       //****1/31
 			DevType:     "1",	//teplota
+			Subtype:	 "2",   // kotel
 			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:     	t.Second() - 30,
-			DevName:     "9 - Zahradní teploměr 3",
-			Visible:	true,
+			Value:     	 strconv.Itoa(t.Second() + 40),
+			DevName:     "9 - KOTEL 3",
+			InVisible:	0,
 		}
 
+	//systémový čas
+	myHomeDeviceSetup[10] = DeviceSetup{
+		DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       0,
+		DevOrder:    0,
+		DevType:     "-1",	//systémovy čas
+		Value:     	 t.Format("2006-01-02 15:04:05"),
+	}
 
 
 //	fmt.Println(myHomeDeviceSetup)
@@ -207,28 +218,36 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
 	//upraví  "tabulku" a odpoví na Get
+	t := time.Now()
+
+	//systémový čas
+	myHomeDeviceSetup[10].Value = t.Format("15:04:05")
 
 	for i:=0;i<numberOfRows ;i++  {
-		t := time.Now()
+
 		myHomeDeviceSetup[i].DevSerTime = t.Format("2006-01-02 15:04:05")
 		myHomeDeviceSetup[i].DevTime = t.Format("15:04:05")
 
 		switch myHomeDeviceSetup[i].DevType {
-		case "1":
-			myHomeDeviceSetup[i].Value = t.Second() + i - 30
-		case "voda":
-			myHomeDeviceSetup[i].Value = time.Now().Second() * 100 / 60
+		case "1":	//teplota
+			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() + i - 30)
+		case "5":	//voda
+			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 		case "svetlo":
-			myHomeDeviceSetup[i].Value = t.Second() / 10
+			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() / 10)
 		case "alarm":
-			myHomeDeviceSetup[i].Value = t.Second()%2
+			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
 		case "brana":
-			myHomeDeviceSetup[i].Value = time.Now().Second() * 100 / 60
+			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 		}
 
 	}
 
 
+	//zobrazí json
+	//**********************
+	//fmt.Println(myHomeDeviceSetup)
+	//**********************
 
 	//připraví data na JSON
 	b, err := json.Marshal(myHomeDeviceSetup)
@@ -247,6 +266,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
 	//uprava těla - vrátí do HTTP GET
 	w.Write(b)
+
 
 }
 
