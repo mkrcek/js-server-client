@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+	"io/ioutil"
 )
 
 type DeviceSetup struct {//for JSON
@@ -138,7 +139,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevOrder:    8,
 			DevPriority: 0,                       //****1/31
 			DevType:     "2",	//kamera - ne počasí
-			Subtype:	 "http://192.168.0.26/jpg/image.jpg",
+			Subtype:	 "liveimages/image5.jpg",
 			DevTime:     t.Format("2006-01-02 15:04:05"),
 			Value:       "0",
 			DevName:     "5 - Kamera Terasa",
@@ -152,7 +153,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 			DevOrder:    9,
 			DevPriority: 0,                       //****1/31
 			DevType:     "2",	//kamera - ne počasí
-			Subtype:	 "http://192.168.0.19/jpg/image.jpg",
+			Subtype:	 "liveimages/image6.jpg",
 			DevTime:     t.Format("2006-01-02 15:04:05"),
 			Value:       "0",
 			DevName:     "6 - Kamera strom",
@@ -218,6 +219,16 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 
 func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
+	const DMteplota  = "1"
+	const DMkamera  = "2"
+	const DMalarm = "3"
+	const DMalarmCam = "4"
+	const DMvoda  = "5"
+	const DMsvetlo  = "6"
+	const DMbrana = "7"
+	const DMpocasi = "8"
+
+
 	//upraví  "tabulku" a odpoví na Get
 	t := time.Now()
 
@@ -230,15 +241,33 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		myHomeDeviceSetup[i].DevTime = t.Format("15:04:05")
 
 		switch myHomeDeviceSetup[i].DevType {
-		case "1":	//teplota
+		case DMkamera:
+			{
+				var errImage error
+				fmt.Println("chci uložit fotku číslo ", i)
+				if i == 6 {
+					errImage = saveImageCam ("http://192.168.0.19/jpg/image.jpg", strconv.Itoa(i))
+				}
+				if i == 5 {
+					errImage = saveImageCam ("http://192.168.0.26/jpg/image.jpg", strconv.Itoa(i))
+				}
+
+				if errImage != nil {
+					fmt.Println("Bohužel obrázek nebyl uložen. Chyba: ", errImage)
+					//log.Fatal(errImage)
+				} else {
+					//fmt.Println("uloženo v čase,",t)
+				}
+			}
+		case DMteplota:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() + i - 30)
-		case "5":	//voda
+		case DMvoda:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
-		case "svetlo":
+		case DMsvetlo:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() / 10)
-		case "alarm":
+		case DMalarm:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
-		case "brana":
+		case DMbrana:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 		}
 
@@ -312,6 +341,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 
 	//nalezení, jeslti je zvolený nějaký konkrétní řádek /zázmam = ID (číslo)
 	//...číslo za lomítkem, např./devices/21293 = 21293
+
 	myURL := r.RequestURI                           // req.URL vs req.RequestURI		"/devices/21293"
 
 
@@ -541,4 +571,67 @@ func HandleOptionsCORS(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	w.WriteHeader(200)
 	return
+}
+
+
+
+//14.2.2018
+//koukání na kameru
+
+func saveImageCam(URLimage, cisloObrazku string) error{
+	//obrázek z kamery podle IP adresy
+
+	//fmt.Println("jdeme číst")
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", URLimage, nil)
+	if err != nil {
+		return err
+	}
+	resp, err := client.Do(req)
+	if err!= nil {
+		fmt.Println("*******", err)
+		return err
+	}
+	defer resp.Body.Close()
+
+	//fmt.Println("přečteno")
+	if err!= nil {
+		return err
+		//fmt.Println("1", errImage)
+		//log.Fatal(errImage)
+	}
+	//fmt.Println("obrazek načten")
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		fmt.Println("Chyba obrazku", err)
+		return err
+		//fmt.Println("2", errImage)
+		//log.Fatal(errImage)
+	}
+	//fmt.Println("obrazek readAll")
+	defer resp.Body.Close()
+
+	if err != nil {
+		return err
+		//fmt.Println("3", errImage)
+		//log.Fatal(errImage)
+	}
+
+	//uloží fotku na disk
+
+	//unikátní jméno podle času - teď nepotřebujeme
+	//actualTime := time.Now().Format("images/2006-01-02_15-04-05") + ".jpg"
+	//imageFileName := actualTime
+
+	imageFileName := "liveimages/image"+cisloObrazku+".jpg"
+		err = ioutil.WriteFile(imageFileName, body, 0644)
+	if err != nil {
+		return err
+		//fmt.Println("4", errImage)
+		//log.Fatal(errImage)
+	}
+	//fmt.Println("Obrázek uložen")
+	return err
 }
