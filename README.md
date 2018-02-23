@@ -20,6 +20,8 @@ https://trello.com/c/XQGXdlBa
 
 (DnN2NeIb): Petrohrad změněn na obrázek o velikosti 1x1px
 
+(dJYYk99J): Voda je Procentech. Změny barvy podle hodnoty Subtype. Mění barvu červená / zelená
+
 
 ## 23.2.2018
 

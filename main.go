@@ -274,6 +274,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 			myHomeDeviceSetup[i].Value = teploS
 		case DMvoda:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
+			myHomeDeviceSetup[i].Subtype = "30"
 		case DMsvetlo:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() / 10)
 		case DMalarm:

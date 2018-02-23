@@ -161,11 +161,19 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     //další nové ne-0menové
     // 5 = VODA
-    '<div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">' +
-    '<div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">' +
-    '  <span id="sensor-ID-voda-numb">44%</span>' +
-    '</div>' +
-    '</div>',
+    //dřívější model s progress barem:
+    // '<div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">' +
+    // '<div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">' +
+    // '  <span id="sensor-ID-voda-numb">44%</span>' +
+    // '</div>' +
+    // '</div>'
+    `<div id="sensor-ID-module-voda" class="text-left">
+        <h1>
+          <span id="sensor-ID-voda-numb">-99</span>
+        </h1>
+    </div>
+    `
+    ,
 
     // 6 = svetlo
     '<div id="sensor-ID-module-svetlo">' +
@@ -596,16 +604,32 @@ Arduino.showDeviceDetail = function() {
             var tempVal = Number(device[i].value);
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            $("#sensor-" + sensorID + "-voda-numb").html(tempVal);
-            $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
+            $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
+            // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
 
-            //změna barvy po dosažení 60%
-            if (tempVal > 60) {
-              document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-danger";
-            } else {
-              document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-success";
+            //změna barvy po dosažení hodnoty v Subtype
+            var temperatureScheme = Number(device[i].subtype); //barevné schéma pro teplotu
+            console.log(temperatureScheme);
+            switch (true) {
+
+              case tempVal < temperatureScheme:
+                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+                break;
+              default:
+                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
+                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
             }
+
+
+            // if (tempVal > 60) {
+            //   document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-danger";
+            // } else {
+            //   document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-success";
+            // }
+
             break;
+
           case DMsvetlo: //světlo
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
