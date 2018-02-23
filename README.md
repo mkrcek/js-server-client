@@ -18,6 +18,7 @@ https://trello.com/c/XQGXdlBa
 
 (C8EKpVJb): uprava barev teplot
 
+(DnN2NeIb): Petrohrad změněn na obrázek o velikosti 1x1px
 
 
 ## 23.2.2018
