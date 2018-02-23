@@ -15,6 +15,11 @@ import (
 type DeviceSetup struct {//for JSON
 	//DevSerTime	string 	`json:"devSerTime"`
 
+	//v budoucnu - omen má už
+	//1) refresh => změna na webrefresh
+	//JSON je vše string včetne 1/0 a bool
+
+
 	DevId		int 	`json:"unid"`		//OK
 	DevOrder	int		`json:"weborder"`	//OK
 	DevPriority	int		`json:"priority"`	//OK
@@ -260,7 +265,13 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		case DMteplota:
-			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() + i - 30)
+			//myHomeDeviceSetup[i].Value = strconv.(t.Second() + i - 30)
+			//teplota s desetinou hodnotou
+			teplo := float64(t.Second())/100 + float64(t.Second() + i - 30)
+
+			teploS := strconv.FormatFloat(teplo, 'f', 2, 32)
+
+			myHomeDeviceSetup[i].Value = teploS
 		case DMvoda:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 		case DMsvetlo:

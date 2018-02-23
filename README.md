@@ -1,4 +1,4 @@
-# Doomaster
+# Doomaster:avokado 23.2.2018 9:16
 
 
 ----------
@@ -6,8 +6,29 @@
 
 ## Co nového ve verzi
 
+## 23.2.2018
 
-## 2018-2-14 
+OPRAVY:
+
+1. JSON VALUE:
+Hodnota parametru VALUE je převedene ze stringu na číslo, tím je možné ji porovnat i v des.cisle
+Implementovano pro webtype:
+- Teplota
+- Voda
+- Svetlo
+- Brana
+
+2. Zrušení červeného pozadí u obrázku z kamer a počasí
+
+
+ÚPRAVY:
+Změnšení velikosti fontů v CSS
+- H1, p, i
+
+V JS nadefinované konstanty pro webtype
+
+
+## 2018-2-14
 
 Pěkná verze !!
 

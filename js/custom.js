@@ -39,9 +39,6 @@ console.log(mojeUrl);
   //umožní zmenit jmeno zařízení číslo -0
 
 
-
-
-
 }
 
 
@@ -111,6 +108,14 @@ var tmpBoxWrap = '';
 var tmpBoxContent = '';
 var tmpBoxSensor = '';
 
+const DMteplota  = "1";
+const DMkamera  = "2";
+const DMalarm = "3";
+const DMalarmCam = "4";
+const DMvoda  = "5";
+const DMsvetlo  = "6";
+const DMbrana = "7";
+const DMpocasi = "8";
 
 Arduino.kontejnerTemplate = function(sensorType, sensorID) {
   //vloži HTML podle templatů
@@ -132,7 +137,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     '</div>',
     // 2 = HTTP outDOOM Obrázek  (jen kamera, pocasi ma jiné)
     '<div id="sensor-ID-module-kamera" class=" kameraBox kamera-value">' +
-    '<div class="cam-value bg-danger">' +
+    '<div class="cam-value ">' +
     '<img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">' +
     '</div>' +
     '</div>',
@@ -142,7 +147,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     '</div>',
     //4 = PIR obrázek
     '<div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">' +
-    '<div class="alertcam-value bg-danger">' +
+    '<div class="alertcam-value ">' +
     '<img id="sensor-ID-alertcam-url" style="width:100%" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >' +
     '</div>' +
     '<div class="progress">' +
@@ -177,7 +182,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     //8 = počasí : mělo by se sjednotit s KAMERA
     '<div id="sensor-ID-module-pocasi" class="pocasi-value">' +
-    '<div class="cam-value bg-danger">' +
+    '<div class="cam-value ">' +
     '<img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">' +
     '</div>' +
     '</div>'
@@ -354,25 +359,25 @@ Arduino.kontejnerShow = function() {
         if (sensorID != "0") { //pokud se nejedné o systémový ID
 
           switch (device[i].webtype) {
-            case "1": //teplota
+            case DMteplota: //teplota
               sensorType = "templateTemp";
               break;
-            case "5": //voda
+            case DMvoda: //voda
               sensorType = "templateWater";
               break;
-            case "6": //svetlo
+            case DMsvetlo: //svetlo
               sensorType = "templateLight";
               break;
-            case "3": //alarm - PIR
+            case DMalarm: //alarm - PIR
               sensorType = "templateAlarm";
               break;
-            case "7": //brána
+            case DMbrana: //brána
               sensorType = "templateGate";
               break;
-            case "2": //kamera
+            case DMkamera: //kamera
               sensorType = "templateCam";
               break;
-            case "8": //počasí
+            case DMpocasi: //počasí
               sensorType = "templateWeather";
               break;
             default:
@@ -443,6 +448,7 @@ Arduino.showAlarmCam = function() {
 
 
 
+
 Arduino.showDeviceDetail = function() {
 
   var sensorID = 0; //unikatni sensorID
@@ -468,9 +474,11 @@ Arduino.showDeviceDetail = function() {
           case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
             break;
 
-          case "1": //teplota
-            var tempVal = device[i].value;
+          case DMteplota: //teplota
+            //var tempVal = device[i].value;
 
+            //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+            var tempVal = Number(device[i].value);
 
             $('#sensor-' + sensorID + '-name').html(device[i].webname);
             $('#sensor-' + sensorID + '-time').html(device[i].lrespiot);
@@ -549,41 +557,47 @@ Arduino.showDeviceDetail = function() {
             }
             break; //teplota KONEC
 
-          case "5": //voda
+          case DMvoda: //voda
+
+            var tempVal = Number(device[i].value);
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            $("#sensor-" + sensorID + "-voda-numb").html(device[i].value);
-            $("#sensor-" + sensorID + "-voda").height(device[i].value + "%");
+            $("#sensor-" + sensorID + "-voda-numb").html(tempVal);
+            $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
 
             //změna barvy po dosažení 60%
-            if (device[i].value > 60) {
+            if (tempVal > 60) {
               document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-danger";
             } else {
               document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-success";
             }
             break;
-          case "6": //světlo
+          case DMsvetlo: //světlo
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
 
+            var tempVal = Number(device[i].value);
+
             //jakože bliká
-            if (device[i].value % 2 == 0) {
+            if (tempVal % 2 == 0) {
               document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "far fa-lightbulb ";
             } else {
               document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "ffar fa-lightbulb text-warning";
             }
             break;
-          case "3": //alarm - PIR
+          case DMalarm: //alarm - PIR
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
             break;
-          case "7": //brána
+          case DMbrana: //brána
+            var tempVal = Number(device[i].value);
+
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            document.getElementById("sensor-" + sensorID + "-brana-left").style.width = device[i].value + "%";
-            document.getElementById("sensor-" + sensorID + "-brana-right").style.width = 100 - device[i].value + "%";
+            document.getElementById("sensor-" + sensorID + "-brana-left").style.width = tempVal + "%";
+            document.getElementById("sensor-" + sensorID + "-brana-right").style.width = 100 - tempVal + "%";
             break;
-          case "2": //kamera (ne počasí)
+          case DMkamera: //kamera (ne počasí)
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
             // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
@@ -592,7 +606,7 @@ Arduino.showDeviceDetail = function() {
 
             // $('#sensor-'+i+'-boxWrap').css("height",auto);
             break;
-          case "8": //počasí
+          case DMpocasi: //počasí
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
             d = new Date();
