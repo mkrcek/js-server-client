@@ -514,16 +514,16 @@ Arduino.showDeviceDetail = function() {
             switch (temperatureScheme) {
               case "1": //air - vzduch
                 switch (true) {
-                  case tempVal < 3:
+                  case tempVal < 4:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
                     break;
                   case tempVal < 16:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "DeepSkyBlue");
+                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
                   case tempVal < 21:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "BlueViolet");
+                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
                   case tempVal < 31:
@@ -539,9 +539,13 @@ Arduino.showDeviceDetail = function() {
                 break;
               case "2": //boiler
                 switch (true) {
-                  case tempVal < 40:
+                  case tempVal < 4:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+                    break;
+                  case tempVal < 40:
+                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
                   case tempVal < 70:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
@@ -551,7 +555,7 @@ Arduino.showDeviceDetail = function() {
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
-                  case tempVal > 82:
+                  case tempVal > 80:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
@@ -560,19 +564,23 @@ Arduino.showDeviceDetail = function() {
                 break;
               case "3": //swimming pool
                 switch (true) {
-                  case tempVal < 20:
+                  case tempVal < 4:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+                    break;
+                  case tempVal < 20:
+                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
                   case tempVal < 25:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
-                  case tempVal < 29:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "OrangeRed");
+                  case tempVal < 30:
+                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
-                  case tempVal > 30:
+                  case tempVal > 29:
                     $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
                     $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                     break;
