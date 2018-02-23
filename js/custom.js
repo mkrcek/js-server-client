@@ -159,7 +159,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     '</div>' +
     '</div>',
 
-    //další nové ne-0menové
+
     // 5 = VODA
     //dřívější model s progress barem:
     // '<div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">' +
@@ -181,12 +181,20 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     '</div>',
 
     // 7 = brána
-    '<div id="sensor-ID-module-brana" class="progress">' +
-    '<div id="sensor-ID-brana-left" class="progress-bar bg-warning" role="progressbar" style="width:30%">' +
-    '</div>' +
-    '<div id="sensor-ID-brana-right" class="progress-bar bg-success" role="progressbar" style="width:70%">' +
-    '</div>' +
-    '</div>',
+    // '<div id="sensor-ID-module-brana" class="progress">' +
+    // '<div id="sensor-ID-brana-left" class="progress-bar bg-warning" role="progressbar" style="width:30%">' +
+    // '</div>' +
+    // '<div id="sensor-ID-brana-right" class="progress-bar bg-success" role="progressbar" style="width:70%">' +
+    // '</div>' +
+    // '</div>'
+
+    `<div id="sensor-ID-module-brana" class="text-left">
+        <h1>
+          <span id="sensor-ID-brana-numb"> -99 </span>
+        </h1>
+    </div>
+    `
+    ,
 
     //8 = počasí : mělo by se sjednotit s KAMERA
     '<div id="sensor-ID-module-pocasi" class="pocasi-value">' +
@@ -274,12 +282,19 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateGate":
       //Brána
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6 gateController">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p>></div>';
-      tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName;
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
+      tmpButtons =
+      `
+      <div class="btn-group btn-group-justified">
+        <a id="sensor-ID-brana-but1" class="btn ">Otevřít</a>
+        <a id="sensor-ID-brana-but2" class="btn ">Branka</a>
+        <a id="sensor-ID-brana-but3" class="btn ">PULS</a>
+      </div>
+      `
+      tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName + tmpButtons;
       break;
 
 
@@ -401,7 +416,7 @@ Arduino.kontejnerShow = function() {
           $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
 
           //rezervace budouciho kliku
-          $(document).on("click", "#sensor-" + sensorID + "-boxWrap", function() {
+          // $(document).on("click", "#sensor-" + sensorID + "-boxWrap", function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
             // console.log($(this).attr("id")); //tisk cisla senzoru
@@ -409,10 +424,36 @@ Arduino.kontejnerShow = function() {
             // $(this).animateCss('pulse');
             // $(this).addClass("fa fa-lightbulb-o");
 
-            alert("BOxík bude vymazán. ID: " + $(this).attr("id"));
-            $(this).addClass("hidden");
+          //   alert("BOxík bude vymazán. ID: " + $(this).attr("id"));
+          //   $(this).addClass("hidden");
+          //
+          // });
 
+
+
+
+
+
+
+          $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
+            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+            //tak se provede to, co je ve funkci:
+          
+
+            alert("Tlačítko 1 ID: " + $(this).attr("id"));
           });
+          $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
+            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+            //tak se provede to, co je ve funkci:
+            alert("Tlačítko 2 ID: " + $(this).attr("id"));
+          });
+          $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
+            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+            //tak se provede to, co je ve funkci:
+            alert("Tlačítko 3 ID: " + $(this).attr("id"));
+          });
+
+
 
         }
       }
@@ -609,7 +650,7 @@ Arduino.showDeviceDetail = function() {
 
             //změna barvy po dosažení hodnoty v Subtype
             var temperatureScheme = Number(device[i].subtype); //barevné schéma pro teplotu
-            console.log(temperatureScheme);
+
             switch (true) {
 
               case tempVal < temperatureScheme:
@@ -652,8 +693,10 @@ Arduino.showDeviceDetail = function() {
 
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            document.getElementById("sensor-" + sensorID + "-brana-left").style.width = tempVal + "%";
-            document.getElementById("sensor-" + sensorID + "-brana-right").style.width = 100 - tempVal + "%";
+            $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " %");
+
+            // document.getElementById("sensor-" + sensorID + "-brana-left").style.width = tempVal + "%";
+            // document.getElementById("sensor-" + sensorID + "-brana-right").style.width = 100 - tempVal + "%";
             break;
           case DMkamera: //kamera (ne počasí)
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
