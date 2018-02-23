@@ -12,8 +12,9 @@
 XQGXdlBa: teplota na 1 des. číslo + des. čáska místo tečky
 https://trello.com/c/XQGXdlBa
 
-jPhRf1ok: Zrušení horního menu + server čas na dolní lištu 
+jPhRf1ok: Zrušení horního menu + server čas na dolní lištu
 
+3qsWWwTh: zobrazování času jen u Kamer, Alarm
 ## 23.2.2018
 
 OPRAVY:

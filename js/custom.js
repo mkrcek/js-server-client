@@ -223,7 +223,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       //jine rozlozeni NAZVU a sirka GRIDU
       tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-pocasi">OBSAH\n   </div>';
-      tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span></div>';
       tmpBoxSensor = tmpHtmlBox[8];
       break;
 
@@ -231,7 +231,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       // teplota
       tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
+
       tmpBoxSensor = tmpHtmlBox[1] + tmpBoxName;
       break;
 
@@ -255,7 +257,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       //SVETLO
       tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
       tmpBoxSensor = tmpHtmlBox[6] + tmpBoxName;
       break;
 
@@ -264,7 +268,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       //Brána
       tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p>></div>';
       tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName;
       break;
 
@@ -273,7 +279,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     default:
       tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
+
+      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
       tmpBoxSensor = $("#" + sensorType).html() + tmpBoxName;
       //načte HTML template z index.html - casem se vloží přímo sem.
   } //end switch
