@@ -10,7 +10,7 @@ window.onload = function() {
    //mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
 
   //pro interní testování pro refresh JS
-  mojeUrl = 'http://localhost:1818/doomaster/sensors/',
+  //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
 
 console.log(mojeUrl);
     Arduino.axios = axios.create({
@@ -438,7 +438,7 @@ Arduino.kontejnerShow = function() {
           $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
-          
+
 
             alert("Tlačítko 1 ID: " + $(this).attr("id"));
           });

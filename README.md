@@ -1,4 +1,4 @@
-# Doomaster:avokado 24.2.2018 1:16
+# Doomaster:avokado 24.2.2018 0:25
 
 
 ----------
@@ -6,7 +6,7 @@
 
 ## Co nového ve verzi
 
-## 24.2.2018
+## 24.2.2018 (00:25)
 
 Úpravy:
 (XQGXdlBa): teplota na 1 des. číslo + des. čáska místo tečky
@@ -22,6 +22,7 @@ https://trello.com/c/XQGXdlBa
 
 (dJYYk99J): Voda je Procentech. Změny barvy podle hodnoty Subtype. Mění barvu červená / zelená
 
+(dr7A85Gd): Otevírání brány - zatím jen design, bez odeslání PUT
 
 ## 23.2.2018
 
