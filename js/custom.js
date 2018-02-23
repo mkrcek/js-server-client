@@ -7,10 +7,10 @@ window.onload = function() {
   //baseURL: 'http://192.168.0.25:1818//doomaster/sensors/',
 
   //baseURL: 'http://localhost:1818//doomaster/sensors/',
-  // baseURL: 'http://192.168.0.22:1818//doomaster/sensors/',
+   //mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
 
   //pro interní testování pro refresh JS
-  // mojeUrl = 'http://localhost:1818/doomaster/sensors/',
+  mojeUrl = 'http://localhost:1818/doomaster/sensors/',
 
 console.log(mojeUrl);
     Arduino.axios = axios.create({
@@ -446,7 +446,25 @@ Arduino.showAlarmCam = function() {
 }
 
 
+function formatNumber(x) {
 
+  const POCET_DESETIN = 1;
+
+
+
+  //převede vždy na 2 des. místa
+  x = x.toFixed(POCET_DESETIN);
+
+  //vráti hodnutu zalomenou podle jazykového nastavení. Natvrdo CZ
+  //nejede - musím udělat upravu ručně
+  //  const LANGUAGE = 'cs-CZ';
+  //s = x.toLocaleString(LANGUAGE);
+
+  s = x.replace (".", ",")
+
+  return s;
+
+}
 
 
 Arduino.showDeviceDetail = function() {
@@ -482,7 +500,7 @@ Arduino.showDeviceDetail = function() {
 
             $('#sensor-' + sensorID + '-name').html(device[i].webname);
             $('#sensor-' + sensorID + '-time').html(device[i].lrespiot);
-            $('#sensor-' + sensorID + '-teplota').html(tempVal);
+            $('#sensor-' + sensorID + '-teplota').html( formatNumber(tempVal));
 
             var temperatureScheme = device[i].subtype; //barevné schéma pro teplotu
             switch (temperatureScheme) {

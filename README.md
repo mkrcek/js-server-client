@@ -1,10 +1,18 @@
-# Doomaster:avokado 23.2.2018 9:16
+# Doomaster:avokado 24.2.2018 1:16
 
 
 ----------
 
 
 ## Co nového ve verzi
+
+## 24.2.2018
+
+Úpravy:
+XQGXdlBa: teplota na 1 des. číslo + des. čáska místo tečky
+https://trello.com/c/XQGXdlBa
+
+jPhRf1ok: Zrušení horního menu + server čas na dolní lištu 
 
 ## 23.2.2018
 
