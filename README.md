@@ -1,10 +1,28 @@
-# Doomaster:avokado 24.2.2018 0:25
+# Doomaster:avokado 24.2.2018 1:20
 
 
 ----------
 
 
 ## Co nového ve verzi
+
+## 24.2.2018 (00:25)
+(dr7A85Gd): Otevírání brány
+
+vrací PUT s hodnotou tlačítka ve value
+
+       .../doomaster/sensors/unid PUT {"value":"3"}
+
+hodnoty value:
+1: Otevřít Bránu
+2: Otevřít Branku
+3: PULS
+
+DESIGN:
+- musíme upravit
+- po kliknutí tlačítka se zobrazí POPup, po kliknutí na OK je poslán POST.
+- pokud je tento senzor jako poslední, bohužel spodní lišta jej přemázne
+
 
 ## 24.2.2018 (00:25)
 

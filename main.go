@@ -129,7 +129,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		myHomeDeviceSetup[4] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
 			DevId:       678904,
-			DevOrder:    11,
+			DevOrder:    1, //bylo 11
 			DevPriority: 0,                       //****1/31
 			DevType:     "7",	//brána
 			DevTime:     t.Format("2006-01-02 15:04:05"),
@@ -249,7 +249,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		case DMkamera:
 			{
 				var errImage error
-				fmt.Println("chci uložit fotku číslo ", i)
+				//fmt.Println("chci uložit fotku číslo ", i)
 				if i == 6 {
 					errImage = saveImageCam ("http://192.168.0.19/jpg/image.jpg", strconv.Itoa(i))
 				}
@@ -354,9 +354,10 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 	//nalezení, jeslti je zvolený nějaký konkrétní řádek /zázmam = ID (číslo)
 	//...číslo za lomítkem, např./devices/21293 = 21293
 
+
 	myURL := r.RequestURI                           // req.URL vs req.RequestURI		"/devices/21293"
 
-
+	fmt.Println(myURL)
 
 	re := regexp.MustCompile("[0-9]+")              //vyfiltruje všechna čísla = 21293
 
@@ -397,9 +398,13 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 		case "OPTIONS":
 			HandleOptionsCORS(w,r)
 		case "POST":
+			HandleOptionsCORS(w,r)
 			fmt.Println("POST ")
 		case "PUT":
-			ApiPutIdem(w, r, itemID)
+			HandleOptionsCORS(w,r)
+			//při pokusech se změnou názvu ---- ApiPutIdem(w, r, itemID)
+			fmt.Println("PUT přijato")
+			zobrazHodnotuPUT(w,r)
 		case "DELETE":
 			fmt.Println("DELETE ")
 		}
@@ -444,7 +449,7 @@ switch r.Method {
 }
 
 
-func HandleItem(w http.ResponseWriter, r *http.Request) {
+/*func HandleItem(w http.ResponseWriter, r *http.Request) {
 
 	//nalezení, jeslti je zvolený nějaký konkrétní řádek /zázmam = ID (číslo)
 	//...číslo za lomítkem, např./devices/21293 = 21293
@@ -465,12 +470,43 @@ func HandleItem(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		fmt.Println("POST ")
 	case "PUT":
-		ApiPutIdem(w, r, itemID)
+		// při pokusech o změnu jména: ApiPutIdem(w, r, itemID)
+		fmt.Println("PUT s hodnotou")
+		zobrazHodnotuPUT(w,r)
 	case "DELETE":
 		fmt.Println("DELETE ")
 	}
 
 	// není vyřešeno, když itemID je mimo zozsah nebo není vubec
+
+}*/
+
+func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) {
+
+
+	lenBody := r.ContentLength
+	body := make([]byte, lenBody)
+	r.Body.Read(body)
+	var post DeviceSetup
+	json.Unmarshal(body,&post)
+
+	fmt.Print("hodnoty v JSON VALUE: ")
+	fmt.Println(post.Value)
+	//aktualizace položky v "tabulce"
+
+
+	//úprava hlavičky
+	//w.Header().Set("Content-Length", "0") - POZOR DELKA NEMUZE BYT NULA
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Max-Age", "86400")
+
+	//zpráva do těla
+	w.Write([]byte("OK UPDATED"))
+
+	fmt.Println("******OK PUT********")
 
 }
 

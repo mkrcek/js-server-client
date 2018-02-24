@@ -117,6 +117,10 @@ const DMsvetlo  = "6";
 const DMbrana = "7";
 const DMpocasi = "8";
 
+const DMbranaT1 = "1";
+const DMbranaT2 = "2";
+const DMbranaT3 = "3";
+
 Arduino.kontejnerTemplate = function(sensorType, sensorID) {
   //vloži HTML podle templatů
 
@@ -282,7 +286,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateGate":
       //Brána
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6 gateController">\n   OBSAH\n</div>';
+      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6 ">\n   OBSAH\n</div>';
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
@@ -293,6 +297,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
         <a id="sensor-ID-brana-but2" class="btn ">Branka</a>
         <a id="sensor-ID-brana-but3" class="btn ">PULS</a>
       </div>
+      <div></div>
       `
       tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName + tmpButtons;
       break;
@@ -439,17 +444,47 @@ Arduino.kontejnerShow = function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
 
+              Arduino.axios.put('/' + sensorID, {
+                  value: DMbranaT1
+                })
+                .then(function(response) {
+                  console.log('Odeslán PUT s URL /' + sensorID + "s hodnotou " + DMbranaT1);
+
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
 
             alert("Tlačítko 1 ID: " + $(this).attr("id"));
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
+            Arduino.axios.put('/' + sensorID, {
+                value: DMbranaT2
+              })
+              .then(function(response) {
+                console.log('Odeslán PUT s URL /' + sensorID + "s hodnotou " + DMbranaT2);
+
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
             alert("Tlačítko 2 ID: " + $(this).attr("id"));
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
+            Arduino.axios.put('/' + sensorID, {
+                value: DMbranaT3
+              })
+              .then(function(response) {
+                console.log('Odeslán PUT s URL /' + sensorID + "s hodnotou " + DMbranaT3);
+
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
             alert("Tlačítko 3 ID: " + $(this).attr("id"));
           });
 
