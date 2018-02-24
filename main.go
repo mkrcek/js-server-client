@@ -129,7 +129,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		myHomeDeviceSetup[4] = DeviceSetup{
 			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
 			DevId:       678904,
-			DevOrder:    1, //bylo 11
+			DevOrder:    11, //bylo 11
 			DevPriority: 0,                       //****1/31
 			DevType:     "7",	//brána
 			DevTime:     t.Format("2006-01-02 15:04:05"),

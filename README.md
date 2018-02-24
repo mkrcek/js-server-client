@@ -1,10 +1,14 @@
-# Doomaster:avokado 24.2.2018 1:20
+# Doomaster:avokado 24.2.2018 11:07
 
 
 ----------
 
 
 ## Co nového ve verzi
+
+OPRAVA:
+
+(vRVK0lUG): Oprava překrývání obsahu spodním menu.
 
 ## 24.2.2018 (00:25)
 (dr7A85Gd): Otevírání brány
