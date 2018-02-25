@@ -7,10 +7,10 @@ window.onload = function() {
   //baseURL: 'http://192.168.0.25:1818//doomaster/sensors/',
 
   //baseURL: 'http://localhost:1818//doomaster/sensors/',
-   //mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
 
   //pro interní testování pro refresh JS
   //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
+  //mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
 
 console.log(mojeUrl);
     Arduino.axios = axios.create({
@@ -367,6 +367,26 @@ Arduino.alercamShow = function() {
 }
 
 
+function odeslatPUT (jmenoSenzoru, hodota){
+  //oříznutí jen na číslo senzoru: tedy z sensor-123456-xxx => 123456
+  poradiPomlcky = jmenoSenzoru.search("-");
+  jmenoSenzoru = jmenoSenzoru.substring(poradiPomlcky+1);
+  poradiPomlcky = jmenoSenzoru.search("-");
+  jmenoSenzoru = jmenoSenzoru.substring(0, poradiPomlcky);
+
+  //odešle PUT s hodnotou "value"
+  Arduino.axios.put('/' + jmenoSenzoru, {
+      value: hodota
+    })
+    .then(function(response) {
+      console.log('Odeslán PUT s URL /' + jmenoSenzoru + " s hodnotou " + hodota);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
+
+
 
 Arduino.kontejnerShow = function() {
 
@@ -444,48 +464,17 @@ Arduino.kontejnerShow = function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
 
-              Arduino.axios.put('/' + sensorID, {
-                  value: DMbranaT1
-                })
-                .then(function(response) {
-                  console.log('Odeslán PUT s URL /' + sensorID + "s hodnotou " + DMbranaT1);
+            odeslatPUT ($(this).attr("id"), DMbranaT1);
+            alert("Odeslán PUT");
 
-                })
-                .catch(function(error) {
-                  console.log(error);
-                });
-
-            alert("Tlačítko 1 ID: " + $(this).attr("id"));
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-            //tak se provede to, co je ve funkci:
-            Arduino.axios.put('/' + sensorID, {
-                value: DMbranaT2
-              })
-              .then(function(response) {
-                console.log('Odeslán PUT s URL /' + sensorID + "s hodnotou " + DMbranaT2);
-
-              })
-              .catch(function(error) {
-                console.log(error);
-              });
-            alert("Tlačítko 2 ID: " + $(this).attr("id"));
+            odeslatPUT ($(this).attr("id"), DMbranaT2);
+            alert("Odeslán PUT 2");
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-            //tak se provede to, co je ve funkci:
-            Arduino.axios.put('/' + sensorID, {
-                value: DMbranaT3
-              })
-              .then(function(response) {
-                console.log('Odeslán PUT s URL /' + sensorID + "s hodnotou " + DMbranaT3);
-
-              })
-              .catch(function(error) {
-                console.log(error);
-              });
-            alert("Tlačítko 3 ID: " + $(this).attr("id"));
+            odeslatPUT ($(this).attr("id"), DMbranaT3);
+            alert("Odeslán PUT 3");
           });
 
 

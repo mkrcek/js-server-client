@@ -1,4 +1,4 @@
-# Doomaster:avokado 24.2.2018 11:07
+# Doomaster:avokado 25.2.2018 16:15
 
 
 ----------
@@ -6,6 +6,13 @@
 
 ## Co nového ve verzi
 
+
+## 24.2.2018
+OPRAVA
+po klinuní na bránu se už správně posílá PUT s URL /{unid}
+(oprava je to takové dočasné řešení, ale funguje: Ze stringu vyseparuju číslo UNID přávě mezi pomlčkami)
+
+## 24.2.2018
 OPRAVA:
 
 (vRVK0lUG): Oprava překrývání obsahu spodním menu.

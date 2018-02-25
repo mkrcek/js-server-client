@@ -47,7 +47,7 @@ var hodnotaPut = DeviceSetup{				//testovaci
 	DevName:  	"testovacka",
 	}
 
-var numberOfRows = 11                                     //pocet zarizeni
+var numberOfRows = 12                                     //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
 
@@ -217,6 +217,19 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	}
 
 
+	//brana
+	myHomeDeviceSetup[11] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       1169927890411,
+		DevOrder:    12, //bylo 11
+		DevPriority: 0,                       //****1/31
+		DevType:     "7",	//brána
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "44",
+		DevName:     "4 - Brána",
+		InVisible:	0,
+	}
+
 //	fmt.Println(myHomeDeviceSetup)
 
 
@@ -357,14 +370,14 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 
 	myURL := r.RequestURI                           // req.URL vs req.RequestURI		"/devices/21293"
 
-	fmt.Println(myURL)
+	//fmt.Println(myURL)
 
 	re := regexp.MustCompile("[0-9]+")              //vyfiltruje všechna čísla = 21293
 
 	ulrDeviceIDs := re.FindAllString(myURL, 1)      //vybere jen první sekvenci číslic = 21293
 	if (ulrDeviceIDs == nil) {			//GET ALL pokud číslo neni - je tedy jen lomitko bez parametru
 
-		fmt.Println("GET ALL")
+		//fmt.Println("GET ALL")
 
 
 		switch r.Method {
@@ -382,8 +395,8 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 
 	} else {							//GET ITEM obsahuje cislo za parametrem
 
-		fmt.Print("parametr  ")
-		fmt.Println(ulrDeviceIDs)
+		//fmt.Print("parametr  ")
+		//fmt.Println(ulrDeviceIDs)
 
 		ulrDeviceIDstr := strings.Join(ulrDeviceIDs,"") //převede type []string” to string
 		itemID, _ := strconv.Atoi(ulrDeviceIDstr)       //převede na číslo
@@ -403,7 +416,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 		case "PUT":
 			HandleOptionsCORS(w,r)
 			//při pokusech se změnou názvu ---- ApiPutIdem(w, r, itemID)
-			fmt.Println("PUT přijato")
+			//fmt.Println("PUT přijato")
 			zobrazHodnotuPUT(w,r)
 		case "DELETE":
 			fmt.Println("DELETE ")
