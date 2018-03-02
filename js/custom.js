@@ -479,16 +479,16 @@ Arduino.kontejnerShow = function() {
             //tak se provede to, co je ve funkci:
 
             odeslatPUT ($(this).attr("id"), DMbranaT1);
-            alert("Odeslán PUT");
+            // alert("Odeslán PUT");
 
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
             odeslatPUT ($(this).attr("id"), DMbranaT2);
-            alert("Odeslán PUT 2");
+            // alert("Odeslán PUT 2");
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
             odeslatPUT ($(this).attr("id"), DMbranaT3);
-            alert("Odeslán PUT 3");
+            // alert("Odeslán PUT 3");
           });
 
 
@@ -731,7 +731,14 @@ Arduino.showDeviceDetail = function() {
 
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " %");
+            if (tempVal == 0) {
+              $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
+              $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+            } else {
+              $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
+              $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+            }
+
 
             // document.getElementById("sensor-" + sensorID + "-brana-left").style.width = tempVal + "%";
             // document.getElementById("sensor-" + sensorID + "-brana-right").style.width = 100 - tempVal + "%";
