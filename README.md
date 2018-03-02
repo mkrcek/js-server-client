@@ -6,7 +6,9 @@
 
 ## Co nového ve verzi
 
-
+## 2.3. 17:00
+- větší písmo v serverovém času
+- test ALARM badge (sleduje objekt unid==0, a pokud je hodnota error != "0" ukáže její  hodnotu)
 
 ## 2.3.2018
 uprava

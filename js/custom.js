@@ -10,7 +10,9 @@ window.onload = function() {
 
   //pro interní testování pro refresh JS
   //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
-  mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
+//  mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
+  mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/',
+
 
 console.log(mojeUrl);
     Arduino.axios = axios.create({
@@ -578,8 +580,22 @@ Arduino.showDeviceDetail = function() {
 
 
         sensorID = device[i].unid;
+
+        //jestliže je systémový údaj
         if (sensorID == "0") {
+
+          //jestliže je chyba - ukaž badge
+          if (device[i].error == "0") {
+            $('#homeButton').removeClass("badge badge-pill badge-danger");
+            $('#homeButton').html("");
+          } else {
+            $('#homeButton').addClass("badge badge-pill badge-danger");
+            $('#homeButton').html(device[i].error);
+          }
+
+          //zobrazí čas
           $('#server-time').html(device[i].value);
+
         }
 
         //podle typu se naplní hodnoty

@@ -15,7 +15,7 @@ import (
 )
 
 
-const arduinoURL string = "http://192.168.0.71"
+const arduinoURL string = "http://192.168.0.70"
 
 const DMteplota  = "1"
 const DMkamera  = "2"
@@ -42,9 +42,10 @@ type DeviceSetup struct {//for JSON
 	DevType		string 	`json:"webtype"`	//OK
 	Subtype		string 	`json:"subtype"`	//OK
 	DevTime   	string 	`json:"lrespiot"`	//OK
-	Value 		string		`json:"value"`		//OK
+	Value 		string	`json:"value"`		//OK
 	DevName 	string 	`json:"webname"`	//OK
-	InVisible		int		`json:"invisible"`
+	InVisible		int	`json:"invisible"`
+	DevError	string  `json:"error"`		//
 
 	//zrušeno:
 		// devTemp = value
@@ -230,6 +231,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevOrder:    0,
 		DevType:     "-1",	//systémovy čas
 		Value:     	 t.Format("2006-01-02 15:04:05"),
+		DevError:	"0",
 	}
 
 
@@ -326,9 +328,17 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
 	//systémový čas
 	myHomeDeviceSetup[10].Value = t.Format("15:04:05")
+	//systemovy error
+	if (t.Second() % 10 == 0) {
+		myHomeDeviceSetup[10].DevError = strconv.Itoa(t.Minute())
+	} else {
+		myHomeDeviceSetup[10].DevError = "0"
+	}
+
+
 	//reálná Arduino teplota
 	//myHomeDeviceSetup[12].Value = strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32)
-	myHomeDeviceSetup[12].Value = "0"
+	myHomeDeviceSetup[12].Value = "-77"
 
 
 	//zobrazí json
