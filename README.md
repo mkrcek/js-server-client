@@ -1,10 +1,18 @@
-# Doomaster:avokado 25.2.2018 16:15
+# Doomaster:avokado 2.3.2018 9:11
 
 
 ----------
 
 
 ## Co nového ve verzi
+
+## 2.3.2018
+uprava
+- počet ikon na řádku je 4.
+(testovat lze tak, že v custom.js se změní obsah konstanty GRID_SM = "col-3"; nebo GRID_SM = "col-4";....pro 3 ikony  )
+(současně jsem změnil i v style.css velikost H1)
+
+
 
 
 ## 24.2.2018

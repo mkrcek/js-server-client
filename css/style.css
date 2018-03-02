@@ -33,7 +33,7 @@ i  {
 }
 
 h1 {
-  font-size: 25px;
+  font-size: 20px;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -116,14 +116,16 @@ h1 {
   /* border: 2px solid Black; */
   /* border-radius: 10%; */
   border-radius: 10px;
-  height: 106px;
+  /* height: 106px; */
+  height: 90px;
   /* width: 106px; */
   /* font-size: 14px; */
   /* standardně je 1rem */
   line-height: 1.2;
   /* standardne je  */
   /* line-height:1.5; */
-  background-color: rgba(192, 192, 192, 0.2);
+  /* background-color: rgba(192, 192, 192, 0.2); */
+  background-color: #F3F3F3;
 }
 
 /*  odstranění mezery pod "<p>" pouze v této třídě*/
@@ -139,7 +141,7 @@ h1 {
   border-radius: 10px;
   /* height: 302px; */
   /* width: 358px; */
-  background-color: rgba(192, 192, 192, 0.2);
+  background-color: #F3F3F3;
 }
 
 /*  box 2 x 2*/
@@ -149,7 +151,7 @@ h1 {
   border-radius: 10px;
   height: 220px;
   /* width: 220px; */
-  background-color: rgba(192, 192, 192, 0.2);
+  background-color: #F3F3F3;
 }
 
 .temperature-value, .light-value, .alarm-value {
@@ -157,6 +159,8 @@ h1 {
   /* padding-top: 1vw; */
   /* font-size: 3vw; */
 }
+
+
 
 .button {
   padding: 15px 25px;

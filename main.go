@@ -10,7 +10,23 @@ import (
 	"strconv"
 	"time"
 	"io/ioutil"
+	"os"
+	"net"
 )
+
+
+const arduinoURL string = "http://192.168.0.71"
+
+const DMteplota  = "1"
+const DMkamera  = "2"
+const DMalarm = "3"
+const DMalarmCam = "4"
+const DMvoda  = "5"
+const DMsvetlo  = "6"
+const DMbrana = "7"
+const DMpocasi = "8"
+
+const numberOfRows = 13
 
 type DeviceSetup struct {//for JSON
 	//DevSerTime	string 	`json:"devSerTime"`
@@ -47,7 +63,7 @@ var hodnotaPut = DeviceSetup{				//testovaci
 	DevName:  	"testovacka",
 	}
 
-var numberOfRows = 12                                     //pocet zarizeni
+                                    //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
 
@@ -230,6 +246,24 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		InVisible:	0,
 	}
 
+	//teplota zahrada3
+	myHomeDeviceSetup[12] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       78901001,
+		DevOrder:    1,
+		DevPriority: 0,                       //****1/31
+		DevType:     DMteplota,	//teplota
+		Subtype:	 "1",   // vzduch
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
+		Value: "0",
+		DevName:     "reálná teplota Arduino",
+		InVisible:	0,
+	}
+
+
+
+
 //	fmt.Println(myHomeDeviceSetup)
 
 
@@ -237,21 +271,13 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 
 func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
-	const DMteplota  = "1"
-	const DMkamera  = "2"
-	const DMalarm = "3"
-	const DMalarmCam = "4"
-	const DMvoda  = "5"
-	const DMsvetlo  = "6"
-	const DMbrana = "7"
-	const DMpocasi = "8"
+
 
 
 	//upraví  "tabulku" a odpoví na Get
 	t := time.Now()
 
-	//systémový čas
-	myHomeDeviceSetup[10].Value = t.Format("15:04:05")
+
 
 	for i:=0;i<numberOfRows ;i++  {
 
@@ -297,6 +323,12 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+
+	//systémový čas
+	myHomeDeviceSetup[10].Value = t.Format("15:04:05")
+	//reálná Arduino teplota
+	//myHomeDeviceSetup[12].Value = strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32)
+	myHomeDeviceSetup[12].Value = "0"
 
 
 	//zobrazí json
@@ -695,4 +727,63 @@ func saveImageCam(URLimage, cisloObrazku string) error{
 	}
 	//fmt.Println("Obrázek uložen")
 	return err
+}
+
+
+
+//přečte teplotu ARDUINa - reálná teplota
+func deviceReadTempHum(pin int) (float64) {
+
+	//teplota a vlhkost
+	type tempHumid struct {
+		DeviceTemperature int `json:"deviceTemperature"`
+		DeviceHumidity    int `json:"deviceHumidity"`
+	}
+
+	//nastavení parametrů na nejjižší urovni TCP komunikace
+	//popis: https://golang.org/src/net/http/transport.go
+	tr := &http.Transport{
+		MaxIdleConns: 10,
+		DialContext: (&net.Dialer{
+			Timeout:   13 * time.Second, //delka trvani timeout, standardně je 30
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
+
+	client := &http.Client{Transport: tr}
+
+	tepmUrl := arduinoURL + "/pins/" + strconv.Itoa(pin)
+	response, err := client.Get(tepmUrl) //musí být použito plné jméno s http:// jinak bude chyba: unsupported protocol scheme
+
+	//	response, err := http.Get("http://192.168.0.39/") 	//nebo to také finguje s tímto - ale není nastaven TIMEOUT"!! můž ebýt kliendě hodinu
+	if err != nil { //pokud URL neexistuje, např. Arduino je vypnuté, tak je chyba: Get http://esp8266m.local/: dial tcp: lookup issssdnes.cz: no such host
+		fmt.Printf("----nastala tato chyba--\n")
+		fmt.Print(time.Now())
+		fmt.Printf("%s\n", err)
+		//os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		//fmt.Printf("%s\n", response.Status)
+		//fmt.Printf("%v\n", response.StatusCode)
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		//fmt.Printf("%s\n", string(contents))
+
+		var deviceTepmHumid tempHumid
+		dataFromDevice := []byte(contents)
+		json.Unmarshal(dataFromDevice, &deviceTepmHumid)
+
+		//fmt.Printf("teplota je " + strconv.Itoa(deviceTepmHumid.DeviceTemperature) + "\n")
+		//fmt.Printf("vlhkost je " + strconv.Itoa(deviceTepmHumid.DeviceHumidity) + "\n")
+		//		return float64(deviceTepmHumid.DeviceTemperature), float64(deviceTepmHumid.DeviceHumidity)
+		return float64(deviceTepmHumid.DeviceTemperature)
+	}
+	//return 0,0
+	return 0
 }

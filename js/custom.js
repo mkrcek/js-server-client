@@ -10,7 +10,7 @@ window.onload = function() {
 
   //pro interní testování pro refresh JS
   //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
-  //mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
+  mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
 
 console.log(mojeUrl);
     Arduino.axios = axios.create({
@@ -121,6 +121,12 @@ const DMbranaT1 = "1";
 const DMbranaT2 = "2";
 const DMbranaT3 = "3";
 
+//počet sloupců na stránce
+
+const GRID_SM = "col-3"; //teplota
+const GRID_MD = "col-8 col-sm-6"; //počasí
+const GRID_FUL= "col-12 col-sm-6"; //kamera
+
 Arduino.kontejnerTemplate = function(sensorType, sensorID) {
   //vloži HTML podle templatů
 
@@ -210,12 +216,14 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
   ];
 
+
+
   switch (sensorType) {
 
     // test securitycap
     case "templateServerTime":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
       tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
@@ -225,7 +233,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       // test securitycap
     case "templateAlertcam":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
       tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
@@ -234,14 +242,14 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateCam":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-12 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
       tmpBoxSensor = tmpBoxName + tmpHtmlBox[2];
       break;
     case "templateWeather":
       //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_MD}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-pocasi">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span></div>';
       tmpBoxSensor = tmpHtmlBox[8];
@@ -249,7 +257,8 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateTemp":
       // teplota
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
@@ -259,7 +268,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateAlarm":
       //PIR alarm
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxSensor = tmpHtmlBox[3] + tmpBoxName;
@@ -267,7 +276,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateWater":
       //VODA
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxSensor = tmpHtmlBox[5] + tmpBoxName;
@@ -275,7 +284,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateLight":
       //SVETLO
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-4 ">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
 
@@ -286,7 +295,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     case "templateGate":
       //Brána
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-8 col-sm-6 ">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_MD} ">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
@@ -305,7 +314,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
       //a pro všechny ostatní typy: jako je třeba ???? NIC
     default:
-      tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
+      //tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
+      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
+
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
 
@@ -369,6 +380,9 @@ Arduino.alercamShow = function() {
 
 function odeslatPUT (jmenoSenzoru, hodota){
   //oříznutí jen na číslo senzoru: tedy z sensor-123456-xxx => 123456
+  const url = `${jmenoSenzoru}`;
+  console.log(url);
+
   poradiPomlcky = jmenoSenzoru.search("-");
   jmenoSenzoru = jmenoSenzoru.substring(poradiPomlcky+1);
   poradiPomlcky = jmenoSenzoru.search("-");
