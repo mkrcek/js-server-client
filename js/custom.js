@@ -479,16 +479,16 @@ Arduino.kontejnerShow = function() {
             //tak se provede to, co je ve funkci:
 
             odeslatPUT ($(this).attr("id"), DMbranaT1);
-            // alert("Odeslán PUT");
+            alert("Odeslán PUT 1");
 
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
             odeslatPUT ($(this).attr("id"), DMbranaT2);
-            // alert("Odeslán PUT 2");
+            alert("Odeslán PUT 2");
           });
           $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
             odeslatPUT ($(this).attr("id"), DMbranaT3);
-            // alert("Odeslán PUT 3");
+            alert("Odeslán PUT 3");
           });
 
 
