@@ -1,10 +1,29 @@
-# Doomaster:avokado 2.3.2018 9:11
+# Doomaster:avokado 5.3.2018 12:11
 
 
 ----------
 
 
 ## Co nového ve verzi
+
+5.3.
+DOČASNÁ aktivace Video z alarmu.
+
+Vše je natvrdo - bez ohledu na JSON a jiné aktivity
+
+- v adresari /activitylog jsou obrázky
+- jmena souboru:  image-0.jpg .... image-32.jpg
+- zobrazí se jako první Livingstone
+
+funkčnost v JS:
+- počet obrazku je na řádku:
+518: var poziceObrazkuAlertCam = 0;
+519: var pocetObratkuAlertCam = 33;
+
+(pokud nechceš funkčnost používat, zakomentovat
+  řádek 28:   Arduino.alercamShow();)
+  řádek 40:   Arduino.showAlarmCam();
+
 
 ## 2.3. 17:00
 - větší písmo v serverovém času
