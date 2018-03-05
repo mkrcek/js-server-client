@@ -10,8 +10,8 @@ window.onload = function() {
 
   //pro interní testování pro refresh JS
   //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
-//  mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
-  mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/',
+  mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
+  //mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/', - kavarna
 
 
 console.log(mojeUrl);
@@ -25,14 +25,19 @@ console.log(mojeUrl);
 
   //test generovani AlertCam
   //ted jeste ne
-  // Arduino.alercamShow();
+  Arduino.alercamShow();
+
+
 
   //vygeneruje HTML pro všechny BOXíky v JSON
   Arduino.kontejnerShow();
 
+
+
+
   //test generovani pro AlertCam
   //ted ješte ne:
-  // Arduino.showAlarmCam();
+  Arduino.showAlarmCam();
 
   Arduino.showDeviceDetail();
   //vygeneruje obsah pro všechny HTML-BOXíky v JSON
@@ -158,18 +163,22 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     '<i id="sensor-ID-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>' +
     '</div>',
     //4 = PIR obrázek
-    '<div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">' +
-    '<div class="alertcam-value ">' +
-    '<img id="sensor-ID-alertcam-url" style="width:100%" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >' +
-    '</div>' +
-    '<div class="progress">' +
-    '<div id="sensor-ID-alertcam-progress-l" class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>' +
-    '</div>' +
-    '<div class="text-center">' +
-    '<button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> <<< - Před</button>' +
-    '<button id="sensor-ID-alertcam-btn-right" type="button" class="btn ">Další - >>></button>' +
-    '</div>' +
-    '</div>',
+    `<div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">
+    <div class="text-center">
+      <button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> <<< - Před</button>
+      <button id="sensor-ID-alertcam-btn-right" type="button" class="btn ">Další - >>></button>
+    </div>
+        <div class="alertcam-value ">
+          <img id="sensor-ID-alertcam-url" style="width:100%;" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >
+        </div>
+        <div class="progress">
+          <div id="sensor-ID-alertcam-progress-l" class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+          </div>
+        </div>
+
+    </div>
+    `,
+
 
 
     // 5 = VODA
@@ -238,8 +247,8 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
-      tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
-      tmpBoxSensor = tmpBoxName + tmlIkony + tmpHtmlBox[4];
+      // tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
+      tmpBoxSensor = tmpBoxName + tmpHtmlBox[4];
       break;
 
     case "templateCam":

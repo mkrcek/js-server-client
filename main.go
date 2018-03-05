@@ -264,9 +264,22 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	}
 
 
+	//video PIR obrazek
+	/*myHomeDeviceSetup[13] = DeviceSetup{
+		DevId:       789011013,
+		DevOrder:    13,
+		DevPriority: 0,                       //
+		DevType:     DMalarmCam,	//kamera - zaznam
+		Subtype:	 "activitylog/image-0.jpg",   // archiv obrazku
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "32",  //pocet obrazku
+		DevName:     "ANIMACE KAMERA PIR",
+		InVisible:	0,
+	}*/
 
 
-//	fmt.Println(myHomeDeviceSetup)
+
+	//	fmt.Println(myHomeDeviceSetup)
 
 
 }
