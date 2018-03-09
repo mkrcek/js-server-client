@@ -1,10 +1,22 @@
-# Doomaster:avokado 5.3.2018 12:11
+# Doomaster: snídane & avokado 9.3.2018 03:31
 
 
 ----------
 
-
 ## Co nového ve verzi
+
+9.3.
+
+SVĚTLO:
+-  kliknutím na Světlo (webtyp = 6) se odešle PUT na server.
+- hodota Value = "1"
+- obarvuje se pozadí tlačítka "1"=žluté, "0" = šedé
+- ikona žárovky
+
+
+NetworkError:
+- Pokud se nehlásí server, zmení se barva pozadí na rudou
+
 
 5.3.
 DOČASNÁ aktivace Video z alarmu.

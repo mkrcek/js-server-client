@@ -195,7 +195,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     // 6 = svetlo
     `<div id="sensor-ID-module-svetlo">
-      <i id="sensor-ID-svetlo-stav">TLACITKO</i>
+      <div style="font-size:3em; color:"White">
+        <i class="far fa-lightbulb"></i>
+      </div>
     </div>`,
 
     // 7 = brána
@@ -809,8 +811,10 @@ Arduino.showDeviceDetail = function() {
     .catch(function(error) {
       console.log(error);
       console.log("nejsou data");
-      //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ 
+      //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
       $("body").css("background-color", "Red");
+      $("container").addClass("alert alert-danger");
+
     });
 
 }
