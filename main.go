@@ -26,7 +26,7 @@ const DMsvetlo  = "6"
 const DMbrana = "7"
 const DMpocasi = "8"
 
-const numberOfRows = 13
+const numberOfRows = 14
 
 type DeviceSetup struct {//for JSON
 	//DevSerTime	string 	`json:"devSerTime"`
@@ -251,7 +251,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//teplota zahrada3
 	myHomeDeviceSetup[12] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-		DevId:       78901001,
+		DevId:       789010012,
 		DevOrder:    1,
 		DevPriority: 0,                       //****1/31
 		DevType:     DMteplota,	//teplota
@@ -263,6 +263,20 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		InVisible:	0,
 	}
 
+	//světlo
+	myHomeDeviceSetup[13] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       78901013,
+		DevOrder:    1,
+		DevPriority: 0,                       //****1/31
+		DevType:     DMsvetlo,	//svetlo
+		Subtype:	 "",   // svetlo
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
+		Value: "1",
+		DevName:     "svetlo",
+		InVisible:	0,
+	}
 
 	//video PIR obrazek
 	/*myHomeDeviceSetup[13] = DeviceSetup{
@@ -330,12 +344,14 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 			myHomeDeviceSetup[i].Subtype = "30"
 		case DMsvetlo:
-			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() / 10)
+		//	myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
 		case DMalarm:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
 		case DMbrana:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
+
 		}
+
 
 	}
 
@@ -422,6 +438,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 	//nalezení, jeslti je zvolený nějaký konkrétní řádek /zázmam = ID (číslo)
 	//...číslo za lomítkem, např./devices/21293 = 21293
 
+	var hodnoty string = ""
 
 	myURL := r.RequestURI                           // req.URL vs req.RequestURI		"/devices/21293"
 
@@ -460,6 +477,8 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 		fmt.Println(itemID)
 
 
+
+
 		switch r.Method {
 		case "GET":
 			ApiGetItem(w ,r ,itemID)
@@ -472,7 +491,16 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 			HandleOptionsCORS(w,r)
 			//při pokusech se změnou názvu ---- ApiPutIdem(w, r, itemID)
 			//fmt.Println("PUT přijato")
-			zobrazHodnotuPUT(w,r)
+			hodnoty = zobrazHodnotuPUT(w,r)
+			if (itemID == 78901013 && hodnoty == "1") {
+				if myHomeDeviceSetup[13].Value == "1" {
+					myHomeDeviceSetup[13].Value = "0"
+				} else {
+					myHomeDeviceSetup[13].Value = "1"
+				}
+
+			}
+
 		case "DELETE":
 			fmt.Println("DELETE ")
 		}
@@ -549,7 +577,7 @@ switch r.Method {
 
 }*/
 
-func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) {
+func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) string {
 
 
 	lenBody := r.ContentLength
@@ -559,7 +587,8 @@ func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(body,&post)
 
 	fmt.Print("hodnoty v JSON VALUE: ")
-	fmt.Println(post.Value)
+	var hodnoty string = post.Value
+	fmt.Println(hodnoty)
 	//aktualizace položky v "tabulce"
 
 
@@ -575,6 +604,9 @@ func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK UPDATED"))
 
 	fmt.Println("******OK PUT********")
+
+
+	return hodnoty;
 
 }
 

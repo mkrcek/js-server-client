@@ -10,7 +10,7 @@ window.onload = function() {
 
   //pro interní testování pro refresh JS
   //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
-  mojeUrl: 'http://192.168.0.22:1818//doomaster/sensors/',
+  mojeUrl: 'http://192.168.0.22:1818/doomaster/sensors/',
   //mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/', - kavarna
 
 
@@ -25,7 +25,7 @@ console.log(mojeUrl);
 
   //test generovani AlertCam
   //ted jeste ne
-  Arduino.alercamShow();
+  //Arduino.alercamShow();
 
 
 
@@ -37,7 +37,7 @@ console.log(mojeUrl);
 
   //test generovani pro AlertCam
   //ted ješte ne:
-  Arduino.showAlarmCam();
+  //Arduino.showAlarmCam();
 
   Arduino.showDeviceDetail();
   //vygeneruje obsah pro všechny HTML-BOXíky v JSON
@@ -123,6 +123,7 @@ const DMvoda  = "5";
 const DMsvetlo  = "6";
 const DMbrana = "7";
 const DMpocasi = "8";
+const DMlight = "9";
 
 const DMbranaT1 = "1";
 const DMbranaT2 = "2";
@@ -162,11 +163,12 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     '<div id="sensor-ID-module-alarm">' +
     '<i id="sensor-ID-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>' +
     '</div>',
-    //4 = PIR obrázek
+    //4 = PIR AlarmCamera obrázek
     `<div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">
     <div class="text-center">
-      <button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> <<< - Před</button>
-      <button id="sensor-ID-alertcam-btn-right" type="button" class="btn ">Další - >>></button>
+      <button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> << </button>
+      <button id="sensor-ID-alertcam-btn-delete" type="button" class="btn "> DEL </button>
+      <button id="sensor-ID-alertcam-btn-right" type="button" class="btn "> >> </button>
     </div>
         <div class="alertcam-value ">
           <img id="sensor-ID-alertcam-url" style="width:100%;" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >
@@ -182,12 +184,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
 
     // 5 = VODA
-    //dřívější model s progress barem:
-    // '<div id="sensor-ID-module-voda" class="  progress progress-bar-vertical text-center">' +
-    // '<div id="sensor-ID-voda" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 44%;">' +
-    // '  <span id="sensor-ID-voda-numb">44%</span>' +
-    // '</div>' +
-    // '</div>'
+
     `<div id="sensor-ID-module-voda" class="text-left">
         <h1>
           <span id="sensor-ID-voda-numb">-99</span>
@@ -197,9 +194,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
     ,
 
     // 6 = svetlo
-    '<div id="sensor-ID-module-svetlo">' +
-    '<i id="sensor-ID-svetlo-stav" class="far fa-lightbulb"></i>' +
-    '</div>',
+    `<div id="sensor-ID-module-svetlo">
+      <i id="sensor-ID-svetlo-stav">TLACITKO</i>
+    </div>`,
 
     // 7 = brána
     // '<div id="sensor-ID-module-brana" class="progress">' +
@@ -256,14 +253,14 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxSensor = tmpBoxName + tmpHtmlBox[2];
+      tmpBoxSensor = tmpBoxName + tmpHtmlBox[DMkamera];
       break;
     case "templateWeather":
       //jine rozlozeni NAZVU a sirka GRIDU
       tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_MD}">\n   OBSAH\n</div>`;
       tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-pocasi">OBSAH\n   </div>';
       tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span></div>';
-      tmpBoxSensor = tmpHtmlBox[8];
+      tmpBoxSensor = tmpHtmlBox[DMpocasi];
       break;
 
     case "templateTemp":
@@ -274,7 +271,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
 
-      tmpBoxSensor = tmpHtmlBox[1] + tmpBoxName;
+      tmpBoxSensor = tmpHtmlBox[DMteplota] + tmpBoxName;
       break;
 
     case "templateAlarm":
@@ -300,7 +297,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
 
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
-      tmpBoxSensor = tmpHtmlBox[6] + tmpBoxName;
+      tmpBoxSensor = tmpHtmlBox[DMsvetlo] + tmpBoxName;
       break;
 
 
@@ -321,6 +318,9 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       `
       tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName + tmpButtons;
       break;
+
+
+
 
 
       //a pro všechny ostatní typy: jako je třeba ???? NIC
@@ -461,6 +461,7 @@ Arduino.kontejnerShow = function() {
             case DMpocasi: //počasí
               sensorType = "templateWeather";
               break;
+
             default:
           }
           $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
@@ -500,6 +501,13 @@ Arduino.kontejnerShow = function() {
           $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
             odeslatPUT ($(this).attr("id"), DMbranaT3);
             alert("Odeslán PUT 3");
+          });
+          //světlo
+          $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
+            odeslatPUT ($(this).attr("id"), "1");
+
+            Arduino.showDeviceDetail();
+
           });
 
 
@@ -739,13 +747,19 @@ Arduino.showDeviceDetail = function() {
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
 
             var tempVal = Number(device[i].value);
+            //console.log(tempVal);
+            switch (true) {
 
-            //jakože bliká
-            if (tempVal % 2 == 0) {
-              document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "far fa-lightbulb ";
-            } else {
-              document.getElementById("sensor-" + sensorID + "-svetlo-stav").className = "ffar fa-lightbulb text-warning";
+              case tempVal == 1:
+                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
+                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+                break;
+              default:
+                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
             }
+
+
             break;
           case DMalarm: //alarm - PIR
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
@@ -790,6 +804,7 @@ Arduino.showDeviceDetail = function() {
     })
     .catch(function(error) {
       console.log(error);
+      console.log("nejsou data");
     });
 
 }
