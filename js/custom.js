@@ -587,6 +587,10 @@ Arduino.showDeviceDetail = function() {
 
   Arduino.axios.get('/')
     .then(function(response) {
+
+      //nastavení barvy pozadí - když jsou data-tak bílé
+      $("body").css("background-color", "White");
+
       var device = response.data;
 
       //zobrazení casu, který je na serveru
@@ -805,6 +809,8 @@ Arduino.showDeviceDetail = function() {
     .catch(function(error) {
       console.log(error);
       console.log("nejsou data");
+      //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ 
+      $("body").css("background-color", "Red");
     });
 
 }
