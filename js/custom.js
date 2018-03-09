@@ -1,4 +1,3 @@
-
 window.Arduino = {};
 
 window.onload = function() {
@@ -11,14 +10,14 @@ window.onload = function() {
   //pro interní testování pro refresh JS
   //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
   mojeUrl: 'http://192.168.0.22:1818/doomaster/sensors/',
-  //mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/', - kavarna
+    //mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/', - kavarna
 
 
-console.log(mojeUrl);
-    Arduino.axios = axios.create({
-      baseURL: mojeUrl,
-      timeout: 100000
-    });
+    console.log(mojeUrl);
+  Arduino.axios = axios.create({
+    baseURL: mojeUrl,
+    timeout: 100000
+  });
 
   // Arduino.generateWeb();
 
@@ -29,7 +28,7 @@ console.log(mojeUrl);
 
 
 
-  //vygeneruje HTML pro všechny BOXíky v JSON
+  //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.kontejnerShow();
 
 
@@ -75,6 +74,7 @@ function myTimer() {
 
 
 
+//stará funkce - nepoužívané
 //Aktualizace PUT: zmeni polozku (webname) a odesle pomoci PUT na API
 Arduino.changeDeviceDetail = function(itemID) {
 
@@ -115,12 +115,12 @@ var tmpBoxWrap = '';
 var tmpBoxContent = '';
 var tmpBoxSensor = '';
 
-const DMteplota  = "1";
-const DMkamera  = "2";
+const DMteplota = "1";
+const DMkamera = "2";
 const DMalarm = "3";
 const DMalarmCam = "4";
-const DMvoda  = "5";
-const DMsvetlo  = "6";
+const DMvoda = "5";
+const DMsvetlo = "6";
 const DMbrana = "7";
 const DMpocasi = "8";
 const DMlight = "9";
@@ -133,12 +133,90 @@ const DMbranaT3 = "3";
 
 const GRID_SM = "col-3"; //teplota
 const GRID_MD = "col-8 col-sm-6"; //počasí
-const GRID_FUL= "col-12 col-sm-6"; //kamera
+const GRID_FUL = "col-12 col-sm-6"; //kamera
 
+
+//zatím nepoužíváno: - generování HTML pro alertCam
+Arduino.alercamShow = function() {
+
+  var sensorType = "";
+  var sensorID = 0; //cislo senzoru UNID
+
+  var device;
+  //načtení z JSON bude zde
+  // device.webtype = "alertcam";
+  // device.unid = 0;
+
+  sensorID = 0;
+  sensorType = "templateAlertcam";
+
+
+  $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
+  //rezervace budouciho kliku
+  $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-left", function() {
+    //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+    //tak se provede to, co je ve funkci:
+    if (poziceObrazkuAlertCam > 0) {
+      poziceObrazkuAlertCam--;
+    } else {
+      poziceObrazkuAlertCam = (pocetObratkuAlertCam - 1);
+    }
+    Arduino.showAlarmCam(); //aktualizace obrazovky
+  });
+  $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-right", function() {
+
+    if (poziceObrazkuAlertCam < pocetObratkuAlertCam - 1) {
+      poziceObrazkuAlertCam++;
+    } else {
+      poziceObrazkuAlertCam = 0;
+    }
+    Arduino.showAlarmCam(); //aktualizace obrazovky
+  });
+
+
+
+}
+
+var poziceObrazkuAlertCam = 0;
+var pocetObratkuAlertCam = 33;
+//pozice a celkovy obrazku na ALARMU
+
+//zatím nepoužíváno: - generování obsahu pro HTML pro alertCam
+Arduino.showAlarmCam = function() {
+
+  var sensorID = 0; //unikatni sensorID
+  var device;
+  var sensorType;
+  //bude načtení z JSON
+
+  sensorID = 0;
+  sensorType = "alertcam";
+  adresaObrazku = "activitylog/image" //celá adresa pak bude /activitylog/image-1.jpg
+
+  switch (sensorType) {
+    case "alertcam":
+      $("#sensor-" + sensorID + "-name").html(" < AKCE v HALE");
+      $("#sensor-" + sensorID + "-time").html("31.12.2017 23:59");
+      // $("#sensor-"+sensorID+"-time").addClass ("top-left");  //zobrazení času v rohu obrázku
+      $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+      $('#sensor-' + sensorID + '-boxContent').css("height", "360");
+      //progress bar
+      document.getElementById("sensor-" + sensorID + "-alertcam-progress-l").style.width = ((poziceObrazkuAlertCam * 100) / pocetObratkuAlertCam) + "%";
+      //novy obrazek
+      document.getElementById("sensor-" + sensorID + "-alertcam-url").src = adresaObrazku + "-" + poziceObrazkuAlertCam + ".jpg";
+      break;
+  } //konec :switch:
+}
+
+
+
+
+
+// na základě typu livingStone (senzoru) vytvoří HTML teplate
 Arduino.kontejnerTemplate = function(sensorType, sensorID) {
   //vloži HTML podle templatů
 
-  //pole, ve kterém jsou HTML vzory jednotlivých čidel.
+  //pole, ve kterém jsou základní HTML vzory jednotlivých čidel.
 
   var tmpHtmlBox = [
     // 0 = NILL
@@ -180,54 +258,36 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 
     </div>
     `,
-
-
-
     // 5 = VODA
-
     `<div id="sensor-ID-module-voda" class="text-left">
         <h1>
           <span id="sensor-ID-voda-numb">-99</span>
         </h1>
     </div>
-    `
-    ,
-
+    `,
     // 6 = svetlo
     `<div id="sensor-ID-module-svetlo">
       <div style="font-size:3em; color:"White">
         <i class="far fa-lightbulb"></i>
       </div>
     </div>`,
-
     // 7 = brána
-    // '<div id="sensor-ID-module-brana" class="progress">' +
-    // '<div id="sensor-ID-brana-left" class="progress-bar bg-warning" role="progressbar" style="width:30%">' +
-    // '</div>' +
-    // '<div id="sensor-ID-brana-right" class="progress-bar bg-success" role="progressbar" style="width:70%">' +
-    // '</div>' +
-    // '</div>'
-
     `<div id="sensor-ID-module-brana" class="text-left">
         <h1>
           <span id="sensor-ID-brana-numb"> -99 </span>
         </h1>
     </div>
-    `
-    ,
-
+    `,
     //8 = počasí : mělo by se sjednotit s KAMERA
     '<div id="sensor-ID-module-pocasi" class="pocasi-value">' +
     '<div class="cam-value ">' +
     '<img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">' +
     '</div>' +
     '</div>'
-
-
   ];
 
 
-
+  // sestavení výsledného modulu
   switch (sensorType) {
 
     // test securitycap
@@ -310,7 +370,7 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
       // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
       tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
       tmpButtons =
-      `
+        `
       <div class="btn-group btn-group-justified">
         <a id="sensor-ID-brana-but1" class="btn ">Otevřít</a>
         <a id="sensor-ID-brana-but2" class="btn ">Branka</a>
@@ -350,54 +410,14 @@ Arduino.kontejnerTemplate = function(sensorType, sensorID) {
 }
 
 
-Arduino.alercamShow = function() {
-
-  var sensorType = "";
-  var sensorID = 0; //cislo senzoru UNID
-
-  var device;
-  //načtení z JSON bude zde
-  // device.webtype = "alertcam";
-  // device.unid = 0;
-
-  sensorID = 0;
-  sensorType = "templateAlertcam";
-
-
-  $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
-  //rezervace budouciho kliku
-  $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-left", function() {
-    //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-    //tak se provede to, co je ve funkci:
-    if (poziceObrazkuAlertCam > 0) {
-      poziceObrazkuAlertCam--;
-    } else {
-      poziceObrazkuAlertCam = (pocetObratkuAlertCam - 1);
-    }
-    Arduino.showAlarmCam(); //aktualizace obrazovky
-  });
-  $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-right", function() {
-
-    if (poziceObrazkuAlertCam < pocetObratkuAlertCam - 1) {
-      poziceObrazkuAlertCam++;
-    } else {
-      poziceObrazkuAlertCam = 0;
-    }
-    Arduino.showAlarmCam(); //aktualizace obrazovky
-  });
-
-
-
-}
-
-
-function odeslatPUT (jmenoSenzoru, hodota){
+//odešle PUT na server s jménem a hodnotou
+function odeslatPUT(jmenoSenzoru, hodota) {
   //oříznutí jen na číslo senzoru: tedy z sensor-123456-xxx => 123456
   const url = `${jmenoSenzoru}`;
   console.log(url);
 
   poradiPomlcky = jmenoSenzoru.search("-");
-  jmenoSenzoru = jmenoSenzoru.substring(poradiPomlcky+1);
+  jmenoSenzoru = jmenoSenzoru.substring(poradiPomlcky + 1);
   poradiPomlcky = jmenoSenzoru.search("-");
   jmenoSenzoru = jmenoSenzoru.substring(0, poradiPomlcky);
 
@@ -414,7 +434,7 @@ function odeslatPUT (jmenoSenzoru, hodota){
 }
 
 
-
+//vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON
 Arduino.kontejnerShow = function() {
 
   var sensorType = "";
@@ -468,51 +488,30 @@ Arduino.kontejnerShow = function() {
           }
           $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
 
-          //rezervace budouciho kliku
-          // $(document).on("click", "#sensor-" + sensorID + "-boxWrap", function() {
-            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-            //tak se provede to, co je ve funkci:
-            // console.log($(this).attr("id")); //tisk cisla senzoru
-
-            // $(this).animateCss('pulse');
-            // $(this).addClass("fa fa-lightbulb-o");
-
-          //   alert("BOxík bude vymazán. ID: " + $(this).attr("id"));
-          //   $(this).addClass("hidden");
-          //
-          // });
-
-
-
-
-
-
+          //ošetření klikacích livingStones (boxíků)
 
           $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
             //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
             //tak se provede to, co je ve funkci:
-
-            odeslatPUT ($(this).attr("id"), DMbranaT1);
+            odeslatPUT($(this).attr("id"), DMbranaT1);
             alert("Odeslán PUT 1");
-
           });
+
           $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-            odeslatPUT ($(this).attr("id"), DMbranaT2);
+            odeslatPUT($(this).attr("id"), DMbranaT2);
             alert("Odeslán PUT 2");
           });
+
           $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-            odeslatPUT ($(this).attr("id"), DMbranaT3);
+            odeslatPUT($(this).attr("id"), DMbranaT3);
             alert("Odeslán PUT 3");
           });
+
           //světlo
           $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-            odeslatPUT ($(this).attr("id"), "1");
-
+            odeslatPUT($(this).attr("id"), "1");
             Arduino.showDeviceDetail();
-
           });
-
-
 
         }
       }
@@ -525,64 +524,23 @@ Arduino.kontejnerShow = function() {
 
 
 
-var poziceObrazkuAlertCam = 0;
-var pocetObratkuAlertCam = 33;
-//pozice a celkovy obrazku na ALARMU
-
-Arduino.showAlarmCam = function() {
-
-  var sensorID = 0; //unikatni sensorID
-  var device;
-  var sensorType;
-  //bude načtení z JSON
-
-  sensorID = 0;
-  sensorType = "alertcam";
-  adresaObrazku = "activitylog/image" //celá adresa pak bude /activitylog/image-1.jpg
 
 
-  switch (sensorType) {
-    case "alertcam":
-      $("#sensor-" + sensorID + "-name").html(" < AKCE v HALE");
-      $("#sensor-" + sensorID + "-time").html("31.12.2017 23:59");
-      // $("#sensor-"+sensorID+"-time").addClass ("top-left");  //zobrazení času v rohu obrázku
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-      $('#sensor-' + sensorID + '-boxContent').css("height", "360");
-      //progress bar
-      document.getElementById("sensor-" + sensorID + "-alertcam-progress-l").style.width = ((poziceObrazkuAlertCam * 100) / pocetObratkuAlertCam) + "%";
-      //novy obrazek
-      document.getElementById("sensor-" + sensorID + "-alertcam-url").src = adresaObrazku + "-" + poziceObrazkuAlertCam + ".jpg";
-
-      break;
-
-  } //konec :switch:
-
-
-
-}
-
-
+//převede des. číslo na Sting na 2 pozice, a dá des. čárku (9.321 -> "9,3")
 function formatNumber(x) {
-
   const POCET_DESETIN = 1;
-
-
-
   //převede vždy na 2 des. místa
   x = x.toFixed(POCET_DESETIN);
-
   //vráti hodnutu zalomenou podle jazykového nastavení. Natvrdo CZ
   //nejede - musím udělat upravu ručně
   //  const LANGUAGE = 'cs-CZ';
   //s = x.toLocaleString(LANGUAGE);
-
-  s = x.replace (".", ",")
-
+  s = x.replace(".", ",")
   return s;
-
 }
 
 
+//vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
 Arduino.showDeviceDetail = function() {
 
   var sensorID = 0; //unikatni sensorID
@@ -595,19 +553,13 @@ Arduino.showDeviceDetail = function() {
 
       var device = response.data;
 
-      //zobrazení casu, který je na serveru
-      // $('#server-time').html(device[0].devSerTime);
-      //getElementById je prej rychlejši ???
-
       for (var i = 0; i < device.length; i++) {
-
 
         sensorID = device[i].unid;
 
         //jestliže je systémový údaj
         if (sensorID == "0") {
-
-          //jestliže je chyba - ukaž badge
+          //jestliže je chyba = ukaž badge (zvoneček)
           if (device[i].error == "0") {
             $('#homeButton').removeClass("badge badge-pill badge-danger");
             $('#homeButton').html("");
@@ -615,10 +567,8 @@ Arduino.showDeviceDetail = function() {
             $('#homeButton').addClass("badge badge-pill badge-danger");
             $('#homeButton').html(device[i].error);
           }
-
           //zobrazí čas
           $('#server-time').html(device[i].value);
-
         }
 
         //podle typu se naplní hodnoty
@@ -634,7 +584,7 @@ Arduino.showDeviceDetail = function() {
 
             $('#sensor-' + sensorID + '-name').html(device[i].webname);
             $('#sensor-' + sensorID + '-time').html(device[i].lrespiot);
-            $('#sensor-' + sensorID + '-teplota').html( formatNumber(tempVal));
+            $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
 
             var temperatureScheme = device[i].subtype; //barevné schéma pro teplotu
             switch (temperatureScheme) {
@@ -718,7 +668,6 @@ Arduino.showDeviceDetail = function() {
             break; //teplota KONEC
 
           case DMvoda: //voda
-
             var tempVal = Number(device[i].value);
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
@@ -729,22 +678,14 @@ Arduino.showDeviceDetail = function() {
             var temperatureScheme = Number(device[i].subtype); //barevné schéma pro teplotu
 
             switch (true) {
-
               case tempVal < temperatureScheme:
-                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+                $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                 break;
               default:
-                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
-                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+                $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
+                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
             }
-
-
-            // if (tempVal > 60) {
-            //   document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-danger";
-            // } else {
-            //   document.getElementById("sensor-" + sensorID + "-voda").className = "progress-bar progress-bar-striped active bg-success";
-            // }
 
             break;
 
@@ -757,20 +698,20 @@ Arduino.showDeviceDetail = function() {
             switch (true) {
 
               case tempVal == 1:
-                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+                $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
+                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
                 break;
               default:
-                  $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-                  $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+                $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
             }
-
-
             break;
+
           case DMalarm: //alarm - PIR
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
             break;
+
           case DMbrana: //brána
             var tempVal = Number(device[i].value);
 
@@ -783,11 +724,8 @@ Arduino.showDeviceDetail = function() {
               $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
               $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
             }
-
-
-            // document.getElementById("sensor-" + sensorID + "-brana-left").style.width = tempVal + "%";
-            // document.getElementById("sensor-" + sensorID + "-brana-right").style.width = 100 - tempVal + "%";
             break;
+
           case DMkamera: //kamera (ne počasí)
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
@@ -797,6 +735,7 @@ Arduino.showDeviceDetail = function() {
 
             // $('#sensor-'+i+'-boxWrap').css("height",auto);
             break;
+
           case DMpocasi: //počasí
             $("#sensor-" + sensorID + "-name").html(device[i].webname);
             $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
