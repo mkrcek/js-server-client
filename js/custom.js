@@ -384,6 +384,8 @@ var myVar = setInterval(function() {
   myTimer()
 }, 1000);
 
+
+
 function myTimer() {
   // Arduino.hodiny();
   // Arduino.showAlarmCam(); //test AlertCam
@@ -433,7 +435,7 @@ Arduino.alercamShow = function() {
   var sensorType = "";
   var sensorID = 0; //cislo senzoru UNID
 
-  var device_nejake;  //pole dat načtených z API ve formatu JSON
+  var device;  //pole dat načtených z API ve formatu JSON
 
 
   sensorID = 0;
@@ -460,7 +462,6 @@ Arduino.alercamShow = function() {
     }
     Arduino.showAlarmCam(); //aktualizace obrazovky
   });
-
 
 
 }
@@ -603,11 +604,8 @@ Arduino.containerShow = function() {
 
 
 
-
-
-
-
-
+var deviceObjectLast = {} ;
+var poprve = 0;
 
 //vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
 Arduino.containerUpdate = function() {
@@ -622,61 +620,87 @@ Arduino.containerUpdate = function() {
 
       var device = response.data;
 
-      for (var i = 0; i < device.length; i++) {
+      //nově - prace s objekty
+      //převede na objekt, kde klicem je unid, např. deviceObject[67898]
+      var deviceObject = device.reduce(function(map, obj) {
+          map[obj.unid] = obj;
+          return map;
+      }, {});
 
-        sensorID = device[i].unid;
 
-        //jestliže je systémový údaj
-        if (sensorID == "0") {
-          //jestliže je chyba = ukaž badge (zvoneček)
-          if (device[i].error == "0") {
-            $('#homeButton').removeClass("badge badge-pill badge-danger");
-            $('#homeButton').html("");
-          } else {
-            $('#homeButton').addClass("badge badge-pill badge-danger");
-            $('#homeButton').html(device[i].error);
-          }
-          //zobrazí čas
-          $('#server-time').html(device[i].value);
-        }
+      if (poprve == 0) {
+        //KDYŽ SE POPRVNÉ načítají data z GETu, tak at se naplní správně pole Objektů deviceObjectLast
+        poprve = 1;
+        deviceObjectLast = deviceObject;
+        console.log("poprve");
+      }
 
-        //podle typu se naplní hodnoty
-        switch (device[i].webtype) {
-          case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
-          break;
 
-          case DMteplota: //teplota
-            LivingStoneUpdate.Temperature (sensorID, device[i]);
-            break;
+      //projede všechno, něco jako cyklus : for (var i = 0; i < device.length; i++)
+      $.each(deviceObject, function(index, deviceItem) {
 
-          case DMvoda: //voda
-            LivingStoneUpdate.Water(sensorID, device[i]);
-            break;
+        sensorID = index;
 
-          case DMsvetlo: //světlo
-            LivingStoneUpdate.Light (sensorID, device[i]);
-            break;
+        //hodnoty se změnily - je potřeba přepsat tabulku. Jinak ne.
+        // if (deviceObjectLast[sensorID].value != deviceItem.value)
+           {
 
-          case DMalarm: //alarm - PIR
-            LivingStoneUpdate.Pir (sensorID, device[i]);
-            break;
+              if (sensorID == "0") {
+                //jestliže je chyba = ukaž badge (zvoneček)
+                if (deviceItem.error == "0") {
+                  $('#homeButton').removeClass("badge badge-pill badge-danger");
+                  $('#homeButton').html("");
+                } else {
+                  $('#homeButton').addClass("badge badge-pill badge-danger");
+                  $('#homeButton').html(deviceItem.error);
+                }
+                //zobrazí čas
+                $('#server-time').html(deviceItem.value);
+              }
 
-          case DMbrana: //brána
-            LivingStoneUpdate.Gate (sensorID, device[i]);
-            break;
+              //podle typu se naplní hodnoty
+              switch (deviceItem.webtype) {
+                case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
+                break;
 
-          case DMkamera: //kamera (ne počasí)
-            LivingStoneUpdate.Camera (sensorID, device[i]);
-            break;
+                case DMteplota: //teplota
+                  LivingStoneUpdate.Temperature (sensorID, deviceItem);
+                  break;
 
-          case DMpocasi: //počasí
-            LivingStoneUpdate.Weather (sensorID, device[i]);
+                case DMvoda: //voda
+                  LivingStoneUpdate.Water(sensorID, deviceItem);
+                  break;
 
-            break;
-        } //konec :switch:
+                case DMsvetlo: //světlo
+                  LivingStoneUpdate.Light (sensorID, deviceItem);
+                  break;
 
-      } //konec cyklu pro kreslení obsahu
+                case DMalarm: //alarm - PIR
+                  LivingStoneUpdate.Pir (sensorID, deviceItem);
+                  break;
 
+                case DMbrana: //brána
+                  LivingStoneUpdate.Gate (sensorID, deviceItem);
+                  break;
+
+                case DMkamera: //kamera (ne počasí)
+                  LivingStoneUpdate.Camera (sensorID, deviceItem);
+                  break;
+
+                case DMpocasi: //počasí
+                  LivingStoneUpdate.Weather (sensorID, deviceItem);
+                  break;
+              } //konec :switch:
+
+          } //konec value=value
+
+      }); //konec forEach cyklus
+
+      //nove - prace s objekty
+
+
+      //zapamatování si posledního stavu
+      deviceObjectLast = deviceObject;
     })
     .catch(function(error) {
       console.log(error);
