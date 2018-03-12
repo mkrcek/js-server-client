@@ -17,6 +17,8 @@ window.onload = function() {
 }
 
 
+// *************** Generuje HTML boxíky na stránku ********
+
 //nove fce pro HTML boxiky - tzv. LivingStone = každá fce samostatný
 LivingStone = {};
 
@@ -77,7 +79,9 @@ LivingStone.Pir = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  //přidání boxku na stránku (do #boxScreen) na poslední místo
+  $("#boxScreen").append(templateHTML);
 }
 
 LivingStone.Camera = function (sensorID) {
@@ -100,6 +104,7 @@ LivingStone.Camera = function (sensorID) {
       </div>
   </div>`;
 
+  //přidání boxku na stránku (do #boxScreen) na poslední místo
   $("#boxScreen").append(templateHTML);
 
 }
@@ -215,7 +220,7 @@ LivingStone.Light = function (sensorID) {
     odeslatPUT($(this).attr("id"), "1");
     Arduino.showDeviceDetail();
   });
-  return templateHTML;
+
 }
 
 LivingStone.AlarmCam = function (sensorID) {
@@ -248,14 +253,132 @@ LivingStone.AlarmCam = function (sensorID) {
     </div>`;
 
     $("#boxScreen").append(templateHTML);
-
 }
 
 
 
 
 
-//spusteni funkcíkazdou senkundu
+// *************** Generuje OBSAH pro boxíky na stránce ********
+LivingStoneUpdate = {};
+
+LivingStoneUpdate.Temperature = function (sensorID, device)  {
+
+  //var tempVal = device[i].value;
+  //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+  var tempVal = Number(device.value);
+
+  $('#sensor-' + sensorID + '-name').html(device.webname);
+  $('#sensor-' + sensorID + '-time').html(device.lrespiot);
+  $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
+
+  var temperatureScheme = device.subtype; //barevné schéma pro teplotu
+  switch (temperatureScheme) {
+    case "1": //air - vzduch
+      switch (true) {
+        case tempVal < 4:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+          break;
+        case tempVal < 16:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        case tempVal < 21:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        case tempVal < 31:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        case tempVal > 30:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        default:
+      }
+    }
+}
+
+LivingStoneUpdate.Water = function (sensorID, device) {
+  var tempVal = Number(device.value);
+  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+  $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
+  // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
+
+  //změna barvy po dosažení hodnoty v Subtype
+  var temperatureScheme = Number(device.subtype); //barevné schéma pro teplotu
+
+  switch (true) {
+    case tempVal < temperatureScheme:
+      $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+      break;
+    default:
+      $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
+      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+  }
+}
+
+LivingStoneUpdate.Light = function (sensorID, device) {
+  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+
+  var tempVal = Number(device.value);
+  //console.log(tempVal);
+  switch (true) {
+
+    case tempVal == 1:
+      $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
+      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+      break;
+    default:
+      $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+  }
+}
+
+LivingStoneUpdate.Pir = function (sensorID, device) {
+  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+}
+
+LivingStoneUpdate.Gate = function (sensorID, device) {
+  var tempVal = Number(device.value);
+
+  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+  if (tempVal == 0) {
+    $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
+    $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+  } else {
+    $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
+    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+  }
+}
+
+LivingStoneUpdate.Camera = function (sensorID, device) {
+  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+  // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
+  d = new Date();
+  document.getElementById("sensor-" + sensorID + "-kamera-url").src = device.subtype + "?" + d.getTime();
+
+  // $('#sensor-'+i+'-boxWrap').css("height",auto);
+}
+
+LivingStoneUpdate.Weather = function (sensorID, device) {
+  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+  d = new Date();
+  document.getElementById("sensor-" + sensorID + "-pocasi-url").src = device.subtype + "?" + d.getHours(); //aktualizuje každou hodinu
+
+}
+
+// *************** spusteni funkcí kazdou senkundu ********
+
 
 var myVar = setInterval(function() {
   myTimer()
@@ -488,7 +611,7 @@ function formatNumber(x) {
 //vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
 Arduino.showDeviceDetail = function() {
 
-  var sensorID = 0; //unikatni sensorID
+  var sensorID = "0"; //unikatni sensorID
 
   Arduino.axios.get('/')
     .then(function(response) {
@@ -519,173 +642,35 @@ Arduino.showDeviceDetail = function() {
         //podle typu se naplní hodnoty
         switch (device[i].webtype) {
           case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
-            break;
+          break;
 
           case DMteplota: //teplota
-            //var tempVal = device[i].value;
-
-            //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
-            var tempVal = Number(device[i].value);
-
-            $('#sensor-' + sensorID + '-name').html(device[i].webname);
-            $('#sensor-' + sensorID + '-time').html(device[i].lrespiot);
-            $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
-
-            var temperatureScheme = device[i].subtype; //barevné schéma pro teplotu
-            switch (temperatureScheme) {
-              case "1": //air - vzduch
-                switch (true) {
-                  case tempVal < 4:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-                    break;
-                  case tempVal < 16:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal < 21:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal < 31:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal > 30:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  default:
-                }
-                break;
-              case "2": //boiler
-                switch (true) {
-                  case tempVal < 4:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-                    break;
-                  case tempVal < 40:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal < 70:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal < 81:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal > 80:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  default:
-                }
-                break;
-              case "3": //swimming pool
-                switch (true) {
-                  case tempVal < 4:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-                    break;
-                  case tempVal < 20:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal < 25:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal < 30:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  case tempVal > 29:
-                    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-                    $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                    break;
-                  default:
-                }
-                break;
-              default:
-            }
-            break; //teplota KONEC
+            LivingStoneUpdate.Temperature (sensorID, device[i]);
+            break;
 
           case DMvoda: //voda
-            var tempVal = Number(device[i].value);
-            $("#sensor-" + sensorID + "-name").html(device[i].webname);
-            $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
-            // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
-
-            //změna barvy po dosažení hodnoty v Subtype
-            var temperatureScheme = Number(device[i].subtype); //barevné schéma pro teplotu
-
-            switch (true) {
-              case tempVal < temperatureScheme:
-                $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                break;
-              default:
-                $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
-                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-            }
-
+            LivingStoneUpdate.Water(sensorID, device[i]);
             break;
 
           case DMsvetlo: //světlo
-            $("#sensor-" + sensorID + "-name").html(device[i].webname);
-            $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-
-            var tempVal = Number(device[i].value);
-            //console.log(tempVal);
-            switch (true) {
-
-              case tempVal == 1:
-                $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-                break;
-              default:
-                $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-                $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-            }
+            LivingStoneUpdate.Light (sensorID, device[i]);
             break;
 
           case DMalarm: //alarm - PIR
-            $("#sensor-" + sensorID + "-name").html(device[i].webname);
-            $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
+            LivingStoneUpdate.Pir (sensorID, device[i]);
             break;
 
           case DMbrana: //brána
-            var tempVal = Number(device[i].value);
-
-            $("#sensor-" + sensorID + "-name").html(device[i].webname);
-            $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            if (tempVal == 0) {
-              $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
-              $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-            } else {
-              $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
-              $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-            }
+            LivingStoneUpdate.Gate (sensorID, device[i]);
             break;
 
           case DMkamera: //kamera (ne počasí)
-            $("#sensor-" + sensorID + "-name").html(device[i].webname);
-            $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
-            d = new Date();
-            document.getElementById("sensor-" + sensorID + "-kamera-url").src = device[i].subtype + "?" + d.getTime();
-
-            // $('#sensor-'+i+'-boxWrap').css("height",auto);
+            LivingStoneUpdate.Camera (sensorID, device[i]);
             break;
 
           case DMpocasi: //počasí
-            $("#sensor-" + sensorID + "-name").html(device[i].webname);
-            $("#sensor-" + sensorID + "-time").html(device[i].lrespiot);
-            d = new Date();
-            document.getElementById("sensor-" + sensorID + "-pocasi-url").src = device[i].subtype + "?" + d.getHours(); //aktualizuje každou hodinu
+            LivingStoneUpdate.Weather (sensorID, device[i]);
+
             break;
         } //konec :switch:
 
