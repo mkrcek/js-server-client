@@ -1,9 +1,12 @@
-# Doomaster: snídane & avokado 9.3.2018 03:31
+# Doomaster: refac & avokado 12.3.2018 10:43
 
 
 ----------
 
 ## Co nového ve verzi
+
+12.3. refaktoringovaá verze
+
 
 9.3.
 
