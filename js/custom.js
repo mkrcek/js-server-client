@@ -10,10 +10,10 @@ window.onload = function() {
   });
 
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
-  Arduino.kontejnerShow();
+  Arduino.containerShow();
 
   //vygeneruje OBSAH pro všechny HTML-BOXíky v JSON
-  Arduino.showDeviceDetail();
+  Arduino.containerUpdate();
 }
 
 
@@ -218,7 +218,7 @@ LivingStone.Light = function (sensorID) {
 
   $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
     odeslatPUT($(this).attr("id"), "1");
-    Arduino.showDeviceDetail();
+    Arduino.containerUpdate();
   });
 
 }
@@ -387,7 +387,7 @@ var myVar = setInterval(function() {
 function myTimer() {
   // Arduino.hodiny();
   // Arduino.showAlarmCam(); //test AlertCam
-  Arduino.showDeviceDetail(); //box na obrazovce
+  Arduino.containerUpdate(); //box na obrazovce
 }
 
 
@@ -433,10 +433,8 @@ Arduino.alercamShow = function() {
   var sensorType = "";
   var sensorID = 0; //cislo senzoru UNID
 
-  var device;
-  //načtení z JSON bude zde
-  // device.webtype = "alertcam";
-  // device.unid = 0;
+  var device_nejake;  //pole dat načtených z API ve formatu JSON
+
 
   sensorID = 0;
   sensorType = "templateAlertcam";
@@ -524,8 +522,22 @@ function odeslatPUT(jmenoSenzoru, hodota) {
 }
 
 
+//převede des. číslo na Sting na 2 pozice, a dá des. čárku (9.321 -> "9,3")
+function formatNumber(x) {
+  const POCET_DESETIN = 1;
+  //převede vždy na 2 des. místa
+  x = x.toFixed(POCET_DESETIN);
+  //vráti hodnutu zalomenou podle jazykového nastavení. Natvrdo CZ
+  //nejede - musím udělat upravu ručně
+  //  const LANGUAGE = 'cs-CZ';
+  //s = x.toLocaleString(LANGUAGE);
+  s = x.replace(".", ",")
+  return s;
+}
+
+
 //vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON
-Arduino.kontejnerShow = function() {
+Arduino.containerShow = function() {
 
   var sensorType = "";
   var sensorID = 0; //cislo senzoru UNID
@@ -594,22 +606,11 @@ Arduino.kontejnerShow = function() {
 
 
 
-//převede des. číslo na Sting na 2 pozice, a dá des. čárku (9.321 -> "9,3")
-function formatNumber(x) {
-  const POCET_DESETIN = 1;
-  //převede vždy na 2 des. místa
-  x = x.toFixed(POCET_DESETIN);
-  //vráti hodnutu zalomenou podle jazykového nastavení. Natvrdo CZ
-  //nejede - musím udělat upravu ručně
-  //  const LANGUAGE = 'cs-CZ';
-  //s = x.toLocaleString(LANGUAGE);
-  s = x.replace(".", ",")
-  return s;
-}
+
 
 
 //vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
-Arduino.showDeviceDetail = function() {
+Arduino.containerUpdate = function() {
 
   var sensorID = "0"; //unikatni sensorID
 
