@@ -21,7 +21,7 @@ window.onload = function() {
 LivingStone = {};
 
 LivingStone.Null = function (sensorID) {
-  //HTML boxím pro NIC
+  //HTML boxík pro NIC
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -35,11 +35,13 @@ LivingStone.Null = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  $("#boxScreen").append(templateHTML);
+
 }
 
 LivingStone.Temperature = function (sensorID) {
-  //HTML boxím pro teplotu
+  //HTML boxík pro teplotu
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -53,11 +55,14 @@ LivingStone.Temperature = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  //přidání boxku na stránku (do #boxScreen) na poslední místo
+  $("#boxScreen").append(templateHTML);
+
 }
 
 LivingStone.Pir = function (sensorID) {
-  //HTML boxím pro Pir Motion Alarm
+  //HTML boxík pro Pir Motion Alarm
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -76,7 +81,7 @@ LivingStone.Pir = function (sensorID) {
 }
 
 LivingStone.Camera = function (sensorID) {
-  //HTML boxím pro Kameru
+  //HTML boxík pro Kameru
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
@@ -94,11 +99,13 @@ LivingStone.Camera = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  $("#boxScreen").append(templateHTML);
+
 }
 
 LivingStone.Weather = function (sensorID) {
-  //HTML boxím pro Počasí
+  //HTML boxík pro Počasí
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
@@ -111,11 +118,13 @@ LivingStone.Weather = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  //přidání boxku na stránku (do #boxScreen) na poslední místo
+  $("#boxScreen").append(templateHTML);
 }
 
 LivingStone.Water = function (sensorID) {
-  //HTML boxím pro Vodu
+  //HTML boxík pro Vodu
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -131,11 +140,13 @@ LivingStone.Water = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  //přidání boxku na stránku (do #boxScreen) na poslední místo
+  $("#boxScreen").append(templateHTML);
 }
 
 LivingStone.Gate = function (sensorID) {
-  //HTML boxím pro Bránu
+  //HTML boxík pro Bránu
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -157,11 +168,30 @@ LivingStone.Gate = function (sensorID) {
 
       </div>
   </div>`;
-  return templateHTML;
+
+  //přidání boxku na stránku (do #boxScreen) na poslední místo
+  $("#boxScreen").append(templateHTML);
+
+  //ošetření kliknutí
+  $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
+    //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+    //tak se provede to, co je ve funkci:
+    odeslatPUT($(this).attr("id"), DMbranaT1);
+    alert("Odeslán PUT 1 na senzor " + sensorID);
+  });
+  $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
+    odeslatPUT($(this).attr("id"), DMbranaT2);
+    alert("Odeslán PUT 2 na senzor " + sensorID);
+  });
+  $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
+    odeslatPUT($(this).attr("id"), DMbranaT3);
+    alert("Odeslán PUT 3 na senzor " + sensorID);
+  });
+
 }
 
 LivingStone.Light = function (sensorID) {
-  //HTML boxím pro Světlo
+  //HTML boxík pro Světlo
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -177,11 +207,19 @@ LivingStone.Light = function (sensorID) {
 
       </div>
   </div>`;
+
+  $("#boxScreen").append(templateHTML);
+
+
+  $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
+    odeslatPUT($(this).attr("id"), "1");
+    Arduino.showDeviceDetail();
+  });
   return templateHTML;
 }
 
 LivingStone.AlarmCam = function (sensorID) {
-  //HTML boxím pro Alarm Kameru
+  //HTML boxík pro Alarm Kameru
     let templateHTML =
     `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
         <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
@@ -208,7 +246,9 @@ LivingStone.AlarmCam = function (sensorID) {
 
         </div>
     </div>`;
-    return templateHTML;
+
+    $("#boxScreen").append(templateHTML);
+
 }
 
 
@@ -390,52 +430,30 @@ Arduino.kontejnerShow = function() {
           switch (device[i].webtype) {
 
             case DMteplota: //teplota
-              $("#boxScreen").append(LivingStone.Temperature(sensorID));
+              LivingStone.Temperature(sensorID);
               break;
             case DMvoda: //voda
-              $("#boxScreen").append(LivingStone.Water(sensorID));
+              LivingStone.Water(sensorID);
               break;
             case DMsvetlo: //svetlo
-              $("#boxScreen").append(LivingStone.Light(sensorID));
-
-              //ošetření kliknutí
-              $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-                odeslatPUT($(this).attr("id"), "1");
-                Arduino.showDeviceDetail();
-              });
+              LivingStone.Light(sensorID);
               break;
             case DMalarm: //alarm - PIR
-              $("#boxScreen").append(LivingStone.Pir(sensorID));
+              LivingStone.Pir(sensorID);
               break;
             case DMbrana: //brána
-              $("#boxScreen").append(LivingStone.Gate(sensorID));
-
-              //ošetření kliknutí
-              $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
-                //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-                //tak se provede to, co je ve funkci:
-                odeslatPUT($(this).attr("id"), DMbranaT1);
-                alert("Odeslán PUT 1");
-              });
-              $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-                odeslatPUT($(this).attr("id"), DMbranaT2);
-                alert("Odeslán PUT 2");
-              });
-              $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-                odeslatPUT($(this).attr("id"), DMbranaT3);
-                alert("Odeslán PUT 3");
-              });
+              LivingStone.Gate(sensorID);
               break;
             case DMkamera: //kamera
-              $("#boxScreen").append(LivingStone.Camera(sensorID));
+              LivingStone.Camera(sensorID);
               break;
             case DMpocasi: //počasí
-              $("#boxScreen").append(LivingStone.Weather(sensorID));
+              LivingStone.Weather(sensorID);
               break;
 
             default:
               //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
-              $("#boxScreen").append(LivingStone.Null(sensorID));
+              LivingStone.Null(sensorID);
           }
         }
       }  // konec cyklu

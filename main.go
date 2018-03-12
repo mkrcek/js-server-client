@@ -244,7 +244,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevType:     "7",	//brána
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		Value:       "44",
-		DevName:     "4 - Brána",
+		DevName:     "4 - Brána 2",
 		InVisible:	0,
 	}
 
