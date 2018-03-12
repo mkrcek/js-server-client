@@ -1,51 +1,216 @@
 window.Arduino = {};
 
 window.onload = function() {
-
   var mojeUrl = window.location.protocol + "//" + window.location.host + '/doomaster/sensors/';
-  //baseURL: 'http://192.168.0.25:1818//doomaster/sensors/',
+        //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
-  //baseURL: 'http://localhost:1818//doomaster/sensors/',
-
-  //pro interní testování pro refresh JS
-  //mojeUrl = 'http://localhost:1818/doomaster/sensors/',
-  mojeUrl: 'http://192.168.0.22:1818/doomaster/sensors/',
-    //mojeUrl: 'http://192.168.0.110:1818//doomaster/sensors/', - kavarna
-
-
-    console.log(mojeUrl);
   Arduino.axios = axios.create({
     baseURL: mojeUrl,
     timeout: 100000
   });
 
-  // Arduino.generateWeb();
-
-
-  //test generovani AlertCam
-  //ted jeste ne
-  //Arduino.alercamShow();
-
-
-
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.kontejnerShow();
 
-
-
-
-  //test generovani pro AlertCam
-  //ted ješte ne:
-  //Arduino.showAlarmCam();
-
+  //vygeneruje OBSAH pro všechny HTML-BOXíky v JSON
   Arduino.showDeviceDetail();
-  //vygeneruje obsah pro všechny HTML-BOXíky v JSON
-
-  Arduino.changeDeviceDetail(0);
-  //umožní zmenit jmeno zařízení číslo -0
-
-
 }
+
+
+//nove fce pro HTML boxiky - tzv. LivingStone = každá fce samostatný
+LivingStone = {};
+
+LivingStone.Null = function (sensorID) {
+  //HTML boxím pro NIC
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+
+          <div id="sensor-${sensorID}-module-null" class="text-left">
+            <h1>
+              <span id="sensor-${sensorID}-null">NULL</span>&deg;
+            </h1>
+          </div>
+          <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Temperature = function (sensorID) {
+  //HTML boxím pro teplotu
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+
+          <div id="sensor-${sensorID}-module-teplota" class="text-left">
+            <h1>
+              <span id="sensor-${sensorID}-teplota">-99</span>&deg;
+            </h1>
+          </div>
+          <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Pir = function (sensorID) {
+  //HTML boxím pro Pir Motion Alarm
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+
+          <div id="sensor-${sensorID}-module-alarm" class="text-left">
+            <i id="sensor-${sensorID}-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>
+          </div>
+          <div >
+            <p id="sensor-${sensorID}-name">Severní pól</p>
+            <i id="sensor-${sensorID}-time">25:61</i>
+          </div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Camera = function (sensorID) {
+  //HTML boxím pro Kameru
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
+
+          <div>
+              <span id="sensor-${sensorID}-name">Severní pól</span>
+              <span> | </span>
+              <i id="sensor-${sensorID}-time">25:61</i>
+          </div>
+          <div id="sensor-${sensorID}-module-kamera" class="kameraBox kamera-value">
+              <div class="cam-value ">
+                <img id="sensor-${sensorID}-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
+              </div>
+          </div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Weather = function (sensorID) {
+  //HTML boxím pro Počasí
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
+
+          <div id="sensor-${sensorID}-module-pocasi" class="pocasi-value">
+            <div class="cam-value ">
+              <img id="sensor-${sensorID}-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
+            </div>
+          </div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Water = function (sensorID) {
+  //HTML boxím pro Vodu
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+
+          <div id="sensor-${sensorID}-module-voda" class="text-left">
+              <h1>
+                  <span id="sensor-${sensorID}-voda-numb">-99</span>
+              </h1>
+          </div>
+          <div>
+              <p id="sensor-${sensorID}-name">Severní pól</p>
+          </div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Gate = function (sensorID) {
+  //HTML boxím pro Bránu
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+
+          <div id="sensor-${sensorID}-module-brana" class="text-left">
+              <h1>
+                  <span id="sensor-${sensorID}-brana-numb">-99</span>
+              </h1>
+          </div>
+          <div>
+              <p id="sensor-${sensorID}-name">Severní pól</p>
+          </div>
+
+          <div class="btn-group btn-group-justified">
+            <a id="sensor-${sensorID}-brana-but1" class="btn ">Otevřít</a>
+            <a id="sensor-${sensorID}-brana-but2" class="btn ">Branka</a>
+            <a id="sensor-${sensorID}-brana-but3" class="btn ">PULS</a>
+          </div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.Light = function (sensorID) {
+  //HTML boxím pro Světlo
+  let templateHTML =
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+
+          <div id="sensor-${sensorID}-module-svetlo">
+              <div style="font-size:3em; color:"White">
+                <i class="far fa-lightbulb"></i>
+              </div>
+          </div>
+          <div>
+              <p id="sensor-${sensorID}-name">Severní pól</p>
+          </div>
+
+      </div>
+  </div>`;
+  return templateHTML;
+}
+
+LivingStone.AlarmCam = function (sensorID) {
+  //HTML boxím pro Alarm Kameru
+    let templateHTML =
+    `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
+        <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
+
+            <div>
+                <span id="sensor-${sensorID}-name">Severní pól</span>
+                <span> | </span>
+                <i id="sensor-${sensorID}-time">25:61</i>
+            </div>
+
+            <div id="sensor-${sensorID}-module-alertcam" class="alertcam-value alertCam">
+                <div class="text-center">
+                  <button id="sensor-${sensorID}-alertcam-btn-left" type="button" class="btn "> << </button>
+                  <button id="sensor-${sensorID}-alertcam-btn-delete" type="button" class="btn "> DEL </button>
+                  <button id="sensor-${sensorID}-alertcam-btn-right" type="button" class="btn "> >> </button>
+                </div>
+                <div class="alertcam-value ">
+                  <img id="sensor-${sensorID}-alertcam-url" style="width:100%;" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >
+                </div>
+                <div class="progress">
+                  <div id="sensor-${sensorID}-alertcam-progress-l" class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+
+        </div>
+    </div>`;
+    return templateHTML;
+}
+
 
 
 
@@ -74,46 +239,9 @@ function myTimer() {
 
 
 
-//stará funkce - nepoužívané
-//Aktualizace PUT: zmeni polozku (webname) a odesle pomoci PUT na API
-Arduino.changeDeviceDetail = function(itemID) {
-
-  //puvodni pracovni verze - jen pro prvni MODULek
-
-  $('#device-detail-' + itemID + ' .save').click(() => {
-    console.log("click " + itemID);
-    $('#device-detail-' + itemID + ' form').submit();
-  });
-
-  $('#device-detail-' + itemID + ' form').submit((event) => {
-    //  Arduino.axios.put ('/hodnota/'+itemID, {
-    Arduino.axios.put('/' + itemID, {
-        webname: $('#device-detail-' + itemID + ' input[name="webname"]').val()
-      })
-      .then(function(response) {
-        console.log('UPDATE PUT' + itemID);
-        Arduino.showDeviceDetail();
-        console.log('Screen is refreshed');
-
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    event.preventDefault();
-  });
-
-} //end changeDeviceDetail
-
-
-
-
-
 
 // ***********************************
 
-var tmpBoxWrap = '';
-var tmpBoxContent = '';
-var tmpBoxSensor = '';
 
 const DMteplota = "1";
 const DMkamera = "2";
@@ -150,8 +278,7 @@ Arduino.alercamShow = function() {
   sensorID = 0;
   sensorType = "templateAlertcam";
 
-
-  $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
+  $("#boxScreen").append(LivingStone.Temperature(sensorID));
   //rezervace budouciho kliku
   $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-left", function() {
     //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
@@ -210,206 +337,6 @@ Arduino.showAlarmCam = function() {
 
 
 
-
-
-// na základě typu livingStone (senzoru) vytvoří HTML teplate
-Arduino.kontejnerTemplate = function(sensorType, sensorID) {
-  //vloži HTML podle templatů
-
-  //pole, ve kterém jsou základní HTML vzory jednotlivých čidel.
-
-  var tmpHtmlBox = [
-    // 0 = NILL
-    '<div id="sensor-ID-module-null" class="text-left">' +
-    '<h1>' +
-    '<span id="sensor-ID-null">NULL</span>' +
-    '</h1>' +
-    '</div>',
-    // 1 = Teplota
-    '<div id="sensor-ID-module-teplota" class="text-left">' +
-    '<h1>' +
-    '<span id="sensor-ID-teplota">-99</span>&deg;' +
-    '</h1>' +
-    '</div>',
-    // 2 = HTTP outDOOM Obrázek  (jen kamera, pocasi ma jiné)
-    '<div id="sensor-ID-module-kamera" class=" kameraBox kamera-value">' +
-    '<div class="cam-value ">' +
-    '<img id="sensor-ID-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">' +
-    '</div>' +
-    '</div>',
-    //3 = PIR
-    '<div id="sensor-ID-module-alarm">' +
-    '<i id="sensor-ID-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>' +
-    '</div>',
-    //4 = PIR AlarmCamera obrázek
-    `<div id="sensor-ID-module-alertcam" class="alertcam-value alertCam">
-    <div class="text-center">
-      <button id="sensor-ID-alertcam-btn-left" type="button" class="btn "> << </button>
-      <button id="sensor-ID-alertcam-btn-delete" type="button" class="btn "> DEL </button>
-      <button id="sensor-ID-alertcam-btn-right" type="button" class="btn "> >> </button>
-    </div>
-        <div class="alertcam-value ">
-          <img id="sensor-ID-alertcam-url" style="width:100%;" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >
-        </div>
-        <div class="progress">
-          <div id="sensor-ID-alertcam-progress-l" class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-          </div>
-        </div>
-
-    </div>
-    `,
-    // 5 = VODA
-    `<div id="sensor-ID-module-voda" class="text-left">
-        <h1>
-          <span id="sensor-ID-voda-numb">-99</span>
-        </h1>
-    </div>
-    `,
-    // 6 = svetlo
-    `<div id="sensor-ID-module-svetlo">
-      <div style="font-size:3em; color:"White">
-        <i class="far fa-lightbulb"></i>
-      </div>
-    </div>`,
-    // 7 = brána
-    `<div id="sensor-ID-module-brana" class="text-left">
-        <h1>
-          <span id="sensor-ID-brana-numb"> -99 </span>
-        </h1>
-    </div>
-    `,
-    //8 = počasí : mělo by se sjednotit s KAMERA
-    '<div id="sensor-ID-module-pocasi" class="pocasi-value">' +
-    '<div class="cam-value ">' +
-    '<img id="sensor-ID-pocasi-url" style="width:90%" src="images/image.jpg" alt="haha" class="img-responsive">' +
-    '</div>' +
-    '</div>'
-  ];
-
-
-  // sestavení výsledného modulu
-  switch (sensorType) {
-
-    // test securitycap
-    case "templateServerTime":
-      //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
-      tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
-      tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
-      tmpBoxSensor = tmpBoxName + tmlIkony + tmpHtmlBox[4];
-      break;
-
-      // test securitycap
-    case "templateAlertcam":
-      //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
-      tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
-      // tmlIkony = '<div class="btn-group btn-group-justified"><a href="#" class="btn btn-primary"><i class="fas fa-star"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-video"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-thermometer-empty"></i></a><a href="#" class="btn btn-primary"><i class="fas fa-lightbulb"></i></div></a>'
-      tmpBoxSensor = tmpBoxName + tmpHtmlBox[4];
-      break;
-
-    case "templateCam":
-      //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_FUL}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-camera">OBSAH\n   </div>';
-      tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span><span> | </span> <i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxSensor = tmpBoxName + tmpHtmlBox[DMkamera];
-      break;
-    case "templateWeather":
-      //jine rozlozeni NAZVU a sirka GRIDU
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_MD}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent-pocasi">OBSAH\n   </div>';
-      tmpBoxName = '<div ><span id="sensor-ID-name">Severní pól</span></div>';
-      tmpBoxSensor = tmpHtmlBox[DMpocasi];
-      break;
-
-    case "templateTemp":
-      // teplota
-
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
-
-      tmpBoxSensor = tmpHtmlBox[DMteplota] + tmpBoxName;
-      break;
-
-    case "templateAlarm":
-      //PIR alarm
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxSensor = tmpHtmlBox[3] + tmpBoxName;
-      break;
-
-    case "templateWater":
-      //VODA
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxSensor = tmpHtmlBox[5] + tmpBoxName;
-      break;
-
-    case "templateLight":
-      //SVETLO
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
-      tmpBoxSensor = tmpHtmlBox[DMsvetlo] + tmpBoxName;
-      break;
-
-
-    case "templateGate":
-      //Brána
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_MD} ">\n   OBSAH\n</div>`;
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
-      tmpButtons =
-        `
-      <div class="btn-group btn-group-justified">
-        <a id="sensor-ID-brana-but1" class="btn ">Otevřít</a>
-        <a id="sensor-ID-brana-but2" class="btn ">Branka</a>
-        <a id="sensor-ID-brana-but3" class="btn ">PULS</a>
-      </div>
-      <div></div>
-      `
-      tmpBoxSensor = tmpHtmlBox[7] + tmpBoxName + tmpButtons;
-      break;
-
-
-
-
-
-      //a pro všechny ostatní typy: jako je třeba ???? NIC
-    default:
-      //tmpBoxWrap = '<div onclick="" id="sensor-ID-boxWrap" class="boxWrap col-xs-4 col-sm-2">\n   OBSAH\n</div>';
-      tmpBoxWrap = `<div onclick="" id="sensor-ID-boxWrap" class="boxWrap ${GRID_SM}">\n   OBSAH\n</div>`;
-
-      tmpBoxContent = '<div id="sensor-ID-boxContent" class="boxContent">OBSAH\n   </div>';
-      // tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p><i id="sensor-ID-time">25:61</i></div>';
-
-      tmpBoxName = '<div ><p id="sensor-ID-name">Severní pól</p></div>';
-      tmpBoxSensor = $("#" + sensorType).html() + tmpBoxName;
-      //načte HTML template z index.html - casem se vloží přímo sem.
-  } //end switch
-
-  // generatePage: proměná s HTML kodem dle Template podle typu senzoru
-
-  generatePage = tmpBoxContent.replace("OBSAH", tmpBoxSensor);
-  generatePage = tmpBoxWrap.replace("OBSAH", generatePage);
-  generatePage = generatePage.replace(/sensor-ID/g, "sensor-" + sensorID);
-  // parametr  /g  znamena globalne - vsechny vyskyty, ne jen prvni
-
-  return generatePage;
-
-}
-
-
 //odešle PUT na server s jménem a hodnotou
 function odeslatPUT(jmenoSenzoru, hodota) {
   //oříznutí jen na číslo senzoru: tedy z sensor-123456-xxx => 123456
@@ -456,66 +383,66 @@ Arduino.kontejnerShow = function() {
 
 
       for (var i = 0; i < device.length; i++) {
-        // console.log(device[i].webtype);
-        sensorID = device[i].unid;
 
+        sensorID = device[i].unid;
         if (sensorID != "0") { //pokud se nejedné o systémový ID
 
           switch (device[i].webtype) {
+
             case DMteplota: //teplota
-              sensorType = "templateTemp";
+              $("#boxScreen").append(LivingStone.Temperature(sensorID));
               break;
             case DMvoda: //voda
-              sensorType = "templateWater";
+              $("#boxScreen").append(LivingStone.Water(sensorID));
               break;
             case DMsvetlo: //svetlo
-              sensorType = "templateLight";
+              $("#boxScreen").append(LivingStone.Light(sensorID));
+
+              //ošetření kliknutí
+              $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
+                odeslatPUT($(this).attr("id"), "1");
+                Arduino.showDeviceDetail();
+              });
               break;
             case DMalarm: //alarm - PIR
-              sensorType = "templateAlarm";
+              $("#boxScreen").append(LivingStone.Pir(sensorID));
               break;
             case DMbrana: //brána
-              sensorType = "templateGate";
+              $("#boxScreen").append(LivingStone.Gate(sensorID));
+
+              //ošetření kliknutí
+              $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
+                //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+                //tak se provede to, co je ve funkci:
+                odeslatPUT($(this).attr("id"), DMbranaT1);
+                alert("Odeslán PUT 1");
+              });
+              $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
+                odeslatPUT($(this).attr("id"), DMbranaT2);
+                alert("Odeslán PUT 2");
+              });
+              $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
+                odeslatPUT($(this).attr("id"), DMbranaT3);
+                alert("Odeslán PUT 3");
+              });
               break;
             case DMkamera: //kamera
-              sensorType = "templateCam";
+              $("#boxScreen").append(LivingStone.Camera(sensorID));
               break;
             case DMpocasi: //počasí
-              sensorType = "templateWeather";
+              $("#boxScreen").append(LivingStone.Weather(sensorID));
               break;
 
             default:
+              //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
+              $("#boxScreen").append(LivingStone.Null(sensorID));
           }
-          $("#boxScreen").append(Arduino.kontejnerTemplate(sensorType, sensorID));
-
-          //ošetření klikacích livingStones (boxíků)
-
-          $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
-            //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-            //tak se provede to, co je ve funkci:
-            odeslatPUT($(this).attr("id"), DMbranaT1);
-            alert("Odeslán PUT 1");
-          });
-
-          $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-            odeslatPUT($(this).attr("id"), DMbranaT2);
-            alert("Odeslán PUT 2");
-          });
-
-          $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-            odeslatPUT($(this).attr("id"), DMbranaT3);
-            alert("Odeslán PUT 3");
-          });
-
-          //světlo
-          $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-            odeslatPUT($(this).attr("id"), "1");
-            Arduino.showDeviceDetail();
-          });
-
         }
-      }
+      }  // konec cyklu
+
     })
+    //když nasane nějaký chyba - např. server není připojen.
+    //řeší se v aktualizaci dat v JSON - teď jen vypíše na konzolu
     .catch(function(error) {
       console.log(error);
     });
@@ -757,20 +684,3 @@ Arduino.showDeviceDetail = function() {
     });
 
 }
-
-
-
-// animace tlačítka - přidání rozšíření do jQuery
-$.fn.extend({
-  animateCss: function(animationName, callback) {
-    var animationEnd =
-      'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-    this.addClass('animated ' + animationName).one(animationEnd, function() {
-      $(this).removeClass('animated ' + animationName);
-      if (callback) {
-        callback();
-      }
-    });
-    return this;
-  },
-});
