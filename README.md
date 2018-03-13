@@ -7,13 +7,13 @@
 
 ## 13.3.2018 - 19:29
 
-- BETA: zobrazení erroru čidla
+BETA: zobrazení erroru čidla
 - funguje POUZE u livingStonu "Light"
 - LivingStoneUpdate.Light: zobrazení chyby + odpočet času + rámeček
 - LivingStone.Light:   HTML kod pro zobrazení chyby
 - Grafika: k diskuzi: teď černý rámeček
 
-- Nová fce: timeCountDown
+Nová fce: timeCountDown
 - vrátí string, ve kterém je rozdíl času oproti jinému času
 - Výstup: dlouhý formát => 12 dní 4 hodiny 22 minut 2 sekundy
 - Výstup: krátký formát => 292:22:02
