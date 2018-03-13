@@ -224,6 +224,8 @@ LivingStone.Light = function (sensorID) {
 }
 
 LivingStone.AlarmCam = function (sensorID) {
+  //neotestováno !!!!
+
   //HTML boxík pro Alarm Kameru
     let templateHTML =
     `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
@@ -379,7 +381,7 @@ LivingStoneUpdate.Weather = function (sensorID, device) {
 
 
 
-// *************** Generuje OBSAH pro menu ********
+// *************** Generuje OBSAH pro MENU ********
 MenuUpdate = {};
 
 MenuUpdate.Zvonecek = function (sensorID, deviceItem)  {
