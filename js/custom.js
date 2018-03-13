@@ -364,17 +364,16 @@ LivingStoneUpdate.Camera = function (sensorID, device) {
   $("#sensor-" + sensorID + "-time").html(device.lrespiot);
   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
   d = new Date();
-  document.getElementById("sensor-" + sensorID + "-kamera-url").src = device.subtype + "?" + d.getTime();
-
-  // $('#sensor-'+i+'-boxWrap').css("height",auto);
+  newUrl = device.subtype + "?" + d.getTime();
+  $("#sensor-" + sensorID + "-kamera-url").attr("src",newUrl);
 }
 
 LivingStoneUpdate.Weather = function (sensorID, device) {
   $("#sensor-" + sensorID + "-name").html(device.webname);
   $("#sensor-" + sensorID + "-time").html(device.lrespiot);
   d = new Date();
-  document.getElementById("sensor-" + sensorID + "-pocasi-url").src = device.subtype + "?" + d.getHours(); //aktualizuje každou hodinu
-
+  newUrl = device.subtype + "?" + d.getHours();
+  $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
 }
 
 
