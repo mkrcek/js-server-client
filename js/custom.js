@@ -377,6 +377,33 @@ LivingStoneUpdate.Weather = function (sensorID, device) {
 
 }
 
+
+
+
+// *************** Generuje OBSAH pro menu ********
+MenuUpdate = {};
+
+MenuUpdate.Zvonecek = function (sensorID, deviceItem)  {
+  //jestliže je chyba = ukaž badge (zvoneček na ikone DM)
+
+  if (deviceItem.error == "0") {
+    $('#homeButton').removeClass("badge badge-pill badge-danger");
+    $('#homeButton').html("");
+  } else {
+    $('#homeButton').addClass("badge badge-pill badge-danger");
+    $('#homeButton').html(deviceItem.error);
+  }
+}
+
+MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
+  //zobrazi serverovy cas
+  $('#server-time').html(deviceItem.value);
+
+}
+
+
+
+
 // *************** spusteni funkcí kazdou senkundu ********
 
 
@@ -536,18 +563,22 @@ function formatNumber(x) {
   return s;
 }
 
+//uchování předešlého stavu obsahu všech LivingStones
+//následně např. porovnávám, co má smysl měnit
+var deviceObjectLast = {} ;
+
 
 //vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON
 Arduino.containerShow = function() {
 
   var sensorType = "";
-  var sensorID = 0; //cislo senzoru UNID
+  var sensorID = "0"; //cislo senzoru UNID
 
   Arduino.axios.get("/")
     .then(function(response) {
       var device = response.data;
 
-      // setřídění podle weborder
+      // setřídění obsah pole (LivingStone) podle weborder
       device = device.sort(function(a, b) {
         // return a.weborder - b.weborder;
         if (a.weborder < b.weborder)
@@ -557,14 +588,25 @@ Arduino.containerShow = function() {
         return 0;
       });
 
+      //načtení POPRVÉ stavu obsahu všech LivingStones
+      //následně např. porovnávám, co má smysl měnit
+      //jako objekt - historický stav LivingStonu
+      // klíčem unid
+      // obsahující všechny informace o LivingStone
+      deviceObjectLast = device.reduce(function(map, obj) {
+          map[obj.unid] = obj;
+          return map;
+      }, {});
 
-      for (var i = 0; i < device.length; i++) {
 
-        sensorID = device[i].unid;
+      device.forEach(function(deviceItem) {
+
+        sensorID = deviceItem.unid;
+        sensorWebType = deviceItem.webtype;
+
         if (sensorID != "0") { //pokud se nejedné o systémový ID
 
-          switch (device[i].webtype) {
-
+          switch (sensorWebType) {
             case DMteplota: //teplota
               LivingStone.Temperature(sensorID);
               break;
@@ -586,14 +628,12 @@ Arduino.containerShow = function() {
             case DMpocasi: //počasí
               LivingStone.Weather(sensorID);
               break;
-
             default:
               //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
               LivingStone.Null(sensorID);
-          }
-        }
-      }  // konec cyklu
-
+          } //switch
+        }   //if sensorID
+      }); //konec forEach cyklu
     })
     //když nasane nějaký chyba - např. server není připojen.
     //řeší se v aktualizaci dat v JSON - teď jen vypíše na konzolu
@@ -604,8 +644,7 @@ Arduino.containerShow = function() {
 
 
 
-var deviceObjectLast = {} ;
-var poprve = 0;
+
 
 //vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
 Arduino.containerUpdate = function() {
@@ -620,46 +659,33 @@ Arduino.containerUpdate = function() {
 
       var device = response.data;
 
-      //nově - prace s objekty
-      //převede na objekt, kde klicem je unid, např. deviceObject[67898]
+      //pravidelné načítání stavu obsahu všech LivingStones
+      //jako objekt s klíčem unid a obsahem LivingStonu
+      //následně např. porovnávám, co má smysl měnit
       var deviceObject = device.reduce(function(map, obj) {
           map[obj.unid] = obj;
           return map;
       }, {});
 
 
-      if (poprve == 0) {
-        //KDYŽ SE POPRVNÉ načítají data z GETu, tak at se naplní správně pole Objektů deviceObjectLast
-        poprve = 1;
-        deviceObjectLast = deviceObject;
-        console.log("poprve");
-      }
-
-
       //projede všechno, něco jako cyklus : for (var i = 0; i < device.length; i++)
       $.each(deviceObject, function(index, deviceItem) {
 
         sensorID = index;
+        sensorWebType = deviceItem.webtype;
 
         //hodnoty se změnily - je potřeba přepsat tabulku. Jinak ne.
         // if (deviceObjectLast[sensorID].value != deviceItem.value)
            {
 
               if (sensorID == "0") {
-                //jestliže je chyba = ukaž badge (zvoneček)
-                if (deviceItem.error == "0") {
-                  $('#homeButton').removeClass("badge badge-pill badge-danger");
-                  $('#homeButton').html("");
-                } else {
-                  $('#homeButton').addClass("badge badge-pill badge-danger");
-                  $('#homeButton').html(deviceItem.error);
-                }
-                //zobrazí čas
-                $('#server-time').html(deviceItem.value);
+                //Uděla update menu podle systemovych parametru
+                MenuUpdate.Zvonecek (sensorID, deviceItem);
+                MenuUpdate.ServerTime (sensorID, deviceItem);
               }
 
               //podle typu se naplní hodnoty
-              switch (deviceItem.webtype) {
+              switch (sensorWebType) {
                 case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
                 break;
 
@@ -696,11 +722,11 @@ Arduino.containerUpdate = function() {
 
       }); //konec forEach cyklus
 
-      //nove - prace s objekty
-
 
       //zapamatování si posledního stavu
+      //následně např. porovnávám, co má smysl měnit
       deviceObjectLast = deviceObject;
+
     })
     .catch(function(error) {
       console.log(error);
