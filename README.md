@@ -7,8 +7,20 @@
 
 ## 13.3.2018
 
-- refaktoring a prehlednejsi kod 
+- refaktoring a prehlednejsi kod
+- LivingStone: vizualni stranka boxíku
+- LivingStoneUpdate: co a jak se mění po cteni API
+- MenuUpdate: co a jak se mění po cteni API (v MENU)
 
+zatim nereseno ani neupravovano. Jedna se o docasny kod
+- alercamShow & showAlarmCam
+
+Upravy
+
+- nově pracuji s objekty deviceObjectLast a deviceObject, s klíčem UNID
+- připraveno na sledování předešlého stavu
+- namísto for cyklu je použit forEach
+- místo JS sjednoceno na jQuery (kromě alercamShow & showAlarmCam)
 
 ## 12.3. refaktoringovaá verze
 
