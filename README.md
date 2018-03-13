@@ -1,9 +1,14 @@
-# Doomaster: refac & avokado 12.3.2018 15:15
+# Doomaster: refac & avokado 13.3.2018 9:42
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 13.3.2018
+
+- refaktoring a prehlednejsi kod 
+
 
 ## 12.3. refaktoringovaá verze
 
@@ -13,7 +18,7 @@
  LivingStone.Water
  ...a tak dale
  - prehlednejsi osetreni kliknuti - primo v definici kontejnerShow
- 
+
 
 ## 9.3.
 
