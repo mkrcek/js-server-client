@@ -191,7 +191,7 @@ LivingStone.Water = function (sensorID) {
 LivingStone.Gate = function (sensorID) {
   //HTML boxík pro Bránu
   let templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
           <div id="sensor-${sensorID}-module-brana" class="text-left">
@@ -552,8 +552,9 @@ MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
   $("#server-time").html(cas);
   $("#server-time").css({"font-size": "1.5rem"});
 
-//js_date_methods pro rozdělání dní
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+  //js_date_methods pro rozdělání dní
+  //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+
 }
 
 

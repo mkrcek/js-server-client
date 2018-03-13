@@ -5,6 +5,10 @@
 
 ## Co nového ve verzi
 
+## 13.3.2018 - 12:21
+
+- drobná oprava: LivingStone Branka se rozšířil a už nepřetíká
+
 ## 13.3.2018 - 12:12
 
 - zobrazování serverového času
