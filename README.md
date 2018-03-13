@@ -1,11 +1,21 @@
-# Doomaster: snídane & avokado 9.3.2018 03:31
+# Doomaster: refac & avokado 12.3.2018 15:15
 
 
 ----------
 
 ## Co nového ve verzi
 
-9.3.
+## 12.3. refaktoringovaá verze
+
+- smazane zbytecne a stare komentace
+- nove fce pro HTML boxiky
+ LivingStone.Weather
+ LivingStone.Water
+ ...a tak dale
+ - prehlednejsi osetreni kliknuti - primo v definici kontejnerShow
+ 
+
+## 9.3.
 
 SVĚTLO:
 -  kliknutím na Světlo (webtyp = 6) se odešle PUT na server.

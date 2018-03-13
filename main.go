@@ -244,7 +244,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevType:     "7",	//brána
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		Value:       "44",
-		DevName:     "4 - Brána",
+		DevName:     "4 - Brána 2",
 		InVisible:	0,
 	}
 
@@ -319,9 +319,11 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 				var errImage error
 				//fmt.Println("chci uložit fotku číslo ", i)
 				if i == 6 {
+					//errImage = saveImageCam ("liveimages/image6.jpg", strconv.Itoa(i))
 					errImage = saveImageCam ("http://192.168.0.19/jpg/image.jpg", strconv.Itoa(i))
 				}
 				if i == 5 {
+					//errImage = saveImageCam ("liveimages/image6.jpg", strconv.Itoa(i))
 					errImage = saveImageCam ("http://192.168.0.26/jpg/image.jpg", strconv.Itoa(i))
 				}
 
