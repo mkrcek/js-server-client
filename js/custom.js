@@ -1,3 +1,41 @@
+//Globální konstanty
+
+const DMteplota = "1";
+const DMkamera = "2";
+const DMalarm = "3";
+const DMalarmCam = "4";
+const DMvoda = "5";
+const DMsvetlo = "6";
+const DMbrana = "7";
+const DMpocasi = "8";
+const DMlight = "9";
+
+const SchemeAir = "1";
+const SchemeBoiler = "2";
+const SchemeWater = "3";
+
+const DMbranaT1 = "1";
+const DMbranaT2 = "2";
+const DMbranaT3 = "3";
+
+
+
+//počet sloupců na stránce
+
+const GRID_SM = "col-3"; //teplota
+const GRID_MD = "col-8 col-sm-6"; //počasí
+const GRID_FUL = "col-12 col-sm-6"; //kamera
+
+
+//uchování předešlého stavu obsahu všech LivingStones
+//následně např. porovnávám, co má smysl měnit
+var deviceObjectLast = {} ;
+
+
+
+// ********** KOD
+
+
 window.Arduino = {};
 
 window.onload = function() {
@@ -276,7 +314,7 @@ LivingStoneUpdate.Temperature = function (sensorID, device)  {
 
   var temperatureScheme = device.subtype; //barevné schéma pro teplotu
   switch (temperatureScheme) {
-    case "1": //air - vzduch
+    case SchemeAir: //air - vzduch
       switch (true) {
         case tempVal < 4:
           $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
@@ -299,8 +337,59 @@ LivingStoneUpdate.Temperature = function (sensorID, device)  {
           $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
           break;
         default:
-      }
-    }
+      } //switch boiler
+      break;
+    case SchemeBoiler: //boiler
+      switch (true) {
+      case tempVal < 4:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+        break;
+      case tempVal < 35:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      case tempVal < 70:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      case tempVal < 81:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      case tempVal > 80:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      default:
+    } //switch boiler
+      break;
+    case SchemeWater: //water - swimming pool
+      switch (true) {
+      case tempVal < 4:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+        break;
+      case tempVal < 20:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      case tempVal < 25:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      case tempVal < 30:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      case tempVal > 29:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      default:
+    } //switch swimming pool
+      break;
+  } //switch (temperatureScheme)
 }
 
 LivingStoneUpdate.Water = function (sensorID, device) {
@@ -436,27 +525,6 @@ function myTimer() {
 // ***********************************
 
 
-const DMteplota = "1";
-const DMkamera = "2";
-const DMalarm = "3";
-const DMalarmCam = "4";
-const DMvoda = "5";
-const DMsvetlo = "6";
-const DMbrana = "7";
-const DMpocasi = "8";
-const DMlight = "9";
-
-const DMbranaT1 = "1";
-const DMbranaT2 = "2";
-const DMbranaT3 = "3";
-
-//počet sloupců na stránce
-
-const GRID_SM = "col-3"; //teplota
-const GRID_MD = "col-8 col-sm-6"; //počasí
-const GRID_FUL = "col-12 col-sm-6"; //kamera
-
-
 //zatím nepoužíváno: - generování HTML pro alertCam
 Arduino.alercamShow = function() {
 
@@ -564,9 +632,6 @@ function formatNumber(x) {
   return s;
 }
 
-//uchování předešlého stavu obsahu všech LivingStones
-//následně např. porovnávám, co má smysl měnit
-var deviceObjectLast = {} ;
 
 
 //vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON

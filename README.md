@@ -1,9 +1,15 @@
-# Doomaster: refac & avokado 13.3.2018 9:42
+# Doomaster: refac & avokado 13.3.2018 10:17
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 13.3.2018 - 10:12
+
+- uprava barevného schematu kotel
+- globální konstanty na začátku JS souboru
+- oprava (vrácení smazaneho kodu pro kotel po refaktoringu :-())
 
 ## 13.3.2018
 
