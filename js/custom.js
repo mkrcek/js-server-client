@@ -448,6 +448,9 @@ LivingStoneUpdate.Gate = function (sensorID, device) {
     $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
   }
+
+
+
 }
 
 LivingStoneUpdate.Camera = function (sensorID, device) {
@@ -487,8 +490,70 @@ MenuUpdate.Zvonecek = function (sensorID, deviceItem)  {
 
 MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
   //zobrazi serverovy cas
-  $('#server-time').html(deviceItem.value);
 
+
+    //načte čas ze serveru a standardizuje
+
+    // var actiondate = new Date(deviceItem.value);
+      //nefungovalo na iphone proto tatto metoda
+      //The reason of the problem is iPhone Safari doesn't support the Y-m-d H:i:s (ISO 8601) date format. I have encountered this problem in 2017/7/19, I do not understand why Safari did not fix the problem after two years.
+      //https://stackoverflow.com/questions/26657353/date-on-ios-device-returns-nan/26671796
+
+    let t = deviceItem.value.split(/[- :]/);
+    // Apply each element to the Date function
+    let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+    let actiondate = new Date(d);
+
+    let minuta = actiondate.getMinutes();
+    if (minuta < 10) {
+      minuta = "0" + minuta.toString();
+    }
+
+    let sekunda = actiondate.getSeconds();
+    if (sekunda < 10) {
+      sekunda = "0" + sekunda.toString();
+    }
+
+    let cas = actiondate.getHours() + ":" + minuta + ":" + sekunda;
+
+    let denVTydnu = "";
+    switch (actiondate.getDay()) {
+      case 1:
+        denVTydnu = "Pondělí"
+        break;
+      case 2:
+        denVTydnu = "Úterý"
+        break;
+      case 3:
+        denVTydnu = "Středa"
+        break;
+      case 4:
+        denVTydnu = "Čtvrtek"
+        break;
+      case 5:
+        denVTydnu = "Pátek"
+        break;
+      case 6:
+        denVTydnu = "Sobota"
+        break;
+      case 7:
+        denVTydnu = "Neděle"
+        break;
+      default:
+      denVTydnu = "Fakt netuším"
+    }
+
+  let datum = denVTydnu + " " + actiondate.getDate() + "." + actiondate.getMonth() + ".";
+
+
+  $("#server-date").html(datum);
+  $("#server-date").css({"font-size": "0.7rem"});
+
+  $("#server-time").html(cas);
+  $("#server-time").css({"font-size": "1.5rem"});
+
+//js_date_methods pro rozdělání dní
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 }
 
 

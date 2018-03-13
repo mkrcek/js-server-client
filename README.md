@@ -1,9 +1,18 @@
-# Doomaster: refac & avokado 13.3.2018 10:17
+# Doomaster: avokado & sprint 13.3.2018 12:12
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 13.3.2018 - 12:12
+
+- zobrazování serverového času
+- očekávám ve formátu 2006-01-02 15:04:05
+- vytiskne: Úterý 13.2. 11:57:15
+- ošetření 5s se zobrazí jako 05 (11:12:05)
+- kde čas je větším fontem
+- ošetřeno i pro iPhone (chybka Safari)
 
 ## 13.3.2018 - 10:12
 
@@ -27,6 +36,10 @@ Upravy
 - připraveno na sledování předešlého stavu
 - namísto for cyklu je použit forEach
 - místo JS sjednoceno na jQuery (kromě alercamShow & showAlarmCam)
+
+a poprvé použitto "rozvětvení" v  githubu
+https://confluence.atlassian.com/bitbucket/use-sourcetree-branches-to-merge-an-update-732268925.html
+
 
 ## 12.3. refaktoringovaá verze
 

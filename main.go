@@ -358,7 +358,12 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//systémový čas
-	myHomeDeviceSetup[10].Value = t.Format("15:04:05")
+	//myHomeDeviceSetup[10].Value = t.Format("15:04:05")
+	//2018-01-31 18:00:10
+	myHomeDeviceSetup[10].Value = t.Format("2006-01-02 15:04:05")
+	//fmt.Println(myHomeDeviceSetup[10].Value )
+
+
 	//systemovy error
 	if (t.Second() % 10 == 0) {
 		myHomeDeviceSetup[10].DevError = strconv.Itoa(t.Minute())
