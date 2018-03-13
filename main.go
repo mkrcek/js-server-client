@@ -231,7 +231,8 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevOrder:    0,
 		DevType:     "-1",	//systémovy čas
 		Value:     	 t.Format("2006-01-02 15:04:05"),
-		DevError:	"0",
+		DevError:	"",
+		DevName: "server",
 	}
 
 
@@ -301,7 +302,10 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 
 
-
+	//*** ****************************** aktualizuje tabulku pri každém čtení GET **************
+	//*** ****************************** aktualizuje tabulku pri každém čtení GET **************
+	//*** ****************************** aktualizuje tabulku pri každém čtení GET **************
+	//*** ****************************** aktualizuje tabulku pri každém čtení GET **************
 
 	//upraví  "tabulku" a odpoví na Get
 	t := time.Now()
@@ -311,7 +315,9 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	for i:=0;i<numberOfRows ;i++  {
 
 		//myHomeDeviceSetup[i].DevSerTime = t.Format("2006-01-02 15:04:05")
-		myHomeDeviceSetup[i].DevTime = t.Format("15:04:05")
+		if (i != 13) {		//třináctka řeší samostatně  - zkouška alarmu
+			myHomeDeviceSetup[i].DevTime = t.Format("2006-01-02 15:04:05")
+		}
 
 		switch myHomeDeviceSetup[i].DevType {
 		case DMkamera:
@@ -368,7 +374,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	if (t.Second() % 10 == 0) {
 		myHomeDeviceSetup[10].DevError = strconv.Itoa(t.Minute())
 	} else {
-		myHomeDeviceSetup[10].DevError = "0"
+		myHomeDeviceSetup[10].DevError = ""
 	}
 
 
@@ -499,11 +505,17 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 			//při pokusech se změnou názvu ---- ApiPutIdem(w, r, itemID)
 			//fmt.Println("PUT přijato")
 			hodnoty = zobrazHodnotuPUT(w,r)
+			t := time.Now()
 			if (itemID == 78901013 && hodnoty == "1") {
 				if myHomeDeviceSetup[13].Value == "1" {
 					myHomeDeviceSetup[13].Value = "0"
+					myHomeDeviceSetup[13].DevError = ""
+					myHomeDeviceSetup[13].DevTime = t.Format("2006-01-02 15:04:05")
 				} else {
 					myHomeDeviceSetup[13].Value = "1"
+					myHomeDeviceSetup[13].DevError = "čidlo hoří"
+					myHomeDeviceSetup[13].DevTime = "2018-03-12 15:04:05"
+
 				}
 
 			}

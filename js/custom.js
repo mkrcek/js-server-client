@@ -248,6 +248,10 @@ LivingStone.Light = function (sensorID) {
               <p id="sensor-${sensorID}-name">Severní pól</p>
           </div>
 
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
+          </div>
+
       </div>
   </div>`;
 
@@ -414,8 +418,27 @@ LivingStoneUpdate.Water = function (sensorID, device) {
 }
 
 LivingStoneUpdate.Light = function (sensorID, device) {
+
+//jestlize nastala chyba - tak orámečkovat a napsat chybu
+//vložit i do livingStones.všechny
+
+  if (device.error != "") {
+    let serverDate = deviceObjectLast["0"].lrespiot; //čas ze serveru
+    let deviceDate = device.lrespiot; //cas z device, LivingStone
+    textLostConTime = device.error + " | " +timeCountDown(deviceDate, serverDate, false);
+    console.log(textLostConTime);
+
+    $("#sensor-" + sensorID + "-error").html(textLostConTime);
+    $('#sensor-' + sensorID + '-boxWrap').css("background-color", "Black ");
+
+
+  } else {
+    textLostConTime = "";
+    $("#sensor-" + sensorID + "-error").html(textLostConTime);
+    $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
+  }
+
   $("#sensor-" + sensorID + "-name").html(device.webname);
-  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
 
   var tempVal = Number(device.value);
   //console.log(tempVal);
@@ -446,7 +469,7 @@ LivingStoneUpdate.Gate = function (sensorID, device) {
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
   } else {
     $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+    $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
   }
 
 
@@ -479,13 +502,92 @@ MenuUpdate = {};
 MenuUpdate.Zvonecek = function (sensorID, deviceItem)  {
   //jestliže je chyba = ukaž badge (zvoneček na ikone DM)
 
-  if (deviceItem.error == "0") {
+  if (deviceItem.error == "") {
     $('#homeButton').removeClass("badge badge-pill badge-danger");
     $('#homeButton').html("");
   } else {
     $('#homeButton').addClass("badge badge-pill badge-danger");
     $('#homeButton').html(deviceItem.error);
   }
+}
+
+
+timeCountDown = function (lastDate, serverDate, longText) {
+  //vrátí string, ve kterém je rozdíl času oproti jinému času (serverový / frontendový / ..)
+  //lastDate je formatu Date
+  //serverDate je formátu Date (počítá se rozdíl do "distance")
+  //longText je true => Výstup: dlouhý formát => 12 dní 4 hodiny 22 minut 2 sekundy
+  //longText je false => Výstup: krátký formát => 292:22:02
+  //užití: jak_dlouho_je_to = timeCountDown("2018-03-1 18:06:05", deviceObjectLast["0"].lrespiot, false);
+
+
+  let t = lastDate.split(/[- :]/);
+  // Apply each element to the Date function
+  let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+  let historyTime = new Date(d);
+
+  let currentTime = new Date(serverDate);
+  let distance =  currentTime - historyTime;
+
+  let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  if (longText == true) {
+    //dlouhý tvar vystupního textu
+    switch (true) {
+      case days == 0:
+        days = "";
+        break;
+      case days == 1:
+        days += " den";
+        break;
+      case (days>1 && days <5):
+        days += " dny";
+        break;
+      case days>4:
+        days += " dní";
+        break;
+      default:
+    }
+    switch (true) {
+      case hours == 0:
+        hours = "";
+        break;
+      case hours == 1:
+        hours += " hodinu";
+        break;
+      case (hours > 1 && hours < 5):
+        hours += " hodniny";
+        break;
+      case hours > 4:
+        hours += " hodnin";
+        break;
+      default:
+    }
+  return (days + " " + hours + " " + minutes + " " + seconds);
+  } //pokud je chtěná dlouhá odpověd Jinak
+  else {
+
+    let hours = Math.floor((distance / ( 1000 * 60 * 60 )));
+    //vysledny tvar ma být v hhh:mm:ss
+
+    if (hours == 0) {
+      hours = "";
+    } else {
+      hours += ":"
+    }
+
+    if (minutes < 10) {
+        minutes = "0" + minutes.toString();
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds.toString();
+    }
+    return (hours + minutes + ":" + seconds);
+  }
+
 }
 
 MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
@@ -865,7 +967,7 @@ Arduino.containerUpdate = function() {
       console.log("nejsou data");
       //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
       $("body").css("background-color", "Red");
-      $("container").addClass("alert alert-danger");
+      // $("container").addClass("alert alert-danger");
 
     });
 
