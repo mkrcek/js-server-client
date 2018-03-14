@@ -457,7 +457,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 	//handle all - teď toto většinou děláme
 
 	if (ulrDeviceIDs == nil) {			//GET ALL pokud číslo neni - je tedy jen lomitko bez parametru
-		fmt.Println("GET ALL")
+		//fmt.Println("GET ALL")
 		switch r.Method {
 		case "GET":
 			ApiGetAll(w,r)

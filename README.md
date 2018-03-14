@@ -5,6 +5,10 @@
 
 ## Co nového ve verzi
 
+##14.3.2018 23:50
+
+- testování mizení kodu a testovani existence LivingStone na obrazovce (DOM)
+
 ##14.3.2018 12:50
 -
 verze 14.3.

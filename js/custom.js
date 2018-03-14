@@ -922,28 +922,16 @@ Arduino.containerUpdate = function() {
 
                 //testování - jestli ještě prvek na webu (DOM) existuje.
 
-                //pomocí délky
-                  jjmeno = "#sensor-" + sensorID + "-boxWrap";
-                  console.log("DELKA");
-                  console.log($(jjmeno).length);
 
-
-                  //pomocí JS ... bez#
-                  jjmeno2 = "sensor-" + sensorID + "-boxWrap";
-                  console.log("jmeno");
-                  if(document.getElementById(jjmeno2)) {
+                  //pomocí JS ... POZOR - ID bez #, je to JS ne jQuery
+                  jmenoPrvku = "sensor-" + sensorID + "-boxWrap";
+                  console.log(jmenoPrvku);
+                  if(document.getElementById(jmenoPrvku)) {
                     console.log("EXISTUJE");
                   } else {
                     console.log("NEEXISTUJE");
                   }
 
-                  //pomocí jQuery ...musí být [0]
-                  console.log("jQuery");
-                  if($("#sensor-" + sensorID + "-boxWrap")[0]) {
-                    console.log("EXISTUJE");
-                  } else {
-                    console.log("NEEXISTUJE");
-                  }
 
                   // if($("#sensor-" + sensorID + "-boxWrap").length == 0) {
                   //     //it doesn't exist
