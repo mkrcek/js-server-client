@@ -1,9 +1,21 @@
-# Doomaster: avokado & sprint 13.3.2018 19:29
+# Doomaster: avokado & sprint 14.3.2018 12:50
 
 
 ----------
 
 ## Co nového ve verzi
+
+##14.3.2018 12:50
+-
+verze 14.3.
+LivingStone: CameraAlarm
+- sensorWebType: "4"
+- subtype je URL k obrázku: např. "activitylog/image-0.jpg"
+- Pokud je Value != "" zobrazi se obrazek a orameckuje. Kdyz Value="", tak jen sedy ramecek
+- kliknutím na obrázek se odešle PUT
+- parametr je unid: např. 789011014
+- v hodnotě PUTu je: value = "DELETE"
+- (obdobně jako žárovka)
 
 ## 13.3.2018 - 19:29
 

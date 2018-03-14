@@ -144,12 +144,21 @@ h1 {
   background-color: #F3F3F3;
 }
 
+.boxContent-camera-alarm {
+  padding: 10px;
+  border-radius: 10px;
+  height: 320px;
+  /* width: 358px; */
+  background-color: #F3F3F3;
+}
+
+
 /*  box 2 x 2*/
 
 .boxContent-pocasi {
   padding: 10px;
   border-radius: 10px;
-  height: 220px;
+  height: 350px;
   /* width: 220px; */
   background-color: #F3F3F3;
 }

@@ -3,7 +3,7 @@
 const DMteplota = "1";
 const DMkamera = "2";
 const DMalarm = "3";
-const DMalarmCam = "4";
+const DMCameraAlarm = "4";
 const DMvoda = "5";
 const DMsvetlo = "6";
 const DMbrana = "7";
@@ -68,10 +68,10 @@ LivingStone.Null = function (sensorID) {
 
           <div id="sensor-${sensorID}-module-null" class="text-left">
             <h1>
-              <span id="sensor-${sensorID}-null">NULL</span>&deg;
+              <span id="sensor-${sensorID}-null">NULL-Stone</span>
             </h1>
           </div>
-          <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
+          <div ><p id="sensor-${sensorID}-name">NUL-pól</p></div>
 
       </div>
   </div>`;
@@ -220,15 +220,15 @@ LivingStone.Gate = function (sensorID) {
     //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
     //tak se provede to, co je ve funkci:
     odeslatPUT($(this).attr("id"), DMbranaT1);
-    alert("Odeslán PUT 1 na senzor " + sensorID);
+    alert("Odeslán PUT 1 na sensor " + sensorID);
   });
   $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
     odeslatPUT($(this).attr("id"), DMbranaT2);
-    alert("Odeslán PUT 2 na senzor " + sensorID);
+    alert("Odeslán PUT 2 na sensor " + sensorID);
   });
   $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
     odeslatPUT($(this).attr("id"), DMbranaT3);
-    alert("Odeslán PUT 3 na senzor " + sensorID);
+    alert("Odeslán PUT 3 na sensor " + sensorID);
   });
 
 }
@@ -240,7 +240,7 @@ LivingStone.Light = function (sensorID) {
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
           <div id="sensor-${sensorID}-module-svetlo">
-              <div style="font-size:3em; color:"White">
+              <div style="font-size:2em; color:"White">
                 <i class="far fa-lightbulb"></i>
               </div>
           </div>
@@ -257,7 +257,7 @@ LivingStone.Light = function (sensorID) {
 
   $("#boxScreen").append(templateHTML);
 
-
+  //co se stane při kliknutí
   $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
     odeslatPUT($(this).attr("id"), "1");
     Arduino.containerUpdate();
@@ -265,10 +265,9 @@ LivingStone.Light = function (sensorID) {
 
 }
 
-LivingStone.AlarmCam = function (sensorID) {
-  //neotestováno !!!!
+LivingStone.CameraAlarm = function (sensorID) {
 
-  //HTML boxík pro Alarm Kameru
+  //HTML boxík pro Obrazek z kamery po alarmu
     let templateHTML =
     `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
         <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
@@ -278,18 +277,9 @@ LivingStone.AlarmCam = function (sensorID) {
                 <span> | </span>
                 <i id="sensor-${sensorID}-time">25:61</i>
             </div>
-
-            <div id="sensor-${sensorID}-module-alertcam" class="alertcam-value alertCam">
-                <div class="text-center">
-                  <button id="sensor-${sensorID}-alertcam-btn-left" type="button" class="btn "> << </button>
-                  <button id="sensor-${sensorID}-alertcam-btn-delete" type="button" class="btn "> DEL </button>
-                  <button id="sensor-${sensorID}-alertcam-btn-right" type="button" class="btn "> >> </button>
-                </div>
-                <div class="alertcam-value ">
-                  <img id="sensor-${sensorID}-alertcam-url" style="width:100%;" src="activitylog/image-0.jpg" alt="POZOR" class="img-fluid" >
-                </div>
-                <div class="progress">
-                  <div id="sensor-${sensorID}-alertcam-progress-l" class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div id="sensor-${sensorID}-module-cameraalarm" class="kameraBox kamera-value">
+                <div class="cameraalarm-value ">
+                  <img id="sensor-${sensorID}-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
                 </div>
             </div>
 
@@ -297,6 +287,12 @@ LivingStone.AlarmCam = function (sensorID) {
     </div>`;
 
     $("#boxScreen").append(templateHTML);
+
+    //co se stane při kliknutí
+    $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
+      odeslatPUT($(this).attr("id"), "DELETE");
+      Arduino.containerUpdate();
+    });
 }
 
 
@@ -472,8 +468,6 @@ LivingStoneUpdate.Gate = function (sensorID, device) {
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
   }
 
-
-
 }
 
 LivingStoneUpdate.Camera = function (sensorID, device) {
@@ -493,7 +487,33 @@ LivingStoneUpdate.Weather = function (sensorID, device) {
   $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
 }
 
+LivingStoneUpdate.CameraAlarm = function (sensorID, device) {
+  let newUrl = "";
 
+  // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
+
+  //je li nějaká hodnota, tedy např. počet obrázku
+  if (device.value != "") {
+    $("#sensor-" + sensorID + "-name").html(device.webname);
+    $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+
+    newUrl = device.subtype;  //adresa ze serveru
+    console.log(newUrl);
+
+    //obervení boxku
+    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+  } else {
+    $("#sensor-" + sensorID + "-name").html("No Camera Alarm");
+    $("#sensor-" + sensorID + "-time").html("");
+    newUrl = "images/image-no-alarm.jpg";
+
+    //obarvení boxíku
+    $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+  }
+
+
+  $("#sensor-" + sensorID + "-cameraalarm-url").attr("src",newUrl);
+}
 
 
 // *************** Generuje OBSAH pro MENU ********
@@ -526,7 +546,12 @@ timeCountDown = function (lastDate, serverDate, longText) {
   let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
   let historyTime = new Date(d);
 
-  let currentTime = new Date(serverDate);
+  let t2 = serverDate.split(/[- :]/);
+  // Apply each element to the Date function
+  let d2 = new Date(t2[0], t2[1]-1, t2[2], t2[3], t2[4], t2[5]);
+  let currentTime = new Date(d2);
+
+  // let currentTime = new Date(serverDate);
   let distance =  currentTime - historyTime;
 
   let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -802,6 +827,13 @@ function formatNumber(x) {
 
 
 
+
+
+// ****************** hlavní fce *********************
+
+
+
+
 //vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON
 Arduino.containerShow = function() {
 
@@ -861,6 +893,9 @@ Arduino.containerShow = function() {
               break;
             case DMpocasi: //počasí
               LivingStone.Weather(sensorID);
+              break;
+            case DMCameraAlarm: //Obrazek z kamery po alarmu
+              LivingStone.CameraAlarm(sensorID);
               break;
             default:
               //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
@@ -950,6 +985,10 @@ Arduino.containerUpdate = function() {
                 case DMpocasi: //počasí
                   LivingStoneUpdate.Weather (sensorID, deviceItem);
                   break;
+                case DMCameraAlarm: //kamera s alarmovým obrazkem
+                  LivingStoneUpdate.CameraAlarm (sensorID, deviceItem);
+                  break;
+
               } //konec :switch:
 
           } //konec value=value
