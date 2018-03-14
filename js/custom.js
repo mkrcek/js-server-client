@@ -498,7 +498,8 @@ LivingStoneUpdate.CameraAlarm = function (sensorID, device) {
     $("#sensor-" + sensorID + "-time").html(device.lrespiot);
 
     newUrl = device.subtype;  //adresa ze serveru
-    console.log(newUrl);
+    // console.log(newUrl);
+
 
     //obervení boxku
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
@@ -506,6 +507,9 @@ LivingStoneUpdate.CameraAlarm = function (sensorID, device) {
     $("#sensor-" + sensorID + "-name").html("No Camera Alarm");
     $("#sensor-" + sensorID + "-time").html("");
     newUrl = "images/image-no-alarm.jpg";
+
+    //smazne boxík z DOM
+    $("#sensor-" + sensorID + "-boxWrap").remove();
 
     //obarvení boxíku
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
@@ -986,6 +990,35 @@ Arduino.containerUpdate = function() {
                   LivingStoneUpdate.Weather (sensorID, deviceItem);
                   break;
                 case DMCameraAlarm: //kamera s alarmovým obrazkem
+
+                //testování - jestli ještě prvek na webu (DOM) existuje.
+
+                //pomocí délky
+                  jjmeno = "#sensor-" + sensorID + "-boxWrap";
+                  console.log("DELKA");
+                  console.log($(jjmeno).length);
+
+
+                  //pomocí JS ... bez#
+                  jjmeno2 = "sensor-" + sensorID + "-boxWrap";
+                  console.log("jmeno");
+                  if(document.getElementById(jjmeno2)) {
+                    console.log("EXISTUJE");
+                  } else {
+                    console.log("NEEXISTUJE");
+                  }
+
+                  //pomocí jQuery ...musí být [0]
+                  console.log("jQuery");
+                  if($("#sensor-" + sensorID + "-boxWrap")[0]) {
+                    console.log("EXISTUJE");
+                  } else {
+                    console.log("NEEXISTUJE");
+                  }
+
+                  // if($("#sensor-" + sensorID + "-boxWrap").length == 0) {
+                  //     //it doesn't exist
+                  //     }
                   LivingStoneUpdate.CameraAlarm (sensorID, deviceItem);
                   break;
 
@@ -1011,3 +1044,10 @@ Arduino.containerUpdate = function() {
     });
 
 }
+
+
+//hodí se
+//smaže boxík
+//$("#sensor-" + sensorID + "-boxWrap").empty();
+//odstraní boxík
+//  $("#sensor-" + sensorID + "-boxWrap").remove();
