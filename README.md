@@ -7,7 +7,9 @@
 
 ##14.3.2018 23:50
 
+CameraAlarm
 - testování mizení kodu a testovani existence LivingStone na obrazovce (DOM)
+- klik a zmizne
 
 ##14.3.2018 12:50
 -
