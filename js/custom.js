@@ -465,7 +465,7 @@ LivingStoneUpdate.Gate = function (sensorID, device) {
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
   } else {
     $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
+    $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
   }
 
 }
