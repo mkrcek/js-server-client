@@ -691,8 +691,10 @@ MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
 
 
 
-// *************** spusteni funkcí kazdou senkundu ********
+// *************** pomocné fce ********
 
+
+// spusteni funkcí kazdou senkundu
 
 var myVar = setInterval(function() {
   myTimer()
@@ -716,79 +718,6 @@ function myTimer() {
 // }
 
 
-
-
-
-// ***********************************
-
-
-//zatím nepoužíváno: - generování HTML pro alertCam
-Arduino.alercamShow = function() {
-
-  var sensorType = "";
-  var sensorID = 0; //cislo senzoru UNID
-
-  var device;  //pole dat načtených z API ve formatu JSON
-
-
-  sensorID = 0;
-  sensorType = "templateAlertcam";
-
-  $("#boxScreen").append(LivingStone.Temperature(sensorID));
-  //rezervace budouciho kliku
-  $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-left", function() {
-    //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-    //tak se provede to, co je ve funkci:
-    if (poziceObrazkuAlertCam > 0) {
-      poziceObrazkuAlertCam--;
-    } else {
-      poziceObrazkuAlertCam = (pocetObratkuAlertCam - 1);
-    }
-    Arduino.showAlarmCam(); //aktualizace obrazovky
-  });
-  $(document).on("click", "#sensor-" + sensorID + "-alertcam-btn-right", function() {
-
-    if (poziceObrazkuAlertCam < pocetObratkuAlertCam - 1) {
-      poziceObrazkuAlertCam++;
-    } else {
-      poziceObrazkuAlertCam = 0;
-    }
-    Arduino.showAlarmCam(); //aktualizace obrazovky
-  });
-
-
-}
-
-var poziceObrazkuAlertCam = 0;
-var pocetObratkuAlertCam = 33;
-//pozice a celkovy obrazku na ALARMU
-
-//zatím nepoužíváno: - generování obsahu pro HTML pro alertCam
-Arduino.showAlarmCam = function() {
-
-  var sensorID = 0; //unikatni sensorID
-  var device;
-  var sensorType;
-  //bude načtení z JSON
-
-  sensorID = 0;
-  sensorType = "alertcam";
-  adresaObrazku = "activitylog/image" //celá adresa pak bude /activitylog/image-1.jpg
-
-  switch (sensorType) {
-    case "alertcam":
-      $("#sensor-" + sensorID + "-name").html(" < AKCE v HALE");
-      $("#sensor-" + sensorID + "-time").html("31.12.2017 23:59");
-      // $("#sensor-"+sensorID+"-time").addClass ("top-left");  //zobrazení času v rohu obrázku
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-      $('#sensor-' + sensorID + '-boxContent').css("height", "360");
-      //progress bar
-      document.getElementById("sensor-" + sensorID + "-alertcam-progress-l").style.width = ((poziceObrazkuAlertCam * 100) / pocetObratkuAlertCam) + "%";
-      //novy obrazek
-      document.getElementById("sensor-" + sensorID + "-alertcam-url").src = adresaObrazku + "-" + poziceObrazkuAlertCam + ".jpg";
-      break;
-  } //konec :switch:
-}
 
 
 
