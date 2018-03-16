@@ -7,6 +7,8 @@
 
 ## 16.3. 2:15
 
+- Test a demo použití Class na měření času místo globální proměné
+
 - Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
 - odstranění poskakování času v menu na menších rozlišeních iPhonu
 
