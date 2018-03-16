@@ -854,6 +854,7 @@ Arduino.containerUpdate = function() {
 
   var sensorID = "0"; //unikatni sensorID
 
+
   Arduino.axios.get('/')
     .then(function(response) {
 
@@ -925,12 +926,13 @@ Arduino.containerUpdate = function() {
 
 
                   //pomocí JS ... POZOR - ID bez #, je to JS ne jQuery
+
                   jmenoPrvku = "sensor-" + sensorID + "-boxWrap";
-                  console.log(jmenoPrvku);
+                  // console.log(jmenoPrvku);
                   if(document.getElementById(jmenoPrvku)) {
-                    console.log("EXISTUJE");
+                    // console.log("EXISTUJE");
                   } else {
-                    console.log("NEEXISTUJE");
+                    // console.log("NEEXISTUJE");
                   }
 
 
@@ -951,13 +953,20 @@ Arduino.containerUpdate = function() {
       //následně např. porovnávám, co má smysl měnit
       deviceObjectLast = deviceObject;
 
+
+
+
     })
     .catch(function(error) {
-      console.log(error);
-      console.log("nejsou data");
-      //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
-      $("body").css("background-color", "Red");
-      // $("container").addClass("alert alert-danger");
+
+
+        //Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
+        let last_activity = new Date(deviceObjectLast["0"].value); //from server time
+        if ((new Date() - last_activity) > 5000) {
+          //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
+          $("body").css("background-color", "Red");
+        }
+
 
     });
 

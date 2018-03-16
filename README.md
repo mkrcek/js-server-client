@@ -1,13 +1,15 @@
-# Doomaster: bluma & sprint 16.3.2018 1:15
+# Doomaster: bluma & sprint 16.3.2018 2:15
 
 
 ----------
 
 ## Co nového ve verzi
 
-## 16.3. 1:15
+## 16.3. 2:15
 
+- Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
 - odstranění poskakování času v menu na menších rozlišeních iPhonu
+
 
 ##14.3.2018 23:50
 
