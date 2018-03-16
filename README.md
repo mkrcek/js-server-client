@@ -7,7 +7,7 @@
 
 ## 16.3. 1:15
 
-- odtranění poskakování času v menu na menších rozlišeních iPhonu
+- odstranění poskakování času v menu na menších rozlišeních iPhonu
 
 ##14.3.2018 23:50
 
