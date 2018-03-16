@@ -1,9 +1,13 @@
-# Doomaster: avokado & sprint 14.3.2018 12:50
+# Doomaster: bluma & sprint 16.3.2018 1:15
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 16.3. 1:15
+
+- odtranění poskakování času v menu na menších rozlišeních iPhonu
 
 ##14.3.2018 23:50
 

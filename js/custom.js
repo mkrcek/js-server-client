@@ -646,6 +646,7 @@ MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
     }
 
     let cas = actiondate.getHours() + ":" + minuta + ":" + sekunda;
+    //cas = "99:99:99"; - testovací čas
 
     let denVTydnu = "";
     switch (actiondate.getDay()) {
