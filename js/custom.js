@@ -745,7 +745,7 @@ MenuUpdate.ServerTime = function (deviceItem)  {
       case 6:
         denVTydnu = "Sobota"
         break;
-      case 7:
+      case 0:
         denVTydnu = "Neděle"
         break;
       default:

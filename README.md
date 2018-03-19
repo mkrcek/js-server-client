@@ -1,9 +1,18 @@
-# Doomaster: bluma & sprint 16.3.2018 2:15
+# Doomaster: bluma & sprint 19.3.2018 15:15
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 19.3. 15:15
+
+- Oprava zobrazení Neděle - místo "Fakt netuším"
+- zobrazení stavu ErrorSensor v LivingStonu
+- rychlejší start: Okamžitě po vykreslení jednoho HTML LivingStone se aktuslizuje jeho obsah. Teptve poté se kreslí další
+- unid se nepřevádí na number(int) - nechává se jako string
+
+
 
 ## 16.3. 2:15
 
