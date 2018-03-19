@@ -60,23 +60,30 @@ class LastServerActivity {
   }
 }
 
-//DEMO
-//inicializace měřiče, kdy byl server naposledny aktivní
-let LSA_demo = new LastServerActivity(11);
-//vypit inicializovaného stavu
-console.log("timeDistance " + LSA_demo.timeDistance);
-//nová proměna + vypis
-LSA_demo.myTimeee = 9;
-console.log("myTimeee " + LSA_demo.myTimeee);
-//změna inicializovaneho stavu
-LSA_demo.timeDistance = 8;
-console.log("timeDistance " + LSA_demo.timeDistance);
-console.log(LSA_demo);
-//--demo konec --
+//uchovává globální čas
+class TimeKeeper {
+  constructor(myTime) {
+    this._myTime = myTime;
+  }
+  // Getter
+  get time() {
+    return this._myTime;
+  }
+  //Setter
+  set time (newTime) {
+        this._myTime = newTime;
+  }
 
-let LSA = new LastServerActivity(new Date().getTime());
-console.log(LSA);
+}
 
+
+
+// let LSA = new LastServerActivity(new Date().getTime());
+// console.log(LSA);
+
+let LastServer = new TimeKeeper (new Date().getTime());
+LastServer.time = new Date().getTime();
+console.log( LastServer);
 
 
 // ********** KOD
@@ -1000,13 +1007,13 @@ Arduino.containerUpdate = function() {
       deviceObjectLast = deviceObject;
 
       //aktualizace času, kdy byl server naposledny aktivní
-      LSA.timeDistance = new Date().getTime();
+      LastServer.time = new Date().getTime();
 
     })
     .catch(function(error) {
 
         // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
-        if ((new Date().getTime() - LSA.timeDistance) > 5000) {
+        if ((new Date().getTime() - LastServer.time) > 5000) {
           //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
           $("body").css("background-color", "Red");
         }
