@@ -348,10 +348,16 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(myHomeDeviceSetup[10].Value )
 
 	//systemovy error
-	if t.Second()%10 == 0 {
-		myHomeDeviceSetup[10].DevError = strconv.Itoa(t.Minute())
-	} else {
-		myHomeDeviceSetup[10].DevError = ""
+
+	for pocetOp := 0; pocetOp < numberOfRows-2; pocetOp++ {
+
+		if t.Second()%2 == 0 { //10
+			// myHomeDeviceSetup[10].DevError = strconv.Itoa(t.Minute())
+			myHomeDeviceSetup[pocetOp].DevError = strconv.Itoa(t.Minute())
+		} else {
+			// myHomeDeviceSetup[10].DevError = ""
+			myHomeDeviceSetup[pocetOp].DevError = ""
+		}
 	}
 
 	//reálná Arduino teplota

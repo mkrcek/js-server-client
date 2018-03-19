@@ -124,6 +124,9 @@ LivingStone.Null = function (sensorID) {
             </h1>
           </div>
           <div ><p id="sensor-${sensorID}-name">NUL-pól</p></div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
+          </div>
 
       </div>
   </div>`;
@@ -145,6 +148,9 @@ LivingStone.Temperature = function (deviceItem) {
             </h1>
           </div>
           <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
+          </div>
 
       </div>
   </div>`;
@@ -166,6 +172,9 @@ LivingStone.Pir = function (sensorID) {
           <div >
             <p id="sensor-${sensorID}-name">Severní pól</p>
             <i id="sensor-${sensorID}-time">25:61</i>
+          </div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
           </div>
 
       </div>
@@ -191,6 +200,9 @@ LivingStone.Camera = function (sensorID) {
                 <img id="sensor-${sensorID}-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
               </div>
           </div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
+          </div>
 
       </div>
   </div>`;
@@ -210,6 +222,9 @@ LivingStone.Weather = function (sensorID) {
             <div class="cam-value ">
               <img id="sensor-${sensorID}-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
             </div>
+          </div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
           </div>
 
       </div>
@@ -233,6 +248,9 @@ LivingStone.Water = function (sensorID) {
           <div>
               <p id="sensor-${sensorID}-name">Severní pól</p>
           </div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
+          </div>
 
       </div>
   </div>`;
@@ -245,7 +263,7 @@ LivingStone.Gate = function (sensorID) {
   //HTML boxík pro Bránu
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
+      <div id="sensor-${sensorID}-boxContent" class="boxContent-gate">
 
           <div id="sensor-${sensorID}-module-brana" class="text-left">
               <h1>
@@ -260,6 +278,9 @@ LivingStone.Gate = function (sensorID) {
             <a id="sensor-${sensorID}-brana-but1" class="btn ">Otevřít</a>
             <a id="sensor-${sensorID}-brana-but2" class="btn ">Branka</a>
             <a id="sensor-${sensorID}-brana-but3" class="btn ">PULS</a>
+          </div>
+          <div>
+              <p id="sensor-${sensorID}-error">error time</p>
           </div>
 
       </div>
@@ -334,6 +355,9 @@ LivingStone.CameraAlarm = function (sensorID) {
                 <div class="cameraalarm-value ">
                   <img id="sensor-${sensorID}-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
                 </div>
+            </div>
+            <div>
+                <p id="sensor-${sensorID}-error">error time</p>
             </div>
 
         </div>
@@ -474,42 +498,28 @@ LivingStoneUpdate.Light = function (deviceItem) {
 //vložit i do livingStones.všechny
 let sensorID = deviceItem.unid;
 
-  if (deviceItem.error != "") {
-    let serverDate = ServerDevices.sensors["0"].lrespiot;  //čas z poslední aktualizace serveru
-    let deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
-    textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
-    console.log(textLostConTime);
 
-    $("#sensor-" + sensorID + "-error").html(textLostConTime);
-    $('#sensor-' + sensorID + '-boxWrap').css("background-color", "Black ");
+    $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
 
+    let tempVal = Number(deviceItem.value);
+    //console.log(tempVal);
+    switch (true) {
+      case tempVal == 1:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+        break;
+      default:
+        $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+    }
 
-  } else {
-    textLostConTime = "";
-    $("#sensor-" + sensorID + "-error").html(textLostConTime);
-    $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
-  }
-
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-
-  var tempVal = Number(deviceItem.value);
-  //console.log(tempVal);
-  switch (true) {
-
-    case tempVal == 1:
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-      break;
-    default:
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-  }
 }
 
 LivingStoneUpdate.Pir = function (deviceItem) {
   let sensorID = deviceItem.unid;
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
 }
 
 LivingStoneUpdate.Gate = function (deviceItem) {
@@ -518,6 +528,7 @@ LivingStoneUpdate.Gate = function (deviceItem) {
 
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
   if (tempVal == 0) {
     $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
@@ -530,6 +541,7 @@ LivingStoneUpdate.Gate = function (deviceItem) {
 
 LivingStoneUpdate.Camera = function (deviceItem) {
   let sensorID = deviceItem.unid;
+  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
@@ -550,6 +562,7 @@ LivingStoneUpdate.Weather = function (deviceItem) {
 LivingStoneUpdate.CameraAlarm = function (deviceItem) {
   let sensorID = deviceItem.unid;
   let newUrl = "";
+  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
 
   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
 
@@ -824,7 +837,30 @@ function formatNumber(x) {
 }
 
 
+//když nastavene chyba sensoru, tak se obarví
+function sensorErrorColorsOn (deviceItem){
 
+  let sensorID = deviceItem.unid;
+  let serverDate = ServerDevices.sensors["0"].lrespiot;  //čas z poslední aktualizace serveru
+  let deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
+  let textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
+  // console.log(textLostConTime);
+
+  $("#sensor-" + sensorID + "-error").html(textLostConTime);
+  $('#sensor-' + sensorID + '-error').css("color", "Red ");
+  $('#sensor-' + sensorID + '-boxContent').css("color", "DimGray ");
+  $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3 ");
+  $('#sensor-' + sensorID + '-boxWrap').css("background-color", "Red ");
+}
+
+//když není chyba sensoru, tak se obarví
+function sensorErrorColorsOff (deviceItem){
+  let sensorID = deviceItem.unid;
+
+  $("#sensor-" + sensorID + "-error").html("");
+  $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
+
+}
 
 
 // ****************** hlavní fce *********************
@@ -841,6 +877,7 @@ Arduino.containerShow = function() {
   Arduino.axios.get("/")
     .then(function(response) {
       var device = response.data;
+
 
       // setřídění obsah pole (LivingStone) podle weborder
       device = device.sort(function(a, b) {
@@ -882,6 +919,7 @@ Arduino.containerShow = function() {
 
         if (sensorID != "0") { //pokud se nejedné o systémový ID
 
+          // console.log(deviceItem.unid + " - " + deviceItem.error);
           switch (sensorWebType) {
             case DMteplota: //teplota
               LivingStone.Temperature(deviceItem);  //vytvoří HTML
@@ -964,10 +1002,20 @@ Arduino.containerUpdate = function() {
         sensorID = index;
         sensorWebType = deviceItem.webtype;
 
-        //hodnoty se změnily - je potřeba přepsat tabulku. Jinak ne.
-        // if (deviceObjectLast[sensorID].value != deviceItem.value)
-           {
 
+
+        if (deviceItem.error != "") {
+
+          //obarvit senzor když je chyba
+          sensorErrorColorsOn (deviceItem);
+
+        } else {
+            //obarvit senzor když NENÍ chyba
+            sensorErrorColorsOff (deviceItem);
+
+            //hodnoty se změnily - je potřeba přepsat tabulku. Jinak ne.
+            // if (deviceObjectLast[sensorID].value != deviceItem.value)
+            {
               if (sensorID == "0") {
                 //Uděla update menu podle systemovych parametru
                 MenuUpdate.Zvonecek (deviceItem);
@@ -1031,6 +1079,8 @@ Arduino.containerUpdate = function() {
               } //konec :switch:
 
           } //konec value=value
+
+        }  // konec Device ERROR
 
       }); //konec forEach cyklus
 
