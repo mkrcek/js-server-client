@@ -295,7 +295,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		case DMCameraAlarm:
 			{
 				if t.Second()%10 == 0 {
-					fmt.Println("ALALLLL")
+					// fmt.Println("ALALLLL")
 					myHomeDeviceSetup[i].Value = "1"
 				}
 
@@ -482,7 +482,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 					myHomeDeviceSetup[13].DevTime = t.Format("2006-01-02 15:04:05")
 				} else {
 					myHomeDeviceSetup[13].Value = "1"
-					myHomeDeviceSetup[13].DevError = "čidlo hoří"
+					myHomeDeviceSetup[13].DevError = "hoří"
 					myHomeDeviceSetup[13].DevTime = "2018-03-12 15:04:05"
 				}
 			}

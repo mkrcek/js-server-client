@@ -29,7 +29,29 @@ const GRID_FUL = "col-12 col-sm-6"; //kamera
 
 //uchování předešlého stavu obsahu všech LivingStones
 //následně např. porovnávám, co má smysl měnit
-var deviceObjectLast = {} ;
+// var deviceObjectLast = {} ;
+
+
+//třída pro ukládání stavu zařízení - místo globální variable
+class Devices {
+  constructor(myDevices) {
+    this._myDevices = myDevices;
+  }
+  // Getter
+  get sensors() {
+    return this._myDevices;
+  }
+  //Setter
+  set sensors (newDevices) {
+        this._myDevices = newDevices;
+  }
+}
+
+let ServerDevices = new Devices ();   //aktuální stav ze serveru
+let LastDevices = new Devices();      //stav o jedno přečtení zpět, předešlý stav
+
+
+
 
 //doba za jakou zčervená pozadí při výpadku spojení se serverem
 const TimeOutRed = 5000;
@@ -110,8 +132,9 @@ LivingStone.Null = function (sensorID) {
 
 }
 
-LivingStone.Temperature = function (sensorID) {
+LivingStone.Temperature = function (deviceItem) {
   //HTML boxík pro teplotu
+  let sensorID = deviceItem.unid;
   let templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
@@ -332,17 +355,18 @@ LivingStone.CameraAlarm = function (sensorID) {
 // *************** Generuje OBSAH pro boxíky na stránce ********
 LivingStoneUpdate = {};
 
-LivingStoneUpdate.Temperature = function (sensorID, device)  {
+LivingStoneUpdate.Temperature = function (deviceItem)  {
 
+  let sensorID = deviceItem.unid;
   //var tempVal = device[i].value;
   //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
-  var tempVal = Number(device.value);
+  var tempVal = Number(deviceItem.value);
 
-  $('#sensor-' + sensorID + '-name').html(device.webname);
-  $('#sensor-' + sensorID + '-time').html(device.lrespiot);
+  $('#sensor-' + sensorID + '-name').html(deviceItem.webname);
+  $('#sensor-' + sensorID + '-time').html(deviceItem.lrespiot);
   $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
 
-  var temperatureScheme = device.subtype; //barevné schéma pro teplotu
+  var temperatureScheme = deviceItem.subtype; //barevné schéma pro teplotu
   switch (temperatureScheme) {
     case SchemeAir: //air - vzduch
       switch (true) {
@@ -422,15 +446,16 @@ LivingStoneUpdate.Temperature = function (sensorID, device)  {
   } //switch (temperatureScheme)
 }
 
-LivingStoneUpdate.Water = function (sensorID, device) {
-  var tempVal = Number(device.value);
-  $("#sensor-" + sensorID + "-name").html(device.webname);
-  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+LivingStoneUpdate.Water = function (deviceItem) {
+  let sensorID = deviceItem.unid;
+  var tempVal = Number(deviceItem.value);
+  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
   // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
 
   //změna barvy po dosažení hodnoty v Subtype
-  var temperatureScheme = Number(device.subtype); //barevné schéma pro teplotu
+  var temperatureScheme = Number(deviceItem.subtype); //barevné schéma pro teplotu
 
   switch (true) {
     case tempVal < temperatureScheme:
@@ -443,15 +468,16 @@ LivingStoneUpdate.Water = function (sensorID, device) {
   }
 }
 
-LivingStoneUpdate.Light = function (sensorID, device) {
+LivingStoneUpdate.Light = function (deviceItem) {
 
 //jestlize nastala chyba - tak orámečkovat a napsat chybu
 //vložit i do livingStones.všechny
+let sensorID = deviceItem.unid;
 
-  if (device.error != "") {
-    let serverDate = deviceObjectLast["0"].lrespiot; //čas ze serveru
-    let deviceDate = device.lrespiot; //cas z device, LivingStone
-    textLostConTime = device.error + " | " +timeCountDown(deviceDate, serverDate, false);
+  if (deviceItem.error != "") {
+    let serverDate = ServerDevices.sensors["0"].lrespiot;  //čas z poslední aktualizace serveru
+    let deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
+    textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
     console.log(textLostConTime);
 
     $("#sensor-" + sensorID + "-error").html(textLostConTime);
@@ -464,9 +490,9 @@ LivingStoneUpdate.Light = function (sensorID, device) {
     $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
   }
 
-  $("#sensor-" + sensorID + "-name").html(device.webname);
+  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
 
-  var tempVal = Number(device.value);
+  var tempVal = Number(deviceItem.value);
   //console.log(tempVal);
   switch (true) {
 
@@ -480,16 +506,18 @@ LivingStoneUpdate.Light = function (sensorID, device) {
   }
 }
 
-LivingStoneUpdate.Pir = function (sensorID, device) {
-  $("#sensor-" + sensorID + "-name").html(device.webname);
-  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+LivingStoneUpdate.Pir = function (deviceItem) {
+  let sensorID = deviceItem.unid;
+  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
 }
 
-LivingStoneUpdate.Gate = function (sensorID, device) {
-  var tempVal = Number(device.value);
+LivingStoneUpdate.Gate = function (deviceItem) {
+  let sensorID = deviceItem.unid;
+  var tempVal = Number(deviceItem.value);
 
-  $("#sensor-" + sensorID + "-name").html(device.webname);
-  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   if (tempVal == 0) {
     $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
@@ -500,34 +528,37 @@ LivingStoneUpdate.Gate = function (sensorID, device) {
 
 }
 
-LivingStoneUpdate.Camera = function (sensorID, device) {
-  $("#sensor-" + sensorID + "-name").html(device.webname);
-  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+LivingStoneUpdate.Camera = function (deviceItem) {
+  let sensorID = deviceItem.unid;
+  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
   d = new Date();
-  newUrl = device.subtype + "?" + d.getTime();
+  newUrl = deviceItem.subtype + "?" + d.getTime();
   $("#sensor-" + sensorID + "-kamera-url").attr("src",newUrl);
 }
 
-LivingStoneUpdate.Weather = function (sensorID, device) {
-  $("#sensor-" + sensorID + "-name").html(device.webname);
-  $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+LivingStoneUpdate.Weather = function (deviceItem) {
+  let sensorID = deviceItem.unid;
+  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   d = new Date();
-  newUrl = device.subtype + "?" + d.getHours();
+  newUrl = deviceItem.subtype + "?" + d.getHours();
   $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
 }
 
-LivingStoneUpdate.CameraAlarm = function (sensorID, device) {
+LivingStoneUpdate.CameraAlarm = function (deviceItem) {
+  let sensorID = deviceItem.unid;
   let newUrl = "";
 
   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
 
   //je li nějaká hodnota, tedy např. počet obrázku
-  if (device.value != "") {
-    $("#sensor-" + sensorID + "-name").html(device.webname);
-    $("#sensor-" + sensorID + "-time").html(device.lrespiot);
+  if (deviceItem.value != "") {
+    $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+    $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
 
-    newUrl = device.subtype;  //adresa ze serveru
+    newUrl = deviceItem.subtype;  //adresa ze serveru
     // console.log(newUrl);
 
 
@@ -553,7 +584,8 @@ LivingStoneUpdate.CameraAlarm = function (sensorID, device) {
 // *************** Generuje OBSAH pro MENU ********
 MenuUpdate = {};
 
-MenuUpdate.Zvonecek = function (sensorID, deviceItem)  {
+MenuUpdate.Zvonecek = function (deviceItem)  {
+  let sensorID = deviceItem.unid;
   //jestliže je chyba = ukaž badge (zvoneček na ikone DM)
 
   if (deviceItem.error == "") {
@@ -649,7 +681,9 @@ timeCountDown = function (lastDate, serverDate, longText) {
 
 }
 
-MenuUpdate.ServerTime = function (sensorID, deviceItem)  {
+MenuUpdate.ServerTime = function (deviceItem)  {
+
+  let sensorID = deviceItem.unid;
   //zobrazi serverovy cas
 
 
@@ -821,12 +855,24 @@ Arduino.containerShow = function() {
       //načtení POPRVÉ stavu obsahu všech LivingStones
       //následně např. porovnávám, co má smysl měnit
       //jako objekt - historický stav LivingStonu
-      // klíčem unid
-      // obsahující všechny informace o LivingStone
-      deviceObjectLast = device.reduce(function(map, obj) {
+      //uložím do [globální střídy: s unid
+      //všechny data převede na objekt s klícem unid
+      ServerDevices.sensors = device.reduce(function(map, obj) {
           map[obj.unid] = obj;
           return map;
       }, {});
+      LastDevices = ServerDevices; //a udělá zálohu pro porovnání s minulým stavem
+      // var popo =[];
+      // popo = Object.keys(LastDevices.sensors); //převede na pole
+      // console.log(popo.length);
+
+      //cyklus pomocí forEach a třídou
+      // Object.keys(LastDevices.sensors).forEach( function(key) {
+      //   console.log(LastDevices.sensors[key]);
+      // });
+      // console.log(Object.keys(LastDevices.sensors)); //převeden a pole
+      // https://sta]ckoverflow.com/questions/31096596/why-is-foreach-not-a-function-for-this-map/31096661
+
 
 
       device.forEach(function(deviceItem) {
@@ -838,35 +884,45 @@ Arduino.containerShow = function() {
 
           switch (sensorWebType) {
             case DMteplota: //teplota
-              LivingStone.Temperature(sensorID);
+              LivingStone.Temperature(deviceItem);  //vytvoří HTML
+              LivingStoneUpdate.Temperature (deviceItem); //naplní obsahem
               break;
             case DMvoda: //voda
               LivingStone.Water(sensorID);
+              LivingStoneUpdate.Water (deviceItem);
               break;
             case DMsvetlo: //svetlo
               LivingStone.Light(sensorID);
+              LivingStoneUpdate.Light (deviceItem);
               break;
             case DMalarm: //alarm - PIR
               LivingStone.Pir(sensorID);
+              LivingStoneUpdate.Pir(deviceItem);
               break;
             case DMbrana: //brána
               LivingStone.Gate(sensorID);
+              LivingStoneUpdate.Gate(deviceItem);
               break;
             case DMkamera: //kamera
               LivingStone.Camera(sensorID);
+              LivingStoneUpdate.Camera (deviceItem);
               break;
             case DMpocasi: //počasí
               LivingStone.Weather(sensorID);
+              LivingStoneUpdate.Weather (deviceItem);
               break;
             case DMCameraAlarm: //Obrazek z kamery po alarmu
               LivingStone.CameraAlarm(sensorID);
+              LivingStoneUpdate.CameraAlarm (deviceItem);
               break;
             default:
-              //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
-              LivingStone.Null(sensorID);
+              LivingStone.Null(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
           } //switch
         }   //if sensorID
       }); //konec forEach cyklu
+
+
+
     })
     //když nasane nějaký chyba - např. server není připojen.
     //řeší se v aktualizaci dat v JSON - teď jen vypíše na konzolu
@@ -914,8 +970,8 @@ Arduino.containerUpdate = function() {
 
               if (sensorID == "0") {
                 //Uděla update menu podle systemovych parametru
-                MenuUpdate.Zvonecek (sensorID, deviceItem);
-                MenuUpdate.ServerTime (sensorID, deviceItem);
+                MenuUpdate.Zvonecek (deviceItem);
+                MenuUpdate.ServerTime (deviceItem);
               }
 
               //podle typu se naplní hodnoty
@@ -924,31 +980,31 @@ Arduino.containerUpdate = function() {
                 break;
 
                 case DMteplota: //teplota
-                  LivingStoneUpdate.Temperature (sensorID, deviceItem);
+                  LivingStoneUpdate.Temperature (deviceItem);
                   break;
 
                 case DMvoda: //voda
-                  LivingStoneUpdate.Water(sensorID, deviceItem);
+                  LivingStoneUpdate.Water(deviceItem);
                   break;
 
                 case DMsvetlo: //světlo
-                  LivingStoneUpdate.Light (sensorID, deviceItem);
+                  LivingStoneUpdate.Light (deviceItem);
                   break;
 
                 case DMalarm: //alarm - PIR
-                  LivingStoneUpdate.Pir (sensorID, deviceItem);
+                  LivingStoneUpdate.Pir (deviceItem);
                   break;
 
                 case DMbrana: //brána
-                  LivingStoneUpdate.Gate (sensorID, deviceItem);
+                  LivingStoneUpdate.Gate (deviceItem);
                   break;
 
                 case DMkamera: //kamera (ne počasí)
-                  LivingStoneUpdate.Camera (sensorID, deviceItem);
+                  LivingStoneUpdate.Camera (deviceItem);
                   break;
 
                 case DMpocasi: //počasí
-                  LivingStoneUpdate.Weather (sensorID, deviceItem);
+                  LivingStoneUpdate.Weather (deviceItem);
                   break;
                 case DMCameraAlarm: //kamera s alarmovým obrazkem
 
@@ -969,7 +1025,7 @@ Arduino.containerUpdate = function() {
                   // if($("#sensor-" + sensorID + "-boxWrap").length == 0) {
                   //     //it doesn't exist
                   //     }
-                  LivingStoneUpdate.CameraAlarm (sensorID, deviceItem);
+                  LivingStoneUpdate.CameraAlarm (deviceItem);
                   break;
 
               } //konec :switch:
@@ -980,8 +1036,12 @@ Arduino.containerUpdate = function() {
 
 
       //zapamatování si posledního stavu
-      //následně např. porovnávám, co má smysl měnit
-      deviceObjectLast = deviceObject;
+      //následně např. porovnávám, co má smysl měni
+
+      ServerDevices.sensors = deviceObject;
+      LastDevices = ServerDevices;
+      // console.log(LastDevices);
+
 
       //aktualizace času, kdy byl server naposledny aktivní
       LastServer.time = new Date().getTime();
