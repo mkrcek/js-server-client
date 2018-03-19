@@ -47,6 +47,8 @@ h1 {
   background: rgba(250, 254, 254, 0.5)
 }
 
+
+
 #lane1 {
   /* background-color: red; */
   /* background-image: url("../images/image.jpg"); */
@@ -172,7 +174,7 @@ h1 {
 }
 
 .button:hover {
-  background-color: #3e8e41
+  background-color: #3e8e41;
 }
 
 .button:active {

@@ -18,6 +18,12 @@ const DMbranaT1 = "1";
 const DMbranaT2 = "2";
 const DMbranaT3 = "3";
 
+// ** Menu
+
+const DMmenuID1 = "10101";
+const DMmenuID2 = "10102";
+const DMmenuID3 = "10103";
+const DMmenuID4 = "10104";
 
 
 //počet sloupců na stránce
@@ -334,7 +340,7 @@ LivingStone.Light = function (sensorID) {
   //co se stane při kliknutí
   $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
     odeslatPUT($(this).attr("id"), "1");
-    Arduino.containerUpdate();
+    Arduino.containerUpdate();  //refresh obrazovky
   });
 
 }
@@ -371,8 +377,6 @@ LivingStone.CameraAlarm = function (sensorID) {
       Arduino.containerUpdate();
     });
 }
-
-
 
 
 
@@ -594,21 +598,202 @@ LivingStoneUpdate.CameraAlarm = function (deviceItem) {
 }
 
 
-// *************** Generuje OBSAH pro MENU ********
-MenuUpdate = {};
 
-MenuUpdate.Zvonecek = function (deviceItem)  {
-  let sensorID = deviceItem.unid;
+
+// *************** Generuje HTML boxíky pro MENU ********
+
+
+MenuStone = {};
+
+MenuStone.Home = function (menuID) {
+  //HTML boxík tlačítho HOME (DM)
+    let templateHTML =
+    `
+    <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
+      <i style="font-size:1em" class=" fas fa-home"></i>
+      <span id="menu-${menuID}-homeButton">HOME</span>
+    </div>
+    `;
+
+    $("#bottomMenu").append(templateHTML);
+
+    //co se stane při kliknutí
+    $(document).on("click", "#menu-" + menuID + "-menuContent", function() {
+      odeslatPUT($(this).attr("id"), "1");
+      location.reload(); //refresh obrazovky po kliknutí a odeslání PUT
+    });
+}
+
+MenuStone.Zvonecek = function (menuID) {
+
+  //HTML boxík pro activityLog / počet alarmů
+    let templateHTML =
+    `
+    <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
+      <span id="menu-${menuID}-activityBut">ACTIVITY</span>
+    </div>
+    `;
+
+    $("#bottomMenu").append(templateHTML);
+
+    //co se stane při kliknutí
+    $(document).on("click", "#menu-" + menuID + "-menuContent", function() {
+      odeslatPUT($(this).attr("id"), "1");
+      Arduino.containerUpdate();
+    });
+}
+
+MenuStone.ServerTime = function (menuID) {
+
+  //HTML boxík pro čas ze Serveru
+    let templateHTML =
+    `
+    <div onclick="" id="menu-${menuID}-menuContent" class="text-right" >
+
+      <span id="menu-${menuID}-server-date" style="font-size:1rem">
+        PONDELI 2018-19-2
+      </span>
+      <span id="menu-${menuID}-server-time" style="font-size:1rem">
+        25:62:62
+      </span>
+    </div>
+    `;
+
+    $("#bottomMenu").append(templateHTML);
+
+    //co se stane při kliknutí
+    $(document).on("click", "#menu-" + menuID + "-menuContent", function() {
+      odeslatPUT($(this).attr("id"), "1");
+      Arduino.containerUpdate();
+    });
+}
+
+MenuStone.Email = function (menuID) {
+  //HTML boxík pro email ikonu
+    let templateHTML =
+    `
+    <div onclick="" id="menu-${menuID}-menuContent" class="text-center" >
+      <i style="font-size:1em" class="fas fa-envelope"></i>
+      <span id="menu-${menuID}-email">EMAIL</span>
+    </div>
+    `;
+
+    $("#bottomMenu").append(templateHTML);
+
+    //co se stane při kliknutí
+    $(document).on("click", "#menu-" + menuID + "-menuContent", function() {
+      odeslatPUT($(this).attr("id"), "1");
+      Arduino.containerUpdate();
+    });
+}
+
+
+
+// *************** Generuje OBSAH pro MENU ********
+MenuStoneUpdate = {};
+
+MenuStoneUpdate.Home = function (menuID, deviceItem)  {
+  $("#menu-" + menuID + "-homeButton").html("");
+}
+
+MenuStoneUpdate.Zvonecek = function (menuID, deviceItem)  {
+  // let sensorID = deviceItem.unid;
   //jestliže je chyba = ukaž badge (zvoneček na ikone DM)
 
   if (deviceItem.error == "") {
-    $('#homeButton').removeClass("badge badge-pill badge-danger");
-    $('#homeButton').html("");
+    $("#menu-" + menuID + "-activityBut").removeClass("badge badge-pill badge-danger");
+    $("#menu-" + menuID + "-activityBut").html("");
   } else {
-    $('#homeButton').addClass("badge badge-pill badge-danger");
-    $('#homeButton').html(deviceItem.error);
+    $("#menu-" + menuID + "-activityBut").addClass("badge badge-pill badge-danger");
+    $("#menu-" + menuID + "-activityBut").html("Alarms:" + deviceItem.error);
   }
 }
+
+
+MenuStoneUpdate.ServerTime = function (menuID, deviceItem)  {
+
+  let sensorID = deviceItem.unid;
+  //zobrazi serverovy cas
+
+
+    //načte čas ze serveru a standardizuje
+
+    // var actiondate = new Date(deviceItem.value);
+      //nefungovalo na iphone proto tatto metoda
+      //The reason of the problem is iPhone Safari doesn't support the Y-m-d H:i:s (ISO 8601) date format. I have encountered this problem in 2017/7/19, I do not understand why Safari did not fix the problem after two years.
+      //https://stackoverflow.com/questions/26657353/date-on-ios-device-returns-nan/26671796
+
+    let t = deviceItem.value.split(/[- :]/);
+    // Apply each element to the Date function
+    let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+    let actiondate = new Date(d);
+
+    let minuta = actiondate.getMinutes();
+    if (minuta < 10) {
+      minuta = "0" + minuta.toString();
+    }
+
+    let sekunda = actiondate.getSeconds();
+    if (sekunda < 10) {
+      sekunda = "0" + sekunda.toString();
+    }
+
+    let cas = actiondate.getHours() + ":" + minuta + ":" + sekunda;
+    //cas = "99:99:99"; - testovací čas
+
+    let denVTydnu = "";
+    switch (actiondate.getDay()) {
+      case 1:
+        denVTydnu = "Pondělí"
+        break;
+      case 2:
+        denVTydnu = "Úterý"
+        break;
+      case 3:
+        denVTydnu = "Středa"
+        break;
+      case 4:
+        denVTydnu = "Čtvrtek"
+        break;
+      case 5:
+        denVTydnu = "Pátek"
+        break;
+      case 6:
+        denVTydnu = "Sobota"
+        break;
+      case 0:
+        denVTydnu = "Neděle"
+        break;
+      default:
+      denVTydnu = "Fakt netuším"
+    }
+
+  let datum = denVTydnu + " " + actiondate.getDate() + "." + actiondate.getMonth() + ".";
+
+
+  $("#menu-" + menuID + "-server-date").html(datum);
+  $("#menu-" + menuID + "-server-date").css({"font-size": "0.7rem"});
+
+  $("#menu-" + menuID + "-server-time").html(cas);
+  $("#menu-" + menuID + "-server-time").css({"font-size": "1.5rem"});
+
+  //js_date_methods pro rozdělání dní
+  //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+
+}
+
+
+MenuStoneUpdate.Email = function (menuID, deviceItem)  {
+  $("#menu-" + menuID + "-email").html("");
+  $('#menu-' + menuID + '-menuContent').css("color", "DimGray ");
+
+}
+
+
+
+// *****  pomocné
+
+
 
 
 timeCountDown = function (lastDate, serverDate, longText) {
@@ -694,77 +879,6 @@ timeCountDown = function (lastDate, serverDate, longText) {
 
 }
 
-MenuUpdate.ServerTime = function (deviceItem)  {
-
-  let sensorID = deviceItem.unid;
-  //zobrazi serverovy cas
-
-
-    //načte čas ze serveru a standardizuje
-
-    // var actiondate = new Date(deviceItem.value);
-      //nefungovalo na iphone proto tatto metoda
-      //The reason of the problem is iPhone Safari doesn't support the Y-m-d H:i:s (ISO 8601) date format. I have encountered this problem in 2017/7/19, I do not understand why Safari did not fix the problem after two years.
-      //https://stackoverflow.com/questions/26657353/date-on-ios-device-returns-nan/26671796
-
-    let t = deviceItem.value.split(/[- :]/);
-    // Apply each element to the Date function
-    let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
-    let actiondate = new Date(d);
-
-    let minuta = actiondate.getMinutes();
-    if (minuta < 10) {
-      minuta = "0" + minuta.toString();
-    }
-
-    let sekunda = actiondate.getSeconds();
-    if (sekunda < 10) {
-      sekunda = "0" + sekunda.toString();
-    }
-
-    let cas = actiondate.getHours() + ":" + minuta + ":" + sekunda;
-    //cas = "99:99:99"; - testovací čas
-
-    let denVTydnu = "";
-    switch (actiondate.getDay()) {
-      case 1:
-        denVTydnu = "Pondělí"
-        break;
-      case 2:
-        denVTydnu = "Úterý"
-        break;
-      case 3:
-        denVTydnu = "Středa"
-        break;
-      case 4:
-        denVTydnu = "Čtvrtek"
-        break;
-      case 5:
-        denVTydnu = "Pátek"
-        break;
-      case 6:
-        denVTydnu = "Sobota"
-        break;
-      case 0:
-        denVTydnu = "Neděle"
-        break;
-      default:
-      denVTydnu = "Fakt netuším"
-    }
-
-  let datum = denVTydnu + " " + actiondate.getDate() + "." + actiondate.getMonth() + ".";
-
-
-  $("#server-date").html(datum);
-  $("#server-date").css({"font-size": "0.7rem"});
-
-  $("#server-time").html(cas);
-  $("#server-time").css({"font-size": "1.5rem"});
-
-  //js_date_methods pro rozdělání dní
-  //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-
-}
 
 
 
@@ -874,6 +988,11 @@ Arduino.containerShow = function() {
   var sensorType = "";
   var sensorID = "0"; //cislo senzoru UNID
 
+
+
+
+// ** LivingStones
+
   Arduino.axios.get("/")
     .then(function(response) {
       var device = response.data;
@@ -957,6 +1076,21 @@ Arduino.containerShow = function() {
               LivingStone.Null(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
           } //switch
         }   //if sensorID
+        else {
+
+            // ** Menu
+            MenuStone.Home(DMmenuID1);
+
+            MenuStone.Zvonecek(DMmenuID2);
+            MenuStone.Email(DMmenuID4);
+            MenuStone.ServerTime(DMmenuID3);
+
+            MenuStoneUpdate.Home(DMmenuID1, deviceItem);
+            MenuStoneUpdate.Zvonecek(DMmenuID2, deviceItem);
+            MenuStoneUpdate.Email(DMmenuID4,deviceItem);
+            MenuStoneUpdate.ServerTime(DMmenuID3, deviceItem);
+
+        }
       }); //konec forEach cyklu
 
 
@@ -965,6 +1099,7 @@ Arduino.containerShow = function() {
     //když nasane nějaký chyba - např. server není připojen.
     //řeší se v aktualizaci dat v JSON - teď jen vypíše na konzolu
     .catch(function(error) {
+      console.log("chyba při vykreslení");
       console.log(error);
     });
 }
@@ -976,8 +1111,7 @@ Arduino.containerShow = function() {
 //vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
 Arduino.containerUpdate = function() {
 
-  var sensorID = "0"; //unikatni sensorID
-
+  let sensorID = ""; //unikatni sensorID
 
   Arduino.axios.get('/')
     .then(function(response) {
@@ -987,6 +1121,9 @@ Arduino.containerUpdate = function() {
 
       var device = response.data;
 
+
+      //uz zbytečně - nějak nepoužívám :-()
+
       //pravidelné načítání stavu obsahu všech LivingStones
       //jako objekt s klíčem unid a obsahem LivingStonu
       //následně např. porovnávám, co má smysl měnit
@@ -995,31 +1132,32 @@ Arduino.containerUpdate = function() {
           return map;
       }, {});
 
+      //průchod objekty
+      $.each( deviceObject, function( sensorID, deviceItem ) {
+      // device.forEach(function(deviceItem) {
 
-      //projede všechno, něco jako cyklus : for (var i = 0; i < device.length; i++)
-      $.each(deviceObject, function(index, deviceItem) {
+        // sensorID = deviceItem.unid;
+        // console.log(sensorID);
 
-        sensorID = index;
         sensorWebType = deviceItem.webtype;
 
-
-
-        if (deviceItem.error != "") {
-
-          //obarvit senzor když je chyba
-          sensorErrorColorsOn (deviceItem);
+        //pokud je chyba a zároveň se nejedná o systémovou informaci
+        if (deviceItem.error != "" && deviceItem.unid != "0" ) {
+            //obarvit senzor když je chyba
+            sensorErrorColorsOn (deviceItem);
 
         } else {
             //obarvit senzor když NENÍ chyba
             sensorErrorColorsOff (deviceItem);
 
-            //hodnoty se změnily - je potřeba přepsat tabulku. Jinak ne.
-            // if (deviceObjectLast[sensorID].value != deviceItem.value)
-            {
-              if (sensorID == "0") {
+              if (deviceItem.unid == "0") {
                 //Uděla update menu podle systemovych parametru
-                MenuUpdate.Zvonecek (deviceItem);
-                MenuUpdate.ServerTime (deviceItem);
+
+                // ** Menu
+                MenuStoneUpdate.Home(DMmenuID1, deviceItem);
+                MenuStoneUpdate.Zvonecek(DMmenuID2, deviceItem);
+                MenuStoneUpdate.Email(DMmenuID4,deviceItem);
+                MenuStoneUpdate.ServerTime(DMmenuID3, deviceItem);
               }
 
               //podle typu se naplní hodnoty
@@ -1078,7 +1216,6 @@ Arduino.containerUpdate = function() {
 
               } //konec :switch:
 
-          } //konec value=value
 
         }  // konec Device ERROR
 
@@ -1098,7 +1235,7 @@ Arduino.containerUpdate = function() {
 
     })
     .catch(function(error) {
-
+      console.log("CHAaaaaBA");
         // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
         if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
           //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ

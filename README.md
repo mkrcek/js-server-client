@@ -12,6 +12,13 @@
 - rychlejší start: Okamžitě po vykreslení jednoho HTML LivingStone se aktuslizuje jeho obsah. Teptve poté se kreslí další
 - unid se nepřevádí na number(int) - nechává se jako string
 
+Menu
+- nové menu boxíky (MenuStone.Home, .Zvonecek, .ServerTime  + bonusový .Email)
+- vykreslují se současně s LivingStones
+- nová menu aktualizace (MenuStoneUpdate.xxxx)
+- aktualizují se současně s LivingStones
+- kliknutím na menu se odešle POST s Value="1" a ID=10101/10102/10103/10104
+- kliknutím na HOME se provede refresh obrazovky // location.reload
 
 
 ## 16.3. 2:15
