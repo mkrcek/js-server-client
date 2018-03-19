@@ -1,291 +1,280 @@
 package main
 
 import (
-	"net/http"
-	"fmt"
 	"encoding/json"
-	"strings"
+	"fmt"
+	"io/ioutil"
+	"net"
+	"net/http"
+	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
-	"io/ioutil"
-	"os"
-	"net"
 )
 
-
 const arduinoURL string = "http://192.168.0.70"
+
 //pro testování na čtení reálné teploty
 
-const DMteplota  = "1"
-const DMkamera  = "2"
+const DMteplota = "1"
+const DMkamera = "2"
 const DMalarm = "3"
 const DMCameraAlarm = "4"
-const DMvoda  = "5"
-const DMsvetlo  = "6"
+const DMvoda = "5"
+const DMsvetlo = "6"
 const DMbrana = "7"
 const DMpocasi = "8"
 
 const numberOfRows = 15
 
 type DeviceSetup struct {
-
-	DevId		int 	`json:"unid"`		//OK
-	DevOrder	int		`json:"weborder"`	//OK
-	DevPriority	int		`json:"priority"`	//OK
-	DevType		string 	`json:"webtype"`	//OK
-	Subtype		string 	`json:"subtype"`	//OK
-	DevTime   	string 	`json:"lrespiot"`	//OK
-	Value 		string	`json:"value"`		//OK
-	DevName 	string 	`json:"webname"`	//OK
-	InVisible		int	`json:"invisible"`
-	DevError	string  `json:"error"`		//
+	DevId       string `json:"unid"`     //OK
+	DevOrder    int    `json:"weborder"` //OK
+	DevPriority int    `json:"priority"` //OK
+	DevType     string `json:"webtype"`  //OK
+	Subtype     string `json:"subtype"`  //OK
+	DevTime     string `json:"lrespiot"` //OK
+	Value       string `json:"value"`    //OK
+	DevName     string `json:"webname"`  //OK
+	InVisible   int    `json:"invisible"`
+	DevError    string `json:"error"` //
 }
 
-var hodnotaPut = DeviceSetup{				//testovaci
-	DevId:      1000001,
-	DevTime:  	time.Now().Format("2006-01-02 15:04:05"),
-	DevName:  	"testovacka",
-	}
+var hodnotaPut = DeviceSetup{ //testovaci
+	DevId:   "1000001",
+	DevTime: time.Now().Format("2006-01-02 15:04:05"),
+	DevName: "testovacka",
+}
 
-                                    //pocet zarizeni
+//pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
-
 
 func main() {
 
 	fmt.Println("starujem")
 
-	setupHomeDeviceData ()		//naplní vzorova data
+	setupHomeDeviceData() //naplní vzorova data
 
 	http.HandleFunc("select/devices/temperatures/", HandleTest) //testovaci
 
-
-
 	//http.HandleFunc("/select/hodnota/", HandleItem) //uprava dat z webu
 
-	http.HandleFunc("/doomaster/sensors/", HandleAllData)      //vrati vsechna data - nebo jen položku za lomítkem
+	http.HandleFunc("/doomaster/sensors/", HandleAllData) //vrati vsechna data - nebo jen položku za lomítkem
 
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("."))))		//webserver pro localhost
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(".")))) //webserver pro localhost
 
 	http.ListenAndServe(":1818", nil)
 }
-
-
 
 func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	t := time.Now()
 
 	//teplota zahrada
-	 	myHomeDeviceSetup[0] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       5678900,
-			DevOrder:    0, // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
-			DevPriority: 0,                       //****1/31
-			DevType:     "1",	//teplota
-			Subtype:	 "1",   // vzduch
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:     	 strconv.Itoa(t.Second() - 30),
-			DevName:     "0 - Zahradní teploměr",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[0] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "5678900",
+		DevOrder:    0,   // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
+		DevPriority: 0,   //****1/31
+		DevType:     "1", //teplota
+		Subtype:     "1", // vzduch
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       strconv.Itoa(t.Second() - 30),
+		DevName:     "0 - Zahradní teploměr",
+		InVisible:   0,
+	}
 
 	//voda
-		myHomeDeviceSetup[1] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       678901,
-			DevOrder:    4,
-			DevPriority: 0,                       //****1/31
-			DevType:     "5",	//voda
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       strconv.Itoa(time.Now().Second() * 100 / 60),
-			DevName:     "1 - bazén",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[1] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "678901",
+		DevOrder:    4,
+		DevPriority: 0,   //****1/31
+		DevType:     "5", //voda
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       strconv.Itoa(time.Now().Second() * 100 / 60),
+		DevName:     "1 - bazén",
+		InVisible:   0,
+	}
 
 	//svetlo
-		myHomeDeviceSetup[2] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       78902,
-			DevOrder:    5,
-			DevPriority: 0,                       //****1/31
-			DevType:     "6", //světlo
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       "0",
-			DevName:     "2 - Vanocni stromek",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[2] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "78902",
+		DevOrder:    5,
+		DevPriority: 0,   //****1/31
+		DevType:     "6", //světlo
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "0",
+		DevName:     "2 - Vanocni stromek",
+		InVisible:   0,
+	}
 	//alarm
-		myHomeDeviceSetup[3] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       678903,
-			DevOrder:    6,
-			DevPriority: 0,                       //****1/31
-			DevType:     "3",	//alarm - PIR
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       "0",
-			DevName:     "3 - Pohyb zahrada",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[3] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "678903",
+		DevOrder:    6,
+		DevPriority: 0,   //****1/31
+		DevType:     "3", //alarm - PIR
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "0",
+		DevName:     "3 - Pohyb zahrada",
+		InVisible:   0,
+	}
 	//brana
-		myHomeDeviceSetup[4] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       678904,
-			DevOrder:    11, //bylo 11
-			DevPriority: 0,                       //****1/31
-			DevType:     DMbrana,	//brána
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       "44",
-			DevName:     "4 - Brána",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[4] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "678904",
+		DevOrder:    11,      //bylo 11
+		DevPriority: 0,       //****1/31
+		DevType:     DMbrana, //brána
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "44",
+		DevName:     "4 - Brána",
+		InVisible:   0,
+	}
 	//kamera
-		myHomeDeviceSetup[5] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       678905,
-			DevOrder:    8,
-			DevPriority: 0,                       //****1/31
-			DevType:     "2",	//kamera - ne počasí
-			Subtype:	 "liveimages/image5.jpg",
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       "0",
-			DevName:     "5 - Kamera Terasa",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[5] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "678905",
+		DevOrder:    8,
+		DevPriority: 0,   //****1/31
+		DevType:     "2", //kamera - ne počasí
+		Subtype:     "liveimages/image5.jpg",
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "0",
+		DevName:     "5 - Kamera Terasa",
+		InVisible:   0,
+	}
 
 	//kamera 2
-		myHomeDeviceSetup[6] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       78906,
-			DevOrder:    9,
-			DevPriority: 0,                       //****1/31
-			DevType:     "2",	//kamera - ne počasí
-			Subtype:	 "liveimages/image6.jpg",
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       "0",
-			DevName:     "6 - Kamera strom",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[6] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "78906",
+		DevOrder:    9,
+		DevPriority: 0,   //****1/31
+		DevType:     "2", //kamera - ne počasí
+		Subtype:     "liveimages/image6.jpg",
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "0",
+		DevName:     "6 - Kamera strom",
+		InVisible:   0,
+	}
 
 	//pocasi
-		myHomeDeviceSetup[7] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       78907,
-			DevOrder:    10,
-			DevPriority: 0,                       //****1/31
-			DevType:     "8",		//počasí - ne kamera
-			Subtype:	 "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:       "0",
-			DevName:     "7 - Počasí",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[7] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "78907",
+		DevOrder:    10,
+		DevPriority: 0,   //****1/31
+		DevType:     "8", //počasí - ne kamera
+		Subtype:     "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       "0",
+		DevName:     "7 - Počasí",
+		InVisible:   0,
+	}
 
 	//teplota zahrada2
-		myHomeDeviceSetup[8] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       67898,
-			DevOrder:    1,
-			DevPriority: 0,                       //****1/31
-			DevType:     "1", //teplota
-			Subtype:	 "3",   // bazen
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:     	 strconv.Itoa(t.Second() - 10),
-			DevName:     "8 - Bazén 2",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[8] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "67898",
+		DevOrder:    1,
+		DevPriority: 0,   //****1/31
+		DevType:     "1", //teplota
+		Subtype:     "3", // bazen
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       strconv.Itoa(t.Second() - 10),
+		DevName:     "8 - Bazén 2",
+		InVisible:   0,
+	}
 
 	//teplota zahrada3
-		myHomeDeviceSetup[9] = DeviceSetup{
-			//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-			DevId:       78909,
-			DevOrder:    2,
-			DevPriority: 0,                       //****1/31
-			DevType:     "1",	//teplota
-			Subtype:	 "2",   // kotel
-			DevTime:     t.Format("2006-01-02 15:04:05"),
-			Value:     	 strconv.Itoa(t.Second() + 40),
-			DevName:     "9 - KOTEL 3",
-			InVisible:	0,
-		}
+	myHomeDeviceSetup[9] = DeviceSetup{
+		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
+		DevId:       "78909",
+		DevOrder:    2,
+		DevPriority: 0,   //****1/31
+		DevType:     "1", //teplota
+		Subtype:     "2", // kotel
+		DevTime:     t.Format("2006-01-02 15:04:05"),
+		Value:       strconv.Itoa(t.Second() + 40),
+		DevName:     "9 - KOTEL 3",
+		InVisible:   0,
+	}
 
 	//systémový čas
 	myHomeDeviceSetup[10] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-		DevId:       0,
-		DevOrder:    0,
-		DevType:     "-1",	//systémovy čas
-		Value:     	 t.Format("2006-01-02 15:04:05"),
-		DevError:	"",
-		DevName: "server",
+		DevId:    "0",
+		DevOrder: 0,
+		DevType:  "-1", //systémovy čas
+		Value:    t.Format("2006-01-02 15:04:05"),
+		DevError: "",
+		DevName:  "server",
 	}
-
 
 	//brana
 	myHomeDeviceSetup[11] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-		DevId:       1169927890411,
-		DevOrder:    12, //bylo 11
-		DevPriority: 0,                       //****1/31
-		DevType:     DMbrana,	//brána
+		DevId:       "1169927890411881817723",
+		DevOrder:    12,      //bylo 11
+		DevPriority: 0,       //****1/31
+		DevType:     DMbrana, //brána
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		Value:       "44",
 		DevName:     "4 - Brána 2",
-		InVisible:	0,
+		InVisible:   0,
 	}
 
 	//teplota zahrada3
 	myHomeDeviceSetup[12] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-		DevId:       789010012,
+		DevId:       "789010012",
 		DevOrder:    1,
-		DevPriority: 0,                       //****1/31
-		DevType:     DMteplota,	//teplota
-		Subtype:	 "1",   // vzduch
+		DevPriority: 0,         //****1/31
+		DevType:     DMteplota, //teplota
+		Subtype:     "1",       // vzduch
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
-		Value: "0",
-		DevName:     "reálná teplota Arduino",
-		InVisible:	0,
+		Value:     "0",
+		DevName:   "reálná teplota Arduino",
+		InVisible: 0,
 	}
 
 	//světlo
 	myHomeDeviceSetup[13] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-		DevId:       78901013,
+		DevId:       "78901013",
 		DevOrder:    1,
-		DevPriority: 0,                       //****1/31
-		DevType:     DMsvetlo,	//svetlo
-		Subtype:	 "",   // svetlo
+		DevPriority: 0,        //****1/31
+		DevType:     DMsvetlo, //svetlo
+		Subtype:     "",       // svetlo
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
-		Value: "1",
-		DevName:     "svetlo",
-		InVisible:	0,
+		Value:     "1",
+		DevName:   "svetlo",
+		InVisible: 0,
 	}
 
 	//CameraAlarm
 	myHomeDeviceSetup[14] = DeviceSetup{
-		DevId:       789011014,
+		DevId:       "789011014",
 		DevOrder:    0,
 		DevPriority: 0,                         //
 		DevType:     DMCameraAlarm,             //kamera - zaznam
 		Subtype:     "activitylog/image-0.jpg", // archiv obrazku
-		DevTime:     "2018-01-02 15:04:05",  		//t.Format("2006-01-02 15:04:05"),
-		Value:       "1",  //pocet obrazku - pro demo bylo 32
+		DevTime:     "2018-01-02 15:04:05",     //t.Format("2006-01-02 15:04:05"),
+		Value:       "1",                       //pocet obrazku - pro demo bylo 32
 		DevName:     "ANIMACE KAMERA PIR",
 		InVisible:   0,
 	}
 
-
-
 	//	fmt.Println(myHomeDeviceSetup)
-
 
 }
 
 func ApiGetAll(w http.ResponseWriter, r *http.Request) {
-
 
 	//*** ****************************** aktualizuje tabulku pri každém čtení GET **************
 	//*** ****************************** aktualizuje tabulku pri každém čtení GET **************
@@ -295,19 +284,17 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	//upraví  "tabulku" a odpoví na Get
 	t := time.Now()
 
-
-
-	for i:=0;i<numberOfRows ;i++  {
+	for i := 0; i < numberOfRows; i++ {
 
 		//myHomeDeviceSetup[i].DevSerTime = t.Format("2006-01-02 15:04:05")
-		if (i != 13 && i != 14) {		//třináctka řeší samostatně  - zkouška hořícího čidla
+		if i != 13 && i != 14 { //třináctka řeší samostatně  - zkouška hořícího čidla
 			myHomeDeviceSetup[i].DevTime = t.Format("2006-01-02 15:04:05")
 		}
 
 		switch myHomeDeviceSetup[i].DevType {
 		case DMCameraAlarm:
 			{
-				if (t.Second()%10 == 0) {
+				if t.Second()%10 == 0 {
 					fmt.Println("ALALLLL")
 					myHomeDeviceSetup[i].Value = "1"
 				}
@@ -319,12 +306,12 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 				var errImage error
 				//fmt.Println("chci uložit fotku číslo ", i)
 				if i == 6 {
-					errImage = saveImageCam ("liveimages/image6.jpg", strconv.Itoa(i))
-					//errImage = saveImageCam ("http://10.66.102.2/jpg/image.jpg", strconv.Itoa(i))
+					//errImage = saveImageCam ("liveimages/image6.jpg", strconv.Itoa(i))
+					errImage = saveImageCam("http://10.66.104.235/jpg/image.jpg", strconv.Itoa(i))
 				}
 				if i == 5 {
-					errImage = saveImageCam ("liveimages/image6.jpg", strconv.Itoa(i))
-					//errImage = saveImageCam ("http://192.168.0.26/jpg/image.jpg", strconv.Itoa(i))
+					//errImage = saveImageCam ("liveimages/image6.jpg", strconv.Itoa(i))
+					errImage = saveImageCam("http://10.66.102.2/jpg/image.jpg", strconv.Itoa(i))
 				}
 
 				if errImage != nil {
@@ -337,7 +324,7 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		case DMteplota:
 			//myHomeDeviceSetup[i].Value = strconv.(t.Second() + i - 30)
 			//teplota s desetinou hodnotou
-			teplo := float64(t.Second())/100 + float64(t.Second() + i - 30)
+			teplo := float64(t.Second())/100 + float64(t.Second()+i-30)
 
 			teploS := strconv.FormatFloat(teplo, 'f', 2, 32)
 
@@ -348,12 +335,11 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		case DMsvetlo:
 		//	myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
 		case DMalarm:
-			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
+			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() % 2)
 		case DMbrana:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 
 		}
-
 
 	}
 
@@ -362,17 +348,15 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(myHomeDeviceSetup[10].Value )
 
 	//systemovy error
-	if (t.Second() % 10 == 0) {
+	if t.Second()%10 == 0 {
 		myHomeDeviceSetup[10].DevError = strconv.Itoa(t.Minute())
 	} else {
 		myHomeDeviceSetup[10].DevError = ""
 	}
 
-
 	//reálná Arduino teplota
 	//myHomeDeviceSetup[12].Value = strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32)
 	myHomeDeviceSetup[12].Value = "-77"
-
 
 	//zobrazí json
 	//**********************
@@ -391,18 +375,12 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 
 	//uprava těla - vrátí do HTTP GET
 	w.Write(b)
 }
-
-
-
-
-
-
 
 func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 
@@ -411,9 +389,9 @@ func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 	//var t = time.Now()
 	myDeviceSetup = DeviceSetup{
 		//DevSerTime: (t.Format(time.Kitchen)),
-		DevId:      78901,
-		DevTime:    "19:00",
-		DevName:  	"bouda",
+		DevId:   "78901",
+		DevTime: "19:00",
+		DevName: "bouda",
 	}
 
 	b, err := json.Marshal(myDeviceSetup)
@@ -429,7 +407,7 @@ func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 
 	//uprava těla - vrátí do HTTP GET
@@ -437,9 +415,7 @@ func ShowApiTest(w http.ResponseWriter, r *http.Request, rowNumber int) {
 
 	fmt.Println("***************")
 
-
 }
-
 
 func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna data - celou tabulku
 
@@ -448,21 +424,20 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 
 	var hodnoty string = ""
 
-	myURL := r.RequestURI                           // req.URL vs req.RequestURI		"/devices/21293"
+	myURL := r.RequestURI // req.URL vs req.RequestURI		"/devices/21293"
 	//fmt.Println("cele URL je " + myURL)
-	re := regexp.MustCompile("[0-9]+")              //vyfiltruje všechna čísla = 21293
-	ulrDeviceIDs := re.FindAllString(myURL, 1)      //vybere jen první sekvenci číslic = 21293
-
+	re := regexp.MustCompile("[0-9]+")         //vyfiltruje všechna čísla = 21293
+	ulrDeviceIDs := re.FindAllString(myURL, 1) //vybere jen první sekvenci číslic = 21293
 
 	//handle all - teď toto většinou děláme
 
-	if (ulrDeviceIDs == nil) {			//GET ALL pokud číslo neni - je tedy jen lomitko bez parametru
+	if ulrDeviceIDs == nil { //GET ALL pokud číslo neni - je tedy jen lomitko bez parametru
 		//fmt.Println("GET ALL")
 		switch r.Method {
 		case "GET":
-			ApiGetAll(w,r)
+			ApiGetAll(w, r)
 		case "OPTIONS":
-			HandleOptionsCORS(w,r)
+			HandleOptionsCORS(w, r)
 		case "POST":
 			fmt.Println("POST ")
 		case "PUT":
@@ -477,30 +452,30 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 		//fmt.Print("parametr  ")
 		//fmt.Println(ulrDeviceIDs)
 
-		ulrDeviceIDstr := strings.Join(ulrDeviceIDs,"") //převede type []string” to string
-		itemID, _ := strconv.Atoi(ulrDeviceIDstr)       //převede na číslo
+		ulrDeviceIDstr := strings.Join(ulrDeviceIDs, "") //převede type []string” to string
+		itemID, _ := strconv.Atoi(ulrDeviceIDstr)        //převede na číslo
 
 		fmt.Print("parametr za lomítkem ")
 		fmt.Println(itemID)
 
 		switch r.Method {
 		case "GET":
-			ApiGetItem(w ,r ,itemID)
+			ApiGetItem(w, r, itemID)
 		case "OPTIONS":
-			HandleOptionsCORS(w,r)
+			HandleOptionsCORS(w, r)
 		case "POST":
-			HandleOptionsCORS(w,r)
+			HandleOptionsCORS(w, r)
 			fmt.Println("POST ")
 		case "PUT":
-			HandleOptionsCORS(w,r)
+			HandleOptionsCORS(w, r)
 			//při pokusech se změnou názvu ---- ApiPutIdem(w, r, itemID)
 			//fmt.Println("PUT přijato")
 			fmt.Println("cele URL je " + myURL)
-			hodnoty = zobrazHodnotuPUT(w,r) //hodnoty + odpoved na server => OK  =200
+			hodnoty = zobrazHodnotuPUT(w, r) //hodnoty + odpoved na server => OK  =200
 			t := time.Now()
 
 			//testování kliknutí na "světlo" se zobrazí alarma "čidlo hoří"
-			if (itemID == 78901013 && hodnoty == "1") {
+			if itemID == 78901013 && hodnoty == "1" {
 				if myHomeDeviceSetup[13].Value == "1" {
 					myHomeDeviceSetup[13].Value = "0"
 					myHomeDeviceSetup[13].DevError = ""
@@ -513,7 +488,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 			}
 
 			//testování kliknutí na "Camera Alarm" se zmeni hodnota ve Value na ""
-			if (itemID == 789011014 && hodnoty == "DELETE") {
+			if itemID == 789011014 && hodnoty == "DELETE" {
 				if myHomeDeviceSetup[14].Value != "" {
 					myHomeDeviceSetup[14].Value = ""
 				} else {
@@ -527,20 +502,19 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 	}
 }
 
-
 //nepoužíváme
 func HandleTest(w http.ResponseWriter, r *http.Request) {
 	//pro demo JS - každou chvilku aktualizujej proměné
 	//nalezení, jeslti je zvolený nějaký konkrétní řádek /zázmam = ID (číslo)
 	//...číslo za lomítkem, např./devices/21293 = 21293
-	myURL := r.RequestURI        // req.URL vs req.RequestURI		"/devices/21293"
-	re := regexp.MustCompile("[0-9]+")		//vyfiltruje všechna čísla = 21293
-	ulrDeviceIDs := re.FindAllString(myURL, 1)	//vybere jen první sekvenci číslic = 21293
-	ulrDeviceIDstr := strings.Join(ulrDeviceIDs,"")			//převede type []string” to string
-	ulrDeviceID, _ := strconv.Atoi(ulrDeviceIDstr)			//převede na číslo
-switch r.Method {
+	myURL := r.RequestURI                            // req.URL vs req.RequestURI		"/devices/21293"
+	re := regexp.MustCompile("[0-9]+")               //vyfiltruje všechna čísla = 21293
+	ulrDeviceIDs := re.FindAllString(myURL, 1)       //vybere jen první sekvenci číslic = 21293
+	ulrDeviceIDstr := strings.Join(ulrDeviceIDs, "") //převede type []string” to string
+	ulrDeviceID, _ := strconv.Atoi(ulrDeviceIDstr)   //převede na číslo
+	switch r.Method {
 	case "GET":
-			ShowApiTest(w,r,ulrDeviceID )
+		ShowApiTest(w, r, ulrDeviceID)
 	case "OPTIONS":
 		fmt.Println("OPTIONS ")
 	case "POST":
@@ -551,7 +525,6 @@ switch r.Method {
 		fmt.Println("DELETE ")
 	}
 }
-
 
 /*func HandleItem(w http.ResponseWriter, r *http.Request) {
 
@@ -585,7 +558,6 @@ switch r.Method {
 
 }*/
 
-
 //zobrazí hodnotu v PUT a odešle OK = 200
 func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) string {
 
@@ -593,7 +565,7 @@ func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) string {
 	body := make([]byte, lenBody)
 	r.Body.Read(body)
 	var post DeviceSetup
-	json.Unmarshal(body,&post)
+	json.Unmarshal(body, &post)
 
 	fmt.Print("hodnoty v JSON VALUE: ")
 	var hodnoty string = post.Value
@@ -605,7 +577,7 @@ func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) string {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 
 	//zpráva do těla
@@ -613,11 +585,9 @@ func zobrazHodnotuPUT(w http.ResponseWriter, r *http.Request) string {
 
 	fmt.Println("******OK PUT********")
 
-
-	return hodnoty;
+	return hodnoty
 
 }
-
 
 //nepoužíváme
 func ApiPutIdem(w http.ResponseWriter, r *http.Request, itemID int) {
@@ -626,23 +596,23 @@ func ApiPutIdem(w http.ResponseWriter, r *http.Request, itemID int) {
 	body := make([]byte, lenBody)
 	r.Body.Read(body)
 	var post DeviceSetup
-	json.Unmarshal(body,&post)
+	json.Unmarshal(body, &post)
 
 	fmt.Print("novy nazev: ")
 	fmt.Println(post.DevName)
 	//aktualizace položky v "tabulce"
 
 	myHomeDeviceSetup[itemID].DevTime = time.Now().Format("2006-01-02 15:04:05")
-	if (post.DevName != "") {
+	if post.DevName != "" {
 		myHomeDeviceSetup[itemID].DevName = post.DevName
-	}  //jinak se zachová se puvodní název
+	} //jinak se zachová se puvodní název
 	myHomeDeviceSetup[itemID].Value = post.Value
 	//úprava hlavičky
 	//w.Header().Set("Content-Length", "0") - POZOR DELKA NEMUZE BYT NULA
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	//zpráva do těla
 	w.Write([]byte("OK UPDATED"))
@@ -657,7 +627,7 @@ func UpdateHodnota_old(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, lenBody)
 	r.Body.Read(body)
 	var post DeviceSetup
-	json.Unmarshal(body,&post)
+	json.Unmarshal(body, &post)
 	hodnotaPut.DevTime = time.Now().Format("2006-01-02 15:04:05")
 	hodnotaPut.DevName = post.DevName
 	//úprava hlavičky
@@ -665,7 +635,7 @@ func UpdateHodnota_old(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	//zpráva do těla
 	w.Write([]byte("OK UPDATED"))
@@ -673,7 +643,6 @@ func UpdateHodnota_old(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Update   : ", hodnotaPut)
 	fmt.Println("***************")
 }
-
 
 func ApiGetItem(w http.ResponseWriter, r *http.Request, itemID int) {
 
@@ -687,7 +656,7 @@ func ApiGetItem(w http.ResponseWriter, r *http.Request, itemID int) {
 	w.Header().Set("Content-Type", "application/json") //
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 
 	//uprava těla - vrátí do HTTP GET
@@ -696,7 +665,6 @@ func ApiGetItem(w http.ResponseWriter, r *http.Request, itemID int) {
 	fmt.Println("*******GET HODNOTA********")
 	fmt.Println(DataToAPi)
 }
-
 
 func HandleOptionsCORS(w http.ResponseWriter, req *http.Request) {
 	//odpověď na volání, pokud by se místo POST klient ptal na OPTIONS
@@ -707,19 +675,17 @@ func HandleOptionsCORS(w http.ResponseWriter, req *http.Request) {
 	//rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080/device")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	w.WriteHeader(200)
 	return
 }
 
-
-
 //koukání na kameru
 //- 14.2.2018
 //- načte obrázek z kamery a uloží do souboru, který pořád přepisuje
 
-func saveImageCam( URLimage, cisloObrazku string ) error{
+func saveImageCam(URLimage, cisloObrazku string) error {
 
 	//obrázek z kamery podle IP adresy
 	client := &http.Client{}
@@ -728,14 +694,14 @@ func saveImageCam( URLimage, cisloObrazku string ) error{
 		return err
 	}
 	resp, err := client.Do(req)
-	if err!= nil {
+	if err != nil {
 		fmt.Println("***CHYBA****", err)
 		return err
 	}
 	defer resp.Body.Close()
 
 	//fmt.Println("přečteno")
-	if err!= nil {
+	if err != nil {
 		return err
 		//fmt.Println("1", errImage)
 		//log.Fatal(errImage)
@@ -765,8 +731,8 @@ func saveImageCam( URLimage, cisloObrazku string ) error{
 	//actualTime := time.Now().Format("images/2006-01-02_15-04-05") + ".jpg"
 	//imageFileName := actualTime
 
-	imageFileName := "liveimages/image"+cisloObrazku+".jpg"
-		err = ioutil.WriteFile(imageFileName, body, 0644)
+	imageFileName := "liveimages/image" + cisloObrazku + ".jpg"
+	err = ioutil.WriteFile(imageFileName, body, 0644)
 	if err != nil {
 		return err
 		//fmt.Println("4", errImage)
@@ -776,10 +742,8 @@ func saveImageCam( URLimage, cisloObrazku string ) error{
 	return err
 }
 
-
-
 //přečte teplotu ARDUINa - reálná teplota
-func deviceReadTempHum(pin int) (float64) {
+func deviceReadTempHum(pin int) float64 {
 
 	//teplota a vlhkost
 	type tempHumid struct {
@@ -834,4 +798,3 @@ func deviceReadTempHum(pin int) (float64) {
 	//return 0,0
 	return 0
 }
-

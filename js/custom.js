@@ -31,35 +31,14 @@ const GRID_FUL = "col-12 col-sm-6"; //kamera
 //následně např. porovnávám, co má smysl měnit
 var deviceObjectLast = {} ;
 
+//doba za jakou zčervená pozadí při výpadku spojení se serverem
+const TimeOutRed = 5000;
+
 
 
 
 
 //test a DEMO class na měření času místo globální proměné
-//https://coryrylan.com/blog/javascript-es6-class-syntax
-
-class LastServerActivity {
-
-  constructor(myTime) {
-    this._myTime = myTime;
-  }
-
-  // Getter
-  get timeDistance() {
-    return this._myTime;
-    // return this.calcArea();
-  }
-  //Setter
-  set timeDistance (newTime) {
-        this._myTime = newTime;
-  }
-  // Method
-    calcArea() {
-    // return this._myTime*1000;
-    // return new Date().getTime();
-  }
-}
-
 //uchovává globální čas
 class TimeKeeper {
   constructor(myTime) {
@@ -73,17 +52,15 @@ class TimeKeeper {
   set time (newTime) {
         this._myTime = newTime;
   }
-
 }
-
-
-
-// let LSA = new LastServerActivity(new Date().getTime());
-// console.log(LSA);
+//inicializace: let LastServer = new TimeKeeper (HODNOTA);
+//update hodnot: LastServer.time = NOVA_HODNOTA;
+//čtení hodnoty: console.log(LastServer.time);
 
 let LastServer = new TimeKeeper (new Date().getTime());
-LastServer.time = new Date().getTime();
-console.log( LastServer);
+
+
+
 
 
 // ********** KOD
@@ -1013,7 +990,7 @@ Arduino.containerUpdate = function() {
     .catch(function(error) {
 
         // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
-        if ((new Date().getTime() - LastServer.time) > 5000) {
+        if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
           //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
           $("body").css("background-color", "Red");
         }
