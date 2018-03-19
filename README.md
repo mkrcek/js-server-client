@@ -1,11 +1,11 @@
-# Doomaster: bluma & sprint 19.3.2018 15:15
+# Doomaster: bluma & sprint 19.3.2018 22:22
 
 
 ----------
 
 ## Co nového ve verzi
 
-## 19.3. 15:15
+## 19.3. 22:22
 
 - Oprava zobrazení Neděle - místo "Fakt netuším"
 - zobrazení stavu ErrorSensor v LivingStonu
