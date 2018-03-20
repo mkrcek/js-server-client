@@ -36,9 +36,20 @@ const DMmenuID4 = "10104";
 
 //počet sloupců na stránce
 
-const GRID_SM = "col-3"; //teplota
-const GRID_MD = "col-8 col-sm-6"; //počasí
-const GRID_FUL = "col-12 col-sm-6"; //kamera
+//<576px col-
+//≥576px col-sm-
+//≥768px col.md-
+//≥992px col.lg-
+//≥1200px col.xl-
+
+const GRID_SM = "col-3 col-sm-2 col-md-3 col.xl-2"; //teplota
+const GRID_MD = "col-8 col-sm-6"; //např.počasí - nepoužito
+const GRID_FUL = "col-12 col-sm-6"; //kamera - napoužito
+
+const GRID_CAM = "col-12 col-sm-12 col-lg-6"; //kamera
+const GRID_CAMAL = "col-12 col-sm-6 col-md-6"; //kamera alarm
+const GRID_WEAD = "col-12 col-sm-6 col-md-4"; //weather
+const GRID_GATE = "col-12 col-sm-6 col-md-4"; //brána
 
 
 //uchování předešlého stavu obsahu všech LivingStones
@@ -223,8 +234,9 @@ LivingStone.Pir = function (sensorID) {
 
 LivingStone.Camera = function (sensorID) {
   //HTML boxík pro Kameru
+  //bylo GRID_FUL
   var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
 
           <div>
@@ -251,8 +263,9 @@ LivingStone.Camera = function (sensorID) {
 
 LivingStone.Weather = function (sensorID) {
   //HTML boxík pro Počasí
+  //bylo: GRID_MD
   var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_WEAD}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
 
           <div id="sensor-${sensorID}-module-pocasi" class="pocasi-value">
@@ -298,8 +311,9 @@ LivingStone.Water = function (sensorID) {
 
 LivingStone.Gate = function (sensorID) {
   //HTML boxík pro Bránu
+  //bylo GRID_MD
   var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
+  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_GATE}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-gate">
 
           <div id="sensor-${sensorID}-module-brana" class="text-left">
@@ -392,8 +406,9 @@ LivingStone.Light = function (sensorID) {
 LivingStone.CameraAlarm = function (sensorID) {
 
   //HTML boxík pro Obrazek z kamery po alarmu
+  //bylo GRID_FUL
     var templateHTML =
-    `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
+    `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAMAL}">
         <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
 
             <div>
@@ -691,6 +706,7 @@ MenuStone.Zvonecek = function (menuID) {
     `;
 
     $("#bottomMenu").append(templateHTML);
+    $("#menu-" + menuID + "-activityBut").css({"font-size": "1.2rem"});
 
     //co se stane při kliknutí
     $(document).on("click", "#menu-" + menuID + "-menuContent", function() {
@@ -772,7 +788,7 @@ MenuStoneUpdate.Zvonecek = function (menuID, deviceItem)  {
     $("#menu-" + menuID + "-activityBut").html("");
   } else {
     $("#menu-" + menuID + "-activityBut").addClass("badge badge-pill badge-danger");
-    $("#menu-" + menuID + "-activityBut").html("Alarms:" + deviceItem.error);
+    $("#menu-" + menuID + "-activityBut").html(deviceItem.error);
   }
 }
 

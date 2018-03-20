@@ -1,11 +1,15 @@
-# Doomaster: bluma & sprint 20.3.2018
+# Doomaster: bluma & sprint 20.3.2018 22:30
 
 
 ----------
 
 ## Co nového ve verzi
 
-## 20.3.
+## 20.3. 22:30
+
+- hrádky s velikostí boxíků pro různá rozlišení
+- odstranění slovo Alarm z menu
+- větší písmo u alarmové hlášky
 
 iPAD iOS 9.x
 - funguje na malém iPadu s iOS 9.3.5
