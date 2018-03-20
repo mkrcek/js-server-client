@@ -973,7 +973,7 @@ function sensorErrorColorsOff (deviceItem){
 
   $("#sensor-" + sensorID + "-error").html("");
   // $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
-  $('#sensor-' + sensorID + '-boxWrap').css('background-color','inherit');
+  $('#sensor-' + sensorID + '-boxWrap').css('background-color','inherit'); //průhledá barva - lepší než transparent. Zdědí barvu z předchudce - tedy prvnku nad tím - tedy boxScreen (si myslím)
 
 }
 
