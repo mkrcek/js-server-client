@@ -15,6 +15,8 @@ import (
 
 const arduinoURL string = "http://192.168.0.70"
 
+
+
 //pro testování na čtení reálné teploty
 
 const DMteplota = "1"
@@ -50,19 +52,24 @@ var hodnotaPut = DeviceSetup{ //testovaci
 //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
+const mujString = "/fuck-in/"
+
 func main() {
+
 
 	fmt.Println("starujem")
 
 	setupHomeDeviceData() //naplní vzorova data
 
-	http.HandleFunc("select/devices/temperatures/", HandleTest) //testovaci
+	//http.HandleFunc("select/devices/temperatures/", HandleTest) //testovaci
 
 	//http.HandleFunc("/select/hodnota/", HandleItem) //uprava dat z webu
 
-	http.HandleFunc("/doomaster/sensors/", HandleAllData) //vrati vsechna data - nebo jen položku za lomítkem
+	http.HandleFunc( mujString + "doomaster/sensors/", HandleAllData) //vrati vsechna data - nebo jen položku za lomítkem
 
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(".")))) //webserver pro localhost
+	http.Handle( "/", http.StripPrefix("/", http.FileServer(http.Dir(".")))) //webserver pro localhost
+
+	//http.Handle( "/fuck-in/", http.StripPrefix("/fuck-in/", http.FileServer(http.Dir(".")))) //webserver pro localhost
 
 	http.ListenAndServe(":1818", nil)
 }

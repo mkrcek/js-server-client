@@ -106,7 +106,7 @@ var LastServer = new TimeKeeper (new Date().getTime());
 window.Arduino = {};
 
 window.onload = function() {
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/doomaster/sensors/';
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/fuck-in/doomaster/sensors/';
         //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
   Arduino.axios = axios.create({
@@ -767,7 +767,7 @@ MenuStoneUpdate.Zvonecek = function (menuID, deviceItem)  {
   // var sensorID = deviceItem.unid;
   //jestliže je chyba = ukaž badge (zvoneček na ikone DM)
 
-  if (deviceItem.error == "") {
+  if (deviceItem.error == null || deviceItem.error == "") {
     $("#menu-" + menuID + "-activityBut").removeClass("badge badge-pill badge-danger");
     $("#menu-" + menuID + "-activityBut").html("");
   } else {
@@ -1210,7 +1210,7 @@ Arduino.containerUpdate = function() {
         sensorWebType = deviceItem.webtype;
 
         //pokud je chyba a zároveň se nejedná o systémovou informaci
-        if (deviceItem.error != "" && deviceItem.unid != "0" ) {
+        if (deviceItem.error!=null && deviceItem.error != "" && deviceItem.unid != "0" ) {
             //obarvit senzor když je chyba
             sensorErrorColorsOn (deviceItem);
 
@@ -1303,12 +1303,33 @@ Arduino.containerUpdate = function() {
 
     })
     .catch(function(error) {
-      console.log("CHAaaaaBA");
+      console.log("TATO CHYBA");
+
         // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
         if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
           //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
           $("body").css("background-color", "Red");
         }
+
+
+
+
+        if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
 
 
     });
