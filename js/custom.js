@@ -1,3 +1,11 @@
+
+// poznámky k vydání
+// ****
+//   používám var místo moderního let (l-e-t)
+//   let nejede - ve starém JS např na SAFARI iOS 9.xx.xx.xx 20.3.2018 ****
+// ****
+
+
 //Globální konstanty
 
 const DMteplota = "1";
@@ -53,8 +61,9 @@ class Devices {
   }
 }
 
-let ServerDevices = new Devices ();   //aktuální stav ze serveru
-let LastDevices = new Devices();      //stav o jedno přečtení zpět, předešlý stav
+
+var ServerDevices = new Devices ();   //aktuální stav ze serveru
+var LastDevices = new Devices();      //stav o jedno přečtení zpět, předešlý stav
 
 
 
@@ -85,7 +94,7 @@ class TimeKeeper {
 //update hodnot: LastServer.time = NOVA_HODNOTA;
 //čtení hodnoty: console.log(LastServer.time);
 
-let LastServer = new TimeKeeper (new Date().getTime());
+var LastServer = new TimeKeeper (new Date().getTime());
 
 
 
@@ -120,7 +129,7 @@ LivingStone = {};
 
 LivingStone.Null = function (sensorID) {
   //HTML boxík pro NIC
-  let templateHTML =
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
@@ -143,8 +152,8 @@ LivingStone.Null = function (sensorID) {
 
 LivingStone.Temperature = function (deviceItem) {
   //HTML boxík pro teplotu
-  let sensorID = deviceItem.unid;
-  let templateHTML =
+  var sensorID = deviceItem.unid;
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
@@ -168,12 +177,34 @@ LivingStone.Temperature = function (deviceItem) {
 
 LivingStone.Pir = function (sensorID) {
   //HTML boxík pro Pir Motion Alarm
-  let templateHTML =
+
+  // var templateHTML =
+  // `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+  //     <div id="sensor-${sensorID}-boxContent" class="boxContent">
+  //
+  //         <div id="sensor-${sensorID}-module-alarm" class="text-left">
+  //           <i id="sensor-${sensorID}-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>
+  //         </div>
+  //         <div >
+  //           <p id="sensor-${sensorID}-name">Severní pól</p>
+  //           <i id="sensor-${sensorID}-time">25:61</i>
+  //         </div>
+  //         <div>
+  //             <p id="sensor-${sensorID}-error">error time</p>
+  //         </div>
+  //
+  //     </div>
+  // </div>`;
+  //https://fontawesome.com/icons/exclamation-triangle?style=solid
+
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
           <div id="sensor-${sensorID}-module-alarm" class="text-left">
-            <i id="sensor-${sensorID}-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>
+              <svg rect x="0" y="0"  height=25 viewBox="0 0 100 100">
+                <use xlink:href="fontawesome/fa-solid.svg#exclamation-triangle"></use>
+              </svg>
           </div>
           <div >
             <p id="sensor-${sensorID}-name">Severní pól</p>
@@ -192,7 +223,7 @@ LivingStone.Pir = function (sensorID) {
 
 LivingStone.Camera = function (sensorID) {
   //HTML boxík pro Kameru
-  let templateHTML =
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
 
@@ -220,7 +251,7 @@ LivingStone.Camera = function (sensorID) {
 
 LivingStone.Weather = function (sensorID) {
   //HTML boxík pro Počasí
-  let templateHTML =
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
 
@@ -242,7 +273,7 @@ LivingStone.Weather = function (sensorID) {
 
 LivingStone.Water = function (sensorID) {
   //HTML boxík pro Vodu
-  let templateHTML =
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
@@ -267,7 +298,7 @@ LivingStone.Water = function (sensorID) {
 
 LivingStone.Gate = function (sensorID) {
   //HTML boxík pro Bránu
-  let templateHTML =
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_MD}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent-gate">
 
@@ -315,15 +346,28 @@ LivingStone.Gate = function (sensorID) {
 
 LivingStone.Light = function (sensorID) {
   //HTML boxík pro Světlo
-  let templateHTML =
+
+  // <div id="sensor-${sensorID}-module-svetlo">
+    // <div style="font-size:2em; color:"White">
+        // <i class="far fa-lightbulb"></i>
+    // </div>
+  //</div>
+  //nově
+  //rozměr height=30, pozice a velikost viewBox="0 0 100 100"
+  // <svg id="sensor-${sensorID}-module-svetlo" height=30 viewBox="0 0 100 100">
+  //   <use xlink:href="fa-regular.svg#lightbulb"></use>
+  // </svg>
+
+  var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-svetlo">
+            <div id="sensor-${sensorID}-module-svetlo">
               <div style="font-size:2em; color:"White">
-                <i class="far fa-lightbulb"></i>
+                  <svg rect x="0" y="0"  height="30" viewBox="0 0 100 100">
+                    <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
+                  </svg>
               </div>
-          </div>
+             </div>
           <div>
               <p id="sensor-${sensorID}-name">Severní pól</p>
           </div>
@@ -348,7 +392,7 @@ LivingStone.Light = function (sensorID) {
 LivingStone.CameraAlarm = function (sensorID) {
 
   //HTML boxík pro Obrazek z kamery po alarmu
-    let templateHTML =
+    var templateHTML =
     `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_FUL}">
         <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
 
@@ -385,7 +429,7 @@ LivingStoneUpdate = {};
 
 LivingStoneUpdate.Temperature = function (deviceItem)  {
 
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   //var tempVal = device[i].value;
   //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
   var tempVal = Number(deviceItem.value);
@@ -475,7 +519,7 @@ LivingStoneUpdate.Temperature = function (deviceItem)  {
 }
 
 LivingStoneUpdate.Water = function (deviceItem) {
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   var tempVal = Number(deviceItem.value);
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
@@ -500,12 +544,12 @@ LivingStoneUpdate.Light = function (deviceItem) {
 
 //jestlize nastala chyba - tak orámečkovat a napsat chybu
 //vložit i do livingStones.všechny
-let sensorID = deviceItem.unid;
+var sensorID = deviceItem.unid;
 
 
     $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
 
-    let tempVal = Number(deviceItem.value);
+    var tempVal = Number(deviceItem.value);
     //console.log(tempVal);
     switch (true) {
       case tempVal == 1:
@@ -520,14 +564,14 @@ let sensorID = deviceItem.unid;
 }
 
 LivingStoneUpdate.Pir = function (deviceItem) {
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
 }
 
 LivingStoneUpdate.Gate = function (deviceItem) {
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   var tempVal = Number(deviceItem.value);
 
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
@@ -544,7 +588,7 @@ LivingStoneUpdate.Gate = function (deviceItem) {
 }
 
 LivingStoneUpdate.Camera = function (deviceItem) {
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
@@ -555,7 +599,7 @@ LivingStoneUpdate.Camera = function (deviceItem) {
 }
 
 LivingStoneUpdate.Weather = function (deviceItem) {
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
   d = new Date();
@@ -564,8 +608,8 @@ LivingStoneUpdate.Weather = function (deviceItem) {
 }
 
 LivingStoneUpdate.CameraAlarm = function (deviceItem) {
-  let sensorID = deviceItem.unid;
-  let newUrl = "";
+  var sensorID = deviceItem.unid;
+  var newUrl = "";
   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
 
   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
@@ -607,10 +651,22 @@ MenuStone = {};
 
 MenuStone.Home = function (menuID) {
   //HTML boxík tlačítho HOME (DM)
-    let templateHTML =
+
+  // var templateHTML =
+  // `
+  // <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
+  //   <i style="font-size:1em" class=" fas fa-home"></i>
+  //   <span id="menu-${menuID}-homeButton">HOME</span>
+  // </div>
+  // `;
+  // https://fontawesome.com/icons/home?style=solid
+
+    var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
-      <i style="font-size:1em" class=" fas fa-home"></i>
+      <svg rect x="0" y="0"  height="20" viewBox="0 0 20 20">
+        <use xlink:href="fontawesome/fa-solid.svg#home"></use>
+      </svg>
       <span id="menu-${menuID}-homeButton">HOME</span>
     </div>
     `;
@@ -627,7 +683,7 @@ MenuStone.Home = function (menuID) {
 MenuStone.Zvonecek = function (menuID) {
 
   //HTML boxík pro activityLog / počet alarmů
-    let templateHTML =
+    var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
       <span id="menu-${menuID}-activityBut">ACTIVITY</span>
@@ -646,7 +702,7 @@ MenuStone.Zvonecek = function (menuID) {
 MenuStone.ServerTime = function (menuID) {
 
   //HTML boxík pro čas ze Serveru
-    let templateHTML =
+    var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-right" >
 
@@ -670,10 +726,21 @@ MenuStone.ServerTime = function (menuID) {
 
 MenuStone.Email = function (menuID) {
   //HTML boxík pro email ikonu
-    let templateHTML =
+  // var templateHTML =
+  // `
+  // <div onclick="" id="menu-${menuID}-menuContent" class="text-center" >
+  //   <i style="font-size:1em" class="fas fa-envelope"></i>
+  //   <span id="menu-${menuID}-email">EMAIL</span>
+  // </div>
+  // `;
+  // https://fontawesome.com/icons?d=gallery&q=envelope&s=regular,solid
+
+    var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-center" >
-      <i style="font-size:1em" class="fas fa-envelope"></i>
+      <svg rect x="0" y="0"  height="20" viewBox="0 0 20 20">
+        <use xlink:href="fontawesome/fa-regular.svg#envelope"></use>
+      </svg>
       <span id="menu-${menuID}-email">EMAIL</span>
     </div>
     `;
@@ -697,7 +764,7 @@ MenuStoneUpdate.Home = function (menuID, deviceItem)  {
 }
 
 MenuStoneUpdate.Zvonecek = function (menuID, deviceItem)  {
-  // let sensorID = deviceItem.unid;
+  // var sensorID = deviceItem.unid;
   //jestliže je chyba = ukaž badge (zvoneček na ikone DM)
 
   if (deviceItem.error == "") {
@@ -712,7 +779,7 @@ MenuStoneUpdate.Zvonecek = function (menuID, deviceItem)  {
 
 MenuStoneUpdate.ServerTime = function (menuID, deviceItem)  {
 
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
   //zobrazi serverovy cas
 
 
@@ -723,25 +790,25 @@ MenuStoneUpdate.ServerTime = function (menuID, deviceItem)  {
       //The reason of the problem is iPhone Safari doesn't support the Y-m-d H:i:s (ISO 8601) date format. I have encountered this problem in 2017/7/19, I do not understand why Safari did not fix the problem after two years.
       //https://stackoverflow.com/questions/26657353/date-on-ios-device-returns-nan/26671796
 
-    let t = deviceItem.value.split(/[- :]/);
+    var t = deviceItem.value.split(/[- :]/);
     // Apply each element to the Date function
-    let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
-    let actiondate = new Date(d);
+    var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+    var actiondate = new Date(d);
 
-    let minuta = actiondate.getMinutes();
+    var minuta = actiondate.getMinutes();
     if (minuta < 10) {
       minuta = "0" + minuta.toString();
     }
 
-    let sekunda = actiondate.getSeconds();
+    var sekunda = actiondate.getSeconds();
     if (sekunda < 10) {
       sekunda = "0" + sekunda.toString();
     }
 
-    let cas = actiondate.getHours() + ":" + minuta + ":" + sekunda;
+    var cas = actiondate.getHours() + ":" + minuta + ":" + sekunda;
     //cas = "99:99:99"; - testovací čas
 
-    let denVTydnu = "";
+    var denVTydnu = "";
     switch (actiondate.getDay()) {
       case 1:
         denVTydnu = "Pondělí"
@@ -768,7 +835,7 @@ MenuStoneUpdate.ServerTime = function (menuID, deviceItem)  {
       denVTydnu = "Fakt netuším"
     }
 
-  let datum = denVTydnu + " " + actiondate.getDate() + "." + actiondate.getMonth() + ".";
+  var datum = denVTydnu + " " + actiondate.getDate() + "." + actiondate.getMonth() + ".";
 
 
   $("#menu-" + menuID + "-server-date").html(datum);
@@ -805,23 +872,23 @@ timeCountDown = function (lastDate, serverDate, longText) {
   //užití: jak_dlouho_je_to = timeCountDown("2018-03-1 18:06:05", deviceObjectLast["0"].lrespiot, false);
 
 
-  let t = lastDate.split(/[- :]/);
+  var t = lastDate.split(/[- :]/);
   // Apply each element to the Date function
-  let d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
-  let historyTime = new Date(d);
+  var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+  var historyTime = new Date(d);
 
-  let t2 = serverDate.split(/[- :]/);
+  var t2 = serverDate.split(/[- :]/);
   // Apply each element to the Date function
-  let d2 = new Date(t2[0], t2[1]-1, t2[2], t2[3], t2[4], t2[5]);
-  let currentTime = new Date(d2);
+  var d2 = new Date(t2[0], t2[1]-1, t2[2], t2[3], t2[4], t2[5]);
+  var currentTime = new Date(d2);
 
-  // let currentTime = new Date(serverDate);
-  let distance =  currentTime - historyTime;
+  // var currentTime = new Date(serverDate);
+  var distance =  currentTime - historyTime;
 
-  let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   if (longText == true) {
     //dlouhý tvar vystupního textu
@@ -859,7 +926,7 @@ timeCountDown = function (lastDate, serverDate, longText) {
   } //pokud je chtěná dlouhá odpověd Jinak
   else {
 
-    let hours = Math.floor((distance / ( 1000 * 60 * 60 )));
+    var hours = Math.floor((distance / ( 1000 * 60 * 60 )));
     //vysledny tvar ma být v hhh:mm:ss
 
     if (hours == 0) {
@@ -954,10 +1021,10 @@ function formatNumber(x) {
 //když nastavene chyba sensoru, tak se obarví
 function sensorErrorColorsOn (deviceItem){
 
-  let sensorID = deviceItem.unid;
-  let serverDate = ServerDevices.sensors["0"].lrespiot;  //čas z poslední aktualizace serveru
-  let deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
-  let textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
+  var sensorID = deviceItem.unid;
+  var serverDate = ServerDevices.sensors["0"].lrespiot;  //čas z poslední aktualizace serveru
+  var deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
+  var textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
   // console.log(textLostConTime);
 
   $("#sensor-" + sensorID + "-error").html(textLostConTime);
@@ -969,7 +1036,7 @@ function sensorErrorColorsOn (deviceItem){
 
 //když není chyba sensoru, tak se obarví
 function sensorErrorColorsOff (deviceItem){
-  let sensorID = deviceItem.unid;
+  var sensorID = deviceItem.unid;
 
   $("#sensor-" + sensorID + "-error").html("");
   // $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
@@ -1112,7 +1179,7 @@ Arduino.containerShow = function() {
 //vygeneruje obsah pro HTML pro všechny livingStones (BOXíky), které jsou aktualizované v JSON
 Arduino.containerUpdate = function() {
 
-  let sensorID = ""; //unikatni sensorID
+  var sensorID = ""; //unikatni sensorID
 
   Arduino.axios.get('/')
     .then(function(response) {

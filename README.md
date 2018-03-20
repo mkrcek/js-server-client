@@ -7,8 +7,15 @@
 
 ## 20.3.
 
+iPAD iOS 9.x
+- funguje na malém iPadu s iOS 9.3.5
+
+UPDATE souborů
+- soubory pro offline: axiom, jquery, bootstrap
+- ikony jako SVG soubory (offline)  
+
 OPRAVA
-- Průhledné pozadí Erroe rámečku LivingSones - při aktivaci NetworkError je vidět červená barva  
+- Průhledné pozadí Error rámečku LivingSones - při aktivaci NetworkError je vidět červená barva  
 
 
 ## 19.3. 22:22
