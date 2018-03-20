@@ -1,9 +1,15 @@
-# Doomaster: bluma & sprint 19.3.2018 22:22
+# Doomaster: bluma & sprint 20.3.2018
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 20.3.
+
+OPRAVA
+- Průhledné pozadí Erroe rámečku LivingSones - při aktivaci NetworkError je vidět červená barva  
+
 
 ## 19.3. 22:22
 

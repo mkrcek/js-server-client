@@ -972,7 +972,8 @@ function sensorErrorColorsOff (deviceItem){
   let sensorID = deviceItem.unid;
 
   $("#sensor-" + sensorID + "-error").html("");
-  $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
+  // $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
+  $('#sensor-' + sensorID + '-boxWrap').css('background-color','inherit');
 
 }
 
