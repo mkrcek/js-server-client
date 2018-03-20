@@ -13,6 +13,7 @@ iPAD iOS 9.x
 UPDATE souborů
 - soubory pro offline: axiom, jquery, bootstrap
 - ikony jako SVG soubory (offline)  
+- uklizeno index.html
 
 OPRAVA
 - Průhledné pozadí Error rámečku LivingSones - při aktivaci NetworkError je vidět červená barva  
