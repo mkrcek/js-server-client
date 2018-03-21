@@ -125,6 +125,8 @@ window.onload = function() {
     timeout: 100000
   });
 
+  LivingStone.Light("999");
+
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.containerShow();
 
@@ -208,14 +210,19 @@ LivingStone.Pir = function (sensorID) {
   // </div>`;
   //https://fontawesome.com/icons/exclamation-triangle?style=solid
 
+  // <svg rect x="0" y="0"  height=25 viewBox="0 0 100 100">
+  //   <use xlink:href="fontawesome/fa-solid.svg#exclamation-triangle"></use>
+  // </svg>
+  //
   var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
 
           <div id="sensor-${sensorID}-module-alarm" class="text-left">
-              <svg rect x="0" y="0"  height=25 viewBox="0 0 100 100">
-                <use xlink:href="fontawesome/fa-solid.svg#exclamation-triangle"></use>
-              </svg>
+              <div id="sensor-${sensorID}-alarm-stav">
+                <i class="fas fa-exclamation-triangle text-danger"></i>
+              </div>
+
           </div>
           <div >
             <p id="sensor-${sensorID}-name">Severní pól</p>
@@ -372,15 +379,17 @@ LivingStone.Light = function (sensorID) {
   //   <use xlink:href="fa-regular.svg#lightbulb"></use>
   // </svg>
 
+  // <div style="font-size:2em; color:"White">
+  //     <svg rect x="0" y="0"  height="30" viewBox="0 0 100 100">
+  //       <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
+  //     </svg>
+  // </div>
+
   var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
       <div id="sensor-${sensorID}-boxContent" class="boxContent">
             <div id="sensor-${sensorID}-module-svetlo">
-              <div style="font-size:2em; color:"White">
-                  <svg rect x="0" y="0"  height="30" viewBox="0 0 100 100">
-                    <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
-                  </svg>
-              </div>
+              <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
              </div>
           <div>
               <p id="sensor-${sensorID}-name">Severní pól</p>
@@ -393,7 +402,11 @@ LivingStone.Light = function (sensorID) {
       </div>
   </div>`;
 
+  console.log(templateHTML);
   $("#boxScreen").append(templateHTML);
+  // $('#boxScreen').append(`<i class="pekneIkony">cecko &#xf0c0;</i>`);
+  // $('#boxScreen').append(`<i class="far fa-lightbulb"></i>`);
+
 
   //co se stane při kliknutí
   $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
