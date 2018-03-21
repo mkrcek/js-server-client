@@ -220,9 +220,8 @@ LivingStone.Pir = function (sensorID) {
 
           <div id="sensor-${sensorID}-module-alarm" class="text-left">
               <div id="sensor-${sensorID}-alarm-stav">
-                <i class="fas fa-exclamation-triangle text-danger"></i>
+                <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
               </div>
-
           </div>
           <div >
             <p id="sensor-${sensorID}-name">Severní pól</p>
@@ -384,6 +383,8 @@ LivingStone.Light = function (sensorID) {
   //       <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
   //     </svg>
   // </div>
+
+  //f0eb ikona svetla: https://fontawesome.com/icons/lightbulb?style=regular
 
   var templateHTML =
   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
@@ -687,14 +688,16 @@ MenuStone.Home = function (menuID) {
   //   <span id="menu-${menuID}-homeButton">HOME</span>
   // </div>
   // `;
+  //<svg rect x="0" y="0"  height="20" viewBox="0 0 20 20">
+  //   <use xlink:href="fontawesome/fa-solid.svg#home"></use>
+  // </svg>
+  //  f015 ikona domečku
   // https://fontawesome.com/icons/home?style=solid
 
     var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
-      <svg rect x="0" y="0"  height="20" viewBox="0 0 20 20">
-        <use xlink:href="fontawesome/fa-solid.svg#home"></use>
-      </svg>
+      <i style="font-size:1.5rem; color:"Black" class="pekneIkony">&#xf015;</i>
       <span id="menu-${menuID}-homeButton">HOME</span>
     </div>
     `;
@@ -762,14 +765,16 @@ MenuStone.Email = function (menuID) {
   //   <span id="menu-${menuID}-email">EMAIL</span>
   // </div>
   // `;
+  // <svg rect x="0" y="0"  height="20" viewBox="0 0 20 20">
+  //   <use xlink:href="fontawesome/fa-regular.svg#envelope"></use>
+  // </svg>
+  // f0e0 ikona obálky:
   // https://fontawesome.com/icons?d=gallery&q=envelope&s=regular,solid
 
     var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-center" >
-      <svg rect x="0" y="0"  height="20" viewBox="0 0 20 20">
-        <use xlink:href="fontawesome/fa-regular.svg#envelope"></use>
-      </svg>
+      <i style="font-size:1rem; color:"Black" class="pekneIkony">&#xf0e0;</i>
       <span id="menu-${menuID}-email">EMAIL</span>
     </div>
     `;
