@@ -1,10 +1,4 @@
 
-// poznámky k vydání
-// ****
-//   používám var místo moderního let (l-e-t)
-//   let nejede - ve starém JS např na SAFARI iOS 9.xx.xx.xx 20.3.2018 ****
-// ****
-
 
 //Globální konstanty
 
@@ -125,7 +119,6 @@ window.onload = function() {
     timeout: 100000
   });
 
-  LivingStone.Light("999");
 
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.containerShow();
@@ -403,7 +396,6 @@ LivingStone.Light = function (sensorID) {
       </div>
   </div>`;
 
-  console.log(templateHTML);
   $("#boxScreen").append(templateHTML);
   // $('#boxScreen').append(`<i class="pekneIkony">cecko &#xf0c0;</i>`);
   // $('#boxScreen').append(`<i class="far fa-lightbulb"></i>`);
@@ -1244,13 +1236,19 @@ Arduino.containerUpdate = function() {
         sensorWebType = deviceItem.webtype;
 
         //pokud je chyba a zároveň se nejedná o systémovou informaci
+
+        //obarvit senzor když NENÍ chyba
+         // console.log("A1");
         if (deviceItem.error!=null && deviceItem.error != "" && deviceItem.unid != "0" ) {
             //obarvit senzor když je chyba
             sensorErrorColorsOn (deviceItem);
 
+
         } else {
             //obarvit senzor když NENÍ chyba
             sensorErrorColorsOff (deviceItem);
+
+        //}  // konec Device ERROR      //OM_______________Omen přidal misto - níže. zbytečné - pokračuji i když BYLA chyba
 
               if (deviceItem.unid == "0") {
                 //Uděla update menu podle systemovych parametru
@@ -1319,7 +1317,7 @@ Arduino.containerUpdate = function() {
               } //konec :switch:
 
 
-        }  // konec Device ERROR
+        }  // konec Device ERROR - Omen zakomentoval MM__________
 
       }); //konec forEach cyklus
 
