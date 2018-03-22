@@ -120,7 +120,7 @@ window.onload = function() {
   });
 
 
-// cookies test
+// cookies test - zeptá se a vypíše
 console.log(checkCookie());
 
 
