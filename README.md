@@ -5,6 +5,21 @@
 
 ## Co nového ve verzi
 
+## 22.3. : demoday
+
+OPRAVA
+- odstranění chyby při výpadku čidla: sensorErrorColorsOn
+- úpravy pro AwesomeFonts
+
+TODO:
+- AwesomeFonts rozhodnout se, jak používat a stáhnout knihovnu lokálně)
+
+NEW
+- cookie
+- při prvním pozužití se zepná na jméno (cookies)
+- toto jméno se pak posílá při každém GET nebo PUT v URL, třeba takto: za otazníkem GET 192.168.0.11/?pepazdepa
+- session: prohlížeč drží jméno 30 dní, pak se optá znovu
+
 ## 20.3. 22:30
 
 - hrádky s velikostí boxíků pro různá rozlišení

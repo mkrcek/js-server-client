@@ -121,7 +121,7 @@ window.onload = function() {
 
 
 // cookies test
-checkCookie();
+console.log(checkCookie());
 
 
 
@@ -1021,8 +1021,8 @@ function odeslatPUT(jmenoSenzoru, hodota) {
   poradiPomlcky = jmenoSenzoru.search("-");
   jmenoSenzoru = jmenoSenzoru.substring(0, poradiPomlcky);
 
-  //odešle PUT s hodnotou "value"
-  Arduino.axios.put('/' + jmenoSenzoru, {
+  //odešle PUT s hodnotou "value" + cookies
+  Arduino.axios.put('/' + jmenoSenzoru  + `?`+checkCookie(), {
       value: hodota
     })
     .then(function(response) {
@@ -1091,7 +1091,8 @@ Arduino.containerShow = function() {
 
 // ** LivingStones
 
-  Arduino.axios.get("/")
+//pošle GET s kukinou za otazníkem
+  Arduino.axios.get("/"  + `?`+checkCookie())
     .then(function(response) {
       var device = response.data;
 
@@ -1211,7 +1212,8 @@ Arduino.containerUpdate = function() {
 
   var sensorID = ""; //unikatni sensorID
 
-  Arduino.axios.get('/')
+  //pošle GET s kukinou za otazníkem
+  Arduino.axios.get('/' + `?`+checkCookie())
     .then(function(response) {
 
       //nastavení barvy pozadí - když jsou data-tak bílé
@@ -1377,15 +1379,15 @@ Arduino.containerUpdate = function() {
 
 
 
-// cookies
+// Zjištění cookies z prohlížeče
 
 function setCookie(cname,cvalue,exdays) {
     var d = new Date();
-    // d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    //
-    d.setTime(d.getTime() + (exdays*1000));
+    //počet dnů - v našem případě 30 dní
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires=" + d.toGMTString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    // document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    document.cookie = cname + "=" + cvalue + ";" + expires;
 }
 
 function getCookie(cname) {
@@ -1404,17 +1406,19 @@ function getCookie(cname) {
     return "";
 }
 
+
 function checkCookie() {
-    var user=getCookie("username");
-    console.log("user " + user);
+    var user = getCookie("username");
+    // console.log("user " + user);
     if (user != "") {
-        alert("Welcome again " + user);
+        // alert("Welcome again " +s user);
     } else {
-       user = prompt("Please enter your name:","");
+       user = prompt("Tvuj otisks:","");
        if (user != "" && user != null) {
-           setCookie("username", user, 10);
+           setCookie("username", user, 30); //expirace za 30 dnís
        }
     }
+    return user;
 }
 
 

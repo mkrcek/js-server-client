@@ -446,7 +446,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 	var hodnoty string = ""
 
 	myURL := r.RequestURI // req.URL vs req.RequestURI		"/devices/21293"
-	//fmt.Println("cele URL je " + myURL)
+	fmt.Println("cele URL je " + myURL)
 	re := regexp.MustCompile("[0-9]+")         //vyfiltruje všechna čísla = 21293
 	ulrDeviceIDs := re.FindAllString(myURL, 1) //vybere jen první sekvenci číslic = 21293
 
