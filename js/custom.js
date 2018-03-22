@@ -120,6 +120,11 @@ window.onload = function() {
   });
 
 
+// cookies test
+checkCookie();
+
+
+
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.containerShow();
 
@@ -897,7 +902,6 @@ timeCountDown = function (lastDate, serverDate, longText) {
   //longText je false => Výstup: krátký formát => 292:22:02
   //užití: jak_dlouho_je_to = timeCountDown("2018-03-1 18:06:05", deviceObjectLast["0"].lrespiot, false);
 
-
   var t = lastDate.split(/[- :]/);
   // Apply each element to the Date function
   var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
@@ -1048,7 +1052,7 @@ function formatNumber(x) {
 function sensorErrorColorsOn (deviceItem){
 
   var sensorID = deviceItem.unid;
-  var serverDate = ServerDevices.sensors["0"].lrespiot;  //čas z poslední aktualizace serveru
+  var serverDate = ServerDevices.sensors["0"].value;  //čas z poslední aktualizace serveru
   var deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
   var textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
   // console.log(textLostConTime);
@@ -1248,7 +1252,7 @@ Arduino.containerUpdate = function() {
             //obarvit senzor když NENÍ chyba
             sensorErrorColorsOff (deviceItem);
 
-        //}  // konec Device ERROR      //OM_______________Omen přidal misto - níže. zbytečné - pokračuji i když BYLA chyba
+        }  // konec Device ERROR      //OM_______________Omen přidal misto - níže. zbytečné - pokračuji i když BYLA chyba
 
               if (deviceItem.unid == "0") {
                 //Uděla update menu podle systemovych parametru
@@ -1317,7 +1321,7 @@ Arduino.containerUpdate = function() {
               } //konec :switch:
 
 
-        }  // konec Device ERROR - Omen zakomentoval MM__________
+        //}  // konec Device ERROR - Omen zakomentoval MM__________
 
       }); //konec forEach cyklus
 
@@ -1334,6 +1338,9 @@ Arduino.containerUpdate = function() {
       LastServer.time = new Date().getTime();
 
     })
+    // .else {
+    //   console.log("ELSE");
+    // }
     .catch(function(error) {
       console.log("TATO CHYBA");
 
@@ -1367,6 +1374,51 @@ Arduino.containerUpdate = function() {
     });
 
 }
+
+
+
+// cookies
+
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    // d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    //
+    d.setTime(d.getTime() + (exdays*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    var user=getCookie("username");
+    console.log("user " + user);
+    if (user != "") {
+        alert("Welcome again " + user);
+    } else {
+       user = prompt("Please enter your name:","");
+       if (user != "" && user != null) {
+           setCookie("username", user, 10);
+       }
+    }
+}
+
+
+
 
 
 //hodí se
