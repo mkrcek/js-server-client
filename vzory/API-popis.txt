@@ -1,35 +1,61 @@
-API:
+API json
 
-aktivní a používané položky
-- unid
-- webtype
-- subtype
-- lrespiot
-- value
-- webname
-- weborder
+- položky mohou být v náhodném pořadí, na obrazovce se střídí podle weborder 
+
+## aktivní a používané položky
+
+"unid": "0",
+- systémové informace ze Serveru
+
+"unid": "xxxxxxx"
+- jednotlivé senzory, zařízení
+
+"weborder": 10,
+- pořadí na obrazovce
+
+"priority": 0,
+- nepoužíváno
+
+"webtype": "8",
+- typ jmenoSenzoru
+
+"subtype": "http://meteosluzby.e-pocasi.cz/pocasi/5a65b64cd7fc8.png",
+- pomocná informace (barevné schéma teplot, adresa obrázku)
+
+"lrespiot": "2018-03-23 06:34:39",
+- poslední aktualizace času čidla
+
+"value": "0",
+- hodnota čidla (teplota, otevření, ...)
+
+"webname": "7 - Počasí",
+- jméno boxíku (livingStones)
+
+"invisible": 0,
+- viditelnost (nepoužíváno)
+
+"error": ""
+- chyba čidla, nebo serveru
+
 
 
 
 webtype
 //zde menší úprava v kameře vs počasí + další typy (pro testování)
 
-- 0 = NILL BOX
-
-- 1=Teplota,
-- 2=HTTP outDOOM Obrázek, //jen kamera
-- 3=PIR,
-- 4=PIR obrázek
-
-- 5 = voda
-- 6 = svetlo
-- 7 = brana
-- 8 = počasí
+ DMteplota = "1";
+ DMkamera = "2";
+ DMalarm = "3";
+ DMCameraAlarm = "4";
+ DMvoda = "5";
+ DMsvetlo = "6";
+ DMbrana = "7";
+ DMpocasi = "8";
+ DMlight = "9";
 
 
 Barevné schéma pro teplotu:
 
-subtype (1 = Teplota)
-- "1" = vzduch
-- "2" = kotel
-- "3" = bazén
+ SchemeAir = "1";
+ SchemeBoiler = "2";
+ SchemeWater = "3";

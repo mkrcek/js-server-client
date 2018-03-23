@@ -1,9 +1,13 @@
-# Doomaster: bluma & sprint 20.3.2018 22:30
+# Doomaster: DEMODAY & sprint 23.3.2018 06:44
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 23.3.
+
+- promazání a aktualizace adresáře VZORY
 
 ## 22.3. : demoday
 
