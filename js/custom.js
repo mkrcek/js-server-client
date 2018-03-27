@@ -1047,9 +1047,36 @@ function formatNumber(x) {
   return s;
 }
 
+//zahraje zvuk
+function zvukoveZnameni (){
+
+  var x = document.getElementById("audioAlarm");
+  x.play();
+
+    //k dispozico jsou
+    // alarm.mp3 - ale dlouhé
+    // beep.mp3 - fajn
+    // voice.mp3 -  fajn
+    //v index.HTML k nastaveni
+
+    // if x.onplaying = function() {
+    //     alert("The video is now playing");
+    // };
+
+  // if (coZahrat == "alarm") {
+  //   $("#audioAlarm").attr("src","audio/voice.mp3");
+    // x.loop = true;
+    // x.play();
+  //
+  // } else {
+  //
+  // }
+
+}
 
 //když nastavene chyba sensoru, tak se obarví
 function sensorErrorColorsOn (deviceItem){
+
 
   var sensorID = deviceItem.unid;
   var serverDate = ServerDevices.sensors["0"].value;  //čas z poslední aktualizace serveru
@@ -1062,6 +1089,10 @@ function sensorErrorColorsOn (deviceItem){
   $('#sensor-' + sensorID + '-boxContent').css("color", "DimGray ");
   $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3 ");
   $('#sensor-' + sensorID + '-boxWrap').css("background-color", "Red ");
+
+//zapnutí audioAlarm
+  zvukoveZnameni();
+
 }
 
 //když není chyba sensoru, tak se obarví
@@ -1254,7 +1285,7 @@ Arduino.containerUpdate = function() {
             //obarvit senzor když NENÍ chyba
             sensorErrorColorsOff (deviceItem);
 
-        }  // konec Device ERROR      //OM_______________Omen přidal misto - níže. zbytečné - pokračuji i když BYLA chyba
+          // konec Device ERROR      //OM_______________Omen přidal misto - níže. zbytečné - pokračuji i když BYLA chyba
 
               if (deviceItem.unid == "0") {
                 //Uděla update menu podle systemovych parametru
@@ -1323,7 +1354,7 @@ Arduino.containerUpdate = function() {
               } //konec :switch:
 
 
-        //}  // konec Device ERROR - Omen zakomentoval MM__________
+        }  // konec Device ERROR - Omen zakomentoval MM__________
 
       }); //konec forEach cyklus
 
@@ -1350,6 +1381,11 @@ Arduino.containerUpdate = function() {
         if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
           //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
           $("body").css("background-color", "Red");
+
+          //zahraje audioAlarm
+          zvukoveZnameni();
+
+
         }
 
 
