@@ -101,8 +101,18 @@ class TimeKeeper {
 
 var LastServer = new TimeKeeper (new Date().getTime());
 
+
+
+//28.3. - převedení LivingStones na Třídy Stones a práce s nimi
+
+//základní prvek, ze kterého se všechno dědí.
+//bude
+// - generování HTML obálky (pomocí .Append se pak přidá dovnitř obálky obsah )
+// - zrušení HTML-ID- a nahrazení práce s HTML class
+
 class Stone {
-  constructor($parent, deviceItem) {
+  constructor($parent, deviceItem) {    //parent - HTML kam umísti se, deviceItem: který Stone se má založit
+                                        // znak $ znamená označení elementu jako jQuery znak  #
     this.$parent = $parent;
     this._deviceItem = deviceItem;
   }
@@ -121,6 +131,7 @@ class Stone {
 
   render() {
     console.log('Not implemented');
+    //Zde bude implementace HTML vzoru "boxíku" společné pro všechny
   }
 
   update(deviceItem) {
@@ -128,19 +139,19 @@ class Stone {
   }
 }
 
-class Temperature extends Stone {
 
-  update(deviceItem) {
+
+class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
     this.deviceItem = deviceItem;
-
-    console.log("NEW class");
-
     var sensorID = deviceItem.unid;
-    //var tempVal = device[i].value;
-    //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
-    var tempVal = Number(deviceItem.value);
 
-    this.$element.find('#sensor-name').html(deviceItem.webname);
+    console.log("Update Teploty pro ID: ", sensorID);
+
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
     this.$element.find('#sensor-time').html(deviceItem.lrespiot);
     this.$element.find('#sensor-teplota').html(formatNumber(tempVal));
 
@@ -199,24 +210,24 @@ class Temperature extends Stone {
       case SchemeWater: //water - swimming pool
         switch (true) {
         case tempVal < 4:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+          $('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-boxContent').css("color", "AliceBlue");
           break;
         case tempVal < 20:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          $('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-boxContent').css("color", "Black");
           break;
         case tempVal < 25:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          $('#sensor-boxContent').css("background-color", "MediumOrchid");
+          $('#sensor-boxContent').css("color", "Black");
           break;
         case tempVal < 30:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          $('#sensor-boxContent').css("background-color", "Orange");
+          $('#sensor-boxContent').css("color", "Black");
           break;
         case tempVal > 29:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          $('#sensor-boxContent').css("background-color", "Red");
+          $('#sensor-boxContent').css("color", "Black");
           break;
         default:
       } //switch swimming pool
@@ -224,15 +235,12 @@ class Temperature extends Stone {
     } //switch (temperatureScheme)
   }
 
-  // getId() {
-  //   return this.deviceItem.unid;
-  // }
 
-  render() {
+  render() {                          // METODA pro vykreslení HTML boxíku
     //HTML boxík pro teplotu
     var sensorID = this.deviceItem.unid;
 
-    console.log(sensorID);
+    console.log("Vytvoření HTML Teploty pro ID: ", sensorID);
 
     this.$element =
     $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
@@ -253,7 +261,8 @@ class Temperature extends Stone {
 
 
     //přidání boxku na stránku (do #boxScreen) na poslední místo
-    this.$parent.append(this.$element);
+    this.$parent.append(this.$element);       //do parent (#boxScreen) vložit $element
+    //dříve v $("#boxScreen").append(templateHTML);
   }
 }
 
@@ -315,6 +324,8 @@ LivingStone.Null = function (sensorID) {
 
 }
 
+//toto je původní - nahrazeno Class ... class Temperature extends Stone
+//
 LivingStone.Temperature = function (deviceItem) {
   //HTML boxík pro teplotu
   var sensorID = deviceItem.unid;
@@ -607,6 +618,8 @@ LivingStone.CameraAlarm = function (sensorID) {
 // *************** Generuje OBSAH pro boxíky na stránce ********
 LivingStoneUpdate = {};
 
+//toto je původní - nahrazeno Class ... class Temperature extends Stone
+//
 LivingStoneUpdate.Temperature = function (deviceItem)  {
 
   var sensorID = deviceItem.unid;
@@ -1271,14 +1284,13 @@ Arduino.containerShow = function() {
   var sensorType = "";
   var sensorID = "0"; //cislo senzoru UNID
 
+  // ** LivingStones
+
+  //pro Class - udělá novou ....něco. Jak se to jmenuje??? (P_?__?)
+  Arduino.devices = {};
 
 
-
-// ** LivingStones
-
-Arduino.devices = {};
-
-//pošle GET s kukinou za otazníkem
+  //pošle GET s kukinou za otazníkem
   Arduino.axios.get("/"  + `?`+checkCookie())
     .then(function(response) {
       var device = response.data;
@@ -1327,9 +1339,12 @@ Arduino.devices = {};
           // console.log(deviceItem.unid + " - " + deviceItem.error);
           switch (sensorWebType) {
             case DMteplota: //teplota
+
+              //pomocí Class
               var temp = new Temperature($("#boxScreen"), deviceItem);
               temp.render();
               Arduino.devices[deviceItem.unid] = temp;
+
 
               // LivingStone.Temperature(deviceItem);  //vytvoří HTML
               // LivingStoneUpdate.Temperature (deviceItem); //naplní obsahem
@@ -1462,8 +1477,13 @@ Arduino.containerUpdate = function() {
                 case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
                 break;
 
+
+                //V bucoucnu - zrušit v case ....pomocí Class
+
                 case DMteplota: //teplota
                   // LivingStoneUpdate.Temperature (deviceItem);
+
+                  //pomocí Class
                   Arduino.devices[deviceItem.unid].update(deviceItem);
 
                   break;
