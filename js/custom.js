@@ -101,7 +101,161 @@ class TimeKeeper {
 
 var LastServer = new TimeKeeper (new Date().getTime());
 
+class Stone {
+  constructor($parent, deviceItem) {
+    this.$parent = $parent;
+    this._deviceItem = deviceItem;
+  }
 
+  get deviceItem() {
+    return this._deviceItem;
+  }
+
+  set deviceItem(deviceItem) {
+    this._deviceItem = deviceItem;
+  }
+
+  getId() {
+    return this.deviceItem.unid;
+  }
+
+  render() {
+    console.log('Not implemented');
+  }
+
+  update(deviceItem) {
+    console.log('Not implemented');
+  }
+}
+
+class Temperature extends Stone {
+
+  update(deviceItem) {
+    this.deviceItem = deviceItem;
+
+    console.log("NEW class");
+
+    var sensorID = deviceItem.unid;
+    //var tempVal = device[i].value;
+    //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    var tempVal = Number(deviceItem.value);
+
+    this.$element.find('#sensor-name').html(deviceItem.webname);
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+    this.$element.find('#sensor-teplota').html(formatNumber(tempVal));
+
+    var temperatureScheme = deviceItem.subtype; //barevné schéma pro teplotu
+    switch (temperatureScheme) {
+      case SchemeAir: //air - vzduch
+        switch (true) {
+          case tempVal < 4:
+            this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+            this.$element.find('#sensor-boxContent').css("color", "AliceBlue");
+            break;
+          case tempVal < 16:
+            this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          case tempVal < 21:
+            this.$element.find('#sensor-boxContent').css("background-color", "MediumOrchid");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          case tempVal < 31:
+            this.$element.find('#sensor-boxContent').css("background-color", "Orange");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          case tempVal > 30:
+            this.$element.find('#sensor-boxContent').css("background-color", "Red");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          default:
+        } //switch boiler
+        break;
+      case SchemeBoiler: //boiler
+        switch (true) {
+        case tempVal < 4:
+          this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          this.$element.find('#sensor-boxContent').css("color", "AliceBlue");
+          break;
+        case tempVal < 35:
+          this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal < 70:
+          this.$element.find('#sensor-boxContent').css("background-color", "MediumOrchid");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal < 81:
+          this.$element.find('#sensor-boxContent').css("background-color", "Orange");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal > 80:
+          this.$element.find('#sensor-boxContent').css("background-color", "Red");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        default:
+      } //switch boiler
+        break;
+      case SchemeWater: //water - swimming pool
+        switch (true) {
+        case tempVal < 4:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+          break;
+        case tempVal < 20:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        case tempVal < 25:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        case tempVal < 30:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        case tempVal > 29:
+          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+          break;
+        default:
+      } //switch swimming pool
+        break;
+    } //switch (temperatureScheme)
+  }
+
+  // getId() {
+  //   return this.deviceItem.unid;
+  // }
+
+  render() {
+    //HTML boxík pro teplotu
+    var sensorID = this.deviceItem.unid;
+
+    console.log(sensorID);
+
+    this.$element =
+    $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
+        <div id="sensor-boxContent" class="boxContent">
+
+            <div id="sensor-module-teplota" class="text-left">
+              <h1>
+                <span id="sensor-teplota">-99</span>&deg;
+              </h1>
+            </div>
+            <div ><p id="sensor-name">Severní pól</p></div>
+            <div>
+                <p id="sensor-error">error time</p>
+            </div>
+
+        </div>
+    </div>`);
+
+
+    //přidání boxku na stránku (do #boxScreen) na poslední místo
+    this.$parent.append(this.$element);
+  }
+}
 
 
 
@@ -1122,6 +1276,8 @@ Arduino.containerShow = function() {
 
 // ** LivingStones
 
+Arduino.devices = {};
+
 //pošle GET s kukinou za otazníkem
   Arduino.axios.get("/"  + `?`+checkCookie())
     .then(function(response) {
@@ -1171,8 +1327,12 @@ Arduino.containerShow = function() {
           // console.log(deviceItem.unid + " - " + deviceItem.error);
           switch (sensorWebType) {
             case DMteplota: //teplota
-              LivingStone.Temperature(deviceItem);  //vytvoří HTML
-              LivingStoneUpdate.Temperature (deviceItem); //naplní obsahem
+              var temp = new Temperature($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
+              // LivingStone.Temperature(deviceItem);  //vytvoří HTML
+              // LivingStoneUpdate.Temperature (deviceItem); //naplní obsahem
               break;
             case DMvoda: //voda
               LivingStone.Water(sensorID);
@@ -1303,7 +1463,9 @@ Arduino.containerUpdate = function() {
                 break;
 
                 case DMteplota: //teplota
-                  LivingStoneUpdate.Temperature (deviceItem);
+                  // LivingStoneUpdate.Temperature (deviceItem);
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
+
                   break;
 
                 case DMvoda: //voda
