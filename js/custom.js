@@ -109,6 +109,9 @@ var LastServer = new TimeKeeper (new Date().getTime());
 //bude
 // - generování HTML obálky (pomocí .Append se pak přidá dovnitř obálky obsah )
 // - zrušení HTML-ID- a nahrazení práce s HTML class
+// jak dělat, když nastane chyba čidla...
+//
+//_________________________________________
 
 class Stone {
   constructor($parent, deviceItem) {    //parent - HTML kam umísti se, deviceItem: který Stone se má založit
@@ -234,6 +237,7 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
         break;
     } //switch (temperatureScheme)
   }
+
 
 
   render() {                          // METODA pro vykreslení HTML boxíku
@@ -1250,6 +1254,13 @@ function sensorErrorColorsOn (deviceItem){
   var deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
   var textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
   // console.log(textLostConTime);
+
+
+  //pomocí Class - jak na to?
+  //
+  //_________________________________________
+
+
 
   $("#sensor-" + sensorID + "-error").html(textLostConTime);
   $('#sensor-' + sensorID + '-error').css("color", "Red ");
