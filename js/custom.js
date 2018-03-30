@@ -102,15 +102,21 @@ class TimeKeeper {
 var LastServer = new TimeKeeper (new Date().getTime());
 
 
+// *****************
+// *****************
 
+// *****************
 //28.3. - převedení LivingStones na Třídy Stones a práce s nimi
 
 //základní prvek, ze kterého se všechno dědí.
 //bude
 // - generování HTML obálky (pomocí .Append se pak přidá dovnitř obálky obsah )
 // - zrušení HTML-ID- a nahrazení práce s HTML class
-// jak dělat, když nastane chyba čidla...
-//
+// - jak dělat, když nastane chyba čidla...
+// - osamostatnit funkčnost do souboru Class
+// - realizovat refresh čidla u každého čidla vzlášť a to pířmo ve Stone
+
+
 //_________________________________________
 
 class Stone {
@@ -133,12 +139,26 @@ class Stone {
   }
 
   render() {
-    console.log('Not implemented');
+    // console.log('RENDER Not implemented');
     //Zde bude implementace HTML vzoru "boxíku" společné pro všechny
+
+    //
+    // this.$element =
+    // $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
+    //     <div id="sensor-boxContent" class="boxContent">
+    //
+    //       <p>STONE</p>
+    //
+    //     </div>
+    // </div>`);
+    //
+    // return this.$element;
+
   }
 
   update(deviceItem) {
     console.log('Not implemented');
+
   }
 }
 
@@ -150,7 +170,7 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
     this.deviceItem = deviceItem;
     var sensorID = deviceItem.unid;
 
-    console.log("Update Teploty pro ID: ", sensorID);
+    // console.log("Update Teploty pro ID: ", sensorID);
 
     var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
 
@@ -238,14 +258,17 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
     } //switch (temperatureScheme)
   }
 
-
-
   render() {                          // METODA pro vykreslení HTML boxíku
     //HTML boxík pro teplotu
-    var sensorID = this.deviceItem.unid;
+    // var sensorID = this.deviceItem.unid;
+    // console.log(super.getId());
 
-    console.log("Vytvoření HTML Teploty pro ID: ", sensorID);
+    // this.$element = super.render();
+    //načtení HTML ze Stone
 
+    // console.log("Vytvoření HTML Teploty pro ID: ", sensorID);
+
+    // console.log(this.$element);
     this.$element =
     $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
         <div id="sensor-boxContent" class="boxContent">
@@ -265,10 +288,101 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
 
 
     //přidání boxku na stránku (do #boxScreen) na poslední místo
-    this.$parent.append(this.$element);       //do parent (#boxScreen) vložit $element
-    //dříve v $("#boxScreen").append(templateHTML);
+
+    this.$parent.append(this.$element);  //do parent (#boxScreen) vložit $element
+    // dříve v $("#boxScreen").append(templateHTML);
+
+
+    // this.$ahoj.append(this.$element);
+
   }
 }
+
+
+
+class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    this.deviceItem = deviceItem;
+    var sensorID = deviceItem.unid;
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+
+    switch (true) {
+      case tempVal == 1:
+        this.$element.find('#sensor-boxContent').css("background-color", "GoldenRod");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+        break;
+      default:
+        this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+    }
+  }
+
+  getId() {
+    return this.deviceItem.unid;
+  }
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    console.log(this.getId());
+    this.$element =
+    $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
+        <div id="sensor-boxContent" class="boxContent">
+              <div id="sensor-module-svetlo">
+                <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
+               </div>
+            <div>
+                <p id="sensor-name">Severní pól</p>
+            </div>
+
+            <div>
+                <p id="sensor-error">error time</p>
+            </div>
+
+        </div>
+    </div>` );
+
+
+    //přidání boxku na stránku (do #boxScreen) na poslední místo
+
+    this.$parent.append(this.$element);  //do parent (#boxScreen) vložit $element
+    // dříve v $("#boxScreen").append(templateHTML);
+
+      // co se stane při kliknutí
+      // nejede ____
+      $(document).on("click", "#sensor-boxContent", function() {
+
+        console.log("AAA", $(this));
+        Object.keys(Arduino.devices).forEach(function (key){
+            // console.log("coto: ", Arduino.devices[key].$element);
+        });
+
+
+
+        // console.log("ID je: ",Arduino.devices[789010012].getId());
+        // // Arduino.devices[deviceItem.unid] = temp;
+        // console.log("AAAAAA pomoc");
+        console.log(event.target.id);
+
+        odeslatPUT($(this).attr("id"), "1");
+        Arduino.containerUpdate();  //refresh obrazovky
+      });
+
+      // $(this.$element).click(function() {
+      //   var linkObj = $(this);
+      //   console.log(linkObj);
+      //     // alert( "Handler for .click() called." );
+      // });
+
+
+
+  }
+}
+
+
 
 
 
@@ -1365,8 +1479,20 @@ Arduino.containerShow = function() {
               LivingStoneUpdate.Water (deviceItem);
               break;
             case DMsvetlo: //svetlo
-              LivingStone.Light(sensorID);
-              LivingStoneUpdate.Light (deviceItem);
+
+
+
+              // LivingStone.Light(sensorID);
+              // LivingStoneUpdate.Light (deviceItem);
+
+              var temp = new Light ($("#boxScreen"), deviceItem);
+
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+              console.log("temp",temp._deviceItem);
+
+
+
               break;
             case DMalarm: //alarm - PIR
               LivingStone.Pir(sensorID);
@@ -1496,6 +1622,7 @@ Arduino.containerUpdate = function() {
 
                   //pomocí Class
                   Arduino.devices[deviceItem.unid].update(deviceItem);
+                  // console.log("ID je: ",Arduino.devices[deviceItem.unid].getId());
 
                   break;
 
@@ -1504,7 +1631,9 @@ Arduino.containerUpdate = function() {
                   break;
 
                 case DMsvetlo: //světlo
-                  LivingStoneUpdate.Light (deviceItem);
+                  // LivingStoneUpdate.Light (deviceItem);
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
+
                   break;
 
                 case DMalarm: //alarm - PIR

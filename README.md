@@ -5,12 +5,19 @@
 
 ## Co nového ve verzi
 
+## 30/3/
+
+Přepsání na class
+
+- Vzniká oddělená větev class_refaktring.
+- V ní se pokouším přepsat livingstone na třídy. Původní funkční kod je ve větvi "master"
+
 ## 25.3.
 
 Audio testování
 - při výpadku čidla nebo odpojední od serveru se spustí audio-hláška.
 - funguje pak na všech zařízeních, i v záložkách a na vypnutém iPadu.
-- cílem je otestovat příjemnost nebo nepříjemnost audio komentáře. 
+- cílem je otestovat příjemnost nebo nepříjemnost audio komentáře.
 
 ## 23.3.
 
