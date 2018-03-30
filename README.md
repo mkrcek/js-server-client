@@ -1,4 +1,4 @@
-# Doomaster: DEMODAY & sprint 23.3.2018 06:44
+# Doomaster: CLASS days 2018 
 
 
 ----------
