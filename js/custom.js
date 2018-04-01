@@ -311,7 +311,6 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
   }
 }
 
-
 class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
 
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
@@ -377,7 +376,7 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
   }
 }
 
-class Pir extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
 
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
 
@@ -415,7 +414,66 @@ class Pir extends Stone {     //subTřída pro Svetlo  - zobrazení i update
   }
 }
 
+class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
 
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    // this.$element.find("#sensor-name").html(deviceItem.webname);
+    // this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    // this.$element.find("#sensor-boxContent").css("color", "Black");
+
+
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+    this.$element.find("#sensor-name").html(deviceItem.webname);
+    this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    d = new Date();
+    newUrl = deviceItem.subtype + "?" + d.getTime();
+    this.$element.find("#sensor-kamera-url").attr("src",newUrl);
+
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div>
+        <span id="sensor-name">Severní pól</span>
+        <span> | </span>
+        <i id="sensor-time">25:61</i>
+    </div>
+    <div id="sensor-module-kamera" class="kameraBox kamera-value">
+        <div class="cam-value ">
+          <img id="sensor-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
+        </div>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render();
+
+
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+
+    // this.$element.find('#sensor-boxWrap').classList.remove("boxWrap ${GRID_SM}");
+    // this.$element.find('#sensor-boxWrap').classlist.replace("boxWrap ${GRID_SM}", "boxWrap ${GRID_CAM}");
+
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //CLICK: ošetření klikání na žárovku
+    // this.$element.click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
+
+  }
+}
 
 
 
@@ -502,84 +560,84 @@ LivingStone = {};
 //
 // }
 
-LivingStone.Pir = function (sensorID) {
-  //HTML boxík pro Pir Motion Alarm
+// LivingStone.Pir = function (sensorID) {
+//   //HTML boxík pro Pir Motion Alarm
+//
+//   // var templateHTML =
+//   // `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+//   //     <div id="sensor-${sensorID}-boxContent" class="boxContent">
+//   //
+//   //         <div id="sensor-${sensorID}-module-alarm" class="text-left">
+//   //           <i id="sensor-${sensorID}-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>
+//   //         </div>
+//   //         <div >
+//   //           <p id="sensor-${sensorID}-name">Severní pól</p>
+//   //           <i id="sensor-${sensorID}-time">25:61</i>
+//   //         </div>
+//   //         <div>
+//   //             <p id="sensor-${sensorID}-error">error time</p>
+//   //         </div>
+//   //
+//   //     </div>
+//   // </div>`;
+//   //https://fontawesome.com/icons/exclamation-triangle?style=solid
+//
+//   // <svg rect x="0" y="0"  height=25 viewBox="0 0 100 100">
+//   //   <use xlink:href="fontawesome/fa-solid.svg#exclamation-triangle"></use>
+//   // </svg>
+//   //
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent">
+//
+//           <div id="sensor-${sensorID}-module-alarm" class="text-left">
+//               <div id="sensor-${sensorID}-alarm-stav">
+//                 <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
+//               </div>
+//           </div>
+//           <div >
+//             <p id="sensor-${sensorID}-name">Severní pól</p>
+//             <i id="sensor-${sensorID}-time">25:61</i>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   //přidání boxku na stránku (do #boxScreen) na poslední místo
+//   $("#boxScreen").append(templateHTML);
+// }
 
-  // var templateHTML =
-  // `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-  //     <div id="sensor-${sensorID}-boxContent" class="boxContent">
-  //
-  //         <div id="sensor-${sensorID}-module-alarm" class="text-left">
-  //           <i id="sensor-${sensorID}-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>
-  //         </div>
-  //         <div >
-  //           <p id="sensor-${sensorID}-name">Severní pól</p>
-  //           <i id="sensor-${sensorID}-time">25:61</i>
-  //         </div>
-  //         <div>
-  //             <p id="sensor-${sensorID}-error">error time</p>
-  //         </div>
-  //
-  //     </div>
-  // </div>`;
-  //https://fontawesome.com/icons/exclamation-triangle?style=solid
-
-  // <svg rect x="0" y="0"  height=25 viewBox="0 0 100 100">
-  //   <use xlink:href="fontawesome/fa-solid.svg#exclamation-triangle"></use>
-  // </svg>
-  //
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-alarm" class="text-left">
-              <div id="sensor-${sensorID}-alarm-stav">
-                <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
-              </div>
-          </div>
-          <div >
-            <p id="sensor-${sensorID}-name">Severní pól</p>
-            <i id="sensor-${sensorID}-time">25:61</i>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-}
-
-LivingStone.Camera = function (sensorID) {
-  //HTML boxík pro Kameru
-  //bylo GRID_FUL
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
-
-          <div>
-              <span id="sensor-${sensorID}-name">Severní pól</span>
-              <span> | </span>
-              <i id="sensor-${sensorID}-time">25:61</i>
-          </div>
-          <div id="sensor-${sensorID}-module-kamera" class="kameraBox kamera-value">
-              <div class="cam-value ">
-                <img id="sensor-${sensorID}-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
-              </div>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-
-}
+// LivingStone.Camera = function (sensorID) {
+//   //HTML boxík pro Kameru
+//   //bylo GRID_FUL
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAM}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
+//
+//           <div>
+//               <span id="sensor-${sensorID}-name">Severní pól</span>
+//               <span> | </span>
+//               <i id="sensor-${sensorID}-time">25:61</i>
+//           </div>
+//           <div id="sensor-${sensorID}-module-kamera" class="kameraBox kamera-value">
+//               <div class="cam-value ">
+//                 <img id="sensor-${sensorID}-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
+//               </div>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   //přidání boxku na stránku (do #boxScreen) na poslední místo
+//   $("#boxScreen").append(templateHTML);
+//
+// }
 
 LivingStone.Weather = function (sensorID) {
   //HTML boxík pro Počasí
@@ -907,12 +965,12 @@ LivingStoneUpdate.Water = function (deviceItem) {
 //
 // }
 
-LivingStoneUpdate.Pir = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-}
+// LivingStoneUpdate.Pir = function (deviceItem) {
+//   var sensorID = deviceItem.unid;
+//   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+//   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
+// }
 
 LivingStoneUpdate.Gate = function (deviceItem) {
   var sensorID = deviceItem.unid;
@@ -931,16 +989,16 @@ LivingStoneUpdate.Gate = function (deviceItem) {
 
 }
 
-LivingStoneUpdate.Camera = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
-  d = new Date();
-  newUrl = deviceItem.subtype + "?" + d.getTime();
-  $("#sensor-" + sensorID + "-kamera-url").attr("src",newUrl);
-}
+// LivingStoneUpdate.Camera = function (deviceItem) {
+//   var sensorID = deviceItem.unid;
+//   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
+//   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+//   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
+//   d = new Date();
+//   newUrl = deviceItem.subtype + "?" + d.getTime();
+//   $("#sensor-" + sensorID + "-kamera-url").attr("src",newUrl);
+// }
 
 LivingStoneUpdate.Weather = function (deviceItem) {
   var sensorID = deviceItem.unid;
@@ -1533,8 +1591,13 @@ Arduino.containerShow = function() {
               LivingStoneUpdate.Gate(deviceItem);
               break;
             case DMkamera: //kamera
-              LivingStone.Camera(sensorID);
-              LivingStoneUpdate.Camera (deviceItem);
+              // LivingStone.Camera(sensorID);
+              // LivingStoneUpdate.Camera (deviceItem);
+
+              var temp = new Camera ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
               break;
             case DMpocasi: //počasí
               LivingStone.Weather(sensorID);
@@ -1685,7 +1748,9 @@ Arduino.containerUpdate = function() {
                   break;
 
                 case DMkamera: //kamera (ne počasí)
-                  LivingStoneUpdate.Camera (deviceItem);
+                  // LivingStoneUpdate.Camera (deviceItem);
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
+
                   break;
 
                 case DMpocasi: //počasí
