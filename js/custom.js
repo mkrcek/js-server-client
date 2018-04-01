@@ -377,6 +377,44 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
   }
 }
 
+class Pir extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    this.$element.find("#sensor-name").html(deviceItem.webname);
+    this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    this.$element.find("#sensor-boxContent").css("color", "Black");
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-alarm" class="text-left">
+        <div id="sensor-alarm-stav">
+          <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
+        </div>
+    </div>
+    <div >
+      <p id="sensor-name">Severní pól</p>
+      <i id="sensor-time">25:61</i>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render();
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+  }
+}
+
 
 
 
@@ -1474,7 +1512,6 @@ Arduino.containerShow = function() {
               // LivingStoneUpdate.Light (deviceItem);
 
               var temp = new Light ($("#boxScreen"), deviceItem);
-
               temp.render();
               Arduino.devices[deviceItem.unid] = temp;
 
@@ -1482,8 +1519,14 @@ Arduino.containerShow = function() {
 
               break;
             case DMalarm: //alarm - PIR
-              LivingStone.Pir(sensorID);
-              LivingStoneUpdate.Pir(deviceItem);
+
+            // LivingStone.Pir(sensorID);
+            // LivingStoneUpdate.Pir(deviceItem);
+
+              var temp = new Pir ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
               break;
             case DMbrana: //brána
               LivingStone.Gate(sensorID);
@@ -1633,7 +1676,8 @@ Arduino.containerUpdate = function() {
                   break;
 
                 case DMalarm: //alarm - PIR
-                  LivingStoneUpdate.Pir (deviceItem);
+                  // LivingStoneUpdate.Pir (deviceItem);
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
                   break;
 
                 case DMbrana: //brána
