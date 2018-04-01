@@ -115,6 +115,8 @@ var LastServer = new TimeKeeper (new Date().getTime());
 // - jak dělat, když nastane chyba čidla...
 // - osamostatnit funkčnost do souboru Class
 // - realizovat refresh čidla u každého čidla vzlášť a to pířmo ve Stone
+// - velikost BOXU const GRID_SM
+// - oříznutí textu při přetékání boxu
 
 
 //_________________________________________
@@ -476,6 +478,58 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
 }
 
 
+class Water extends Stone {     //subTřída pro Teplotu  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    this.deviceItem = deviceItem;
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+
+    this.$element.find("#sensor-name").html(deviceItem.webname);
+    this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    this.$element.find("#sensor-voda-numb").html(tempVal + " %");
+
+    var temperatureScheme = Number(deviceItem.subtype); //barevné schéma pro teplotu
+
+    switch (true) {
+      case tempVal < temperatureScheme:
+        this.$element.find('#sensor-boxContent').css("background-color", "Red");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+        break;
+      default:
+        this.$element.find('#sensor-boxContent').css("background-color", "LightGreen");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+    }
+
+
+  }
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+    //HTML boxík pro Water
+
+    //unikátní obsah pro Stone - Water
+    var uniqueContent = `
+      <div id="sensor-module-voda" class="text-left">
+          <h1>
+              <span id="sensor-voda-numb">-99</span>
+          </h1>
+      </div>
+      <div>
+          <p id="sensor-name">Severní pól</p>
+      </div>
+      <div>
+          <p id="sensor-error">error time</p>
+      </div>
+      `;
+
+
+    super.render();
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+  }
+}
 
 // ********** KOD
 
@@ -662,30 +716,30 @@ LivingStone.Weather = function (sensorID) {
   $("#boxScreen").append(templateHTML);
 }
 
-LivingStone.Water = function (sensorID) {
-  //HTML boxík pro Vodu
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-voda" class="text-left">
-              <h1>
-                  <span id="sensor-${sensorID}-voda-numb">-99</span>
-              </h1>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-name">Severní pól</p>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-}
+// LivingStone.Water = function (sensorID) {
+//   //HTML boxík pro Vodu
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent">
+//
+//           <div id="sensor-${sensorID}-module-voda" class="text-left">
+//               <h1>
+//                   <span id="sensor-${sensorID}-voda-numb">-99</span>
+//               </h1>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-name">Severní pól</p>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   //přidání boxku na stránku (do #boxScreen) na poslední místo
+//   $("#boxScreen").append(templateHTML);
+// }
 
 LivingStone.Gate = function (sensorID) {
   //HTML boxík pro Bránu
@@ -920,27 +974,27 @@ LivingStoneUpdate = {};
 //   } //switch (temperatureScheme)
 // }
 
-LivingStoneUpdate.Water = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  var tempVal = Number(deviceItem.value);
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
-  // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
-
-  //změna barvy po dosažení hodnoty v Subtype
-  var temperatureScheme = Number(deviceItem.subtype); //barevné schéma pro teplotu
-
-  switch (true) {
-    case tempVal < temperatureScheme:
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-      break;
-    default:
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
-      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-  }
-}
+// LivingStoneUpdate.Water = function (deviceItem) {
+//   var sensorID = deviceItem.unid;
+//   var tempVal = Number(deviceItem.value);
+//   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+//   $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
+//   // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
+//
+//   //změna barvy po dosažení hodnoty v Subtype
+//   var temperatureScheme = Number(deviceItem.subtype); //barevné schéma pro teplotu
+//
+//   switch (true) {
+//     case tempVal < temperatureScheme:
+//       $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+//       $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//       break;
+//     default:
+//       $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
+//       $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//   }
+// }
 
 // LivingStoneUpdate.Light = function (deviceItem) {
 //
@@ -1559,8 +1613,14 @@ Arduino.containerShow = function() {
               // LivingStoneUpdate.Temperature (deviceItem); //naplní obsahem
               break;
             case DMvoda: //voda
-              LivingStone.Water(sensorID);
-              LivingStoneUpdate.Water (deviceItem);
+              // LivingStone.Water(sensorID);
+              // LivingStoneUpdate.Water (deviceItem);
+
+              //pomocí Class
+              var temp = new Water ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
               break;
             case DMsvetlo: //svetlo
 
@@ -1728,7 +1788,11 @@ Arduino.containerUpdate = function() {
                   break;
 
                 case DMvoda: //voda
-                  LivingStoneUpdate.Water(deviceItem);
+                  // LivingStoneUpdate.Water(deviceItem);
+                  //pomocí Class
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
+
+
                   break;
 
                 case DMsvetlo: //světlo
