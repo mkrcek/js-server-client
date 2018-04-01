@@ -161,7 +161,36 @@ class Stone {
   }
 }
 
+class EmptyBox extends Stone {     //subTřída pro Svetlo  - zobrazení i update
 
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    console.log("EmptyBox is Not Implemented");
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-null" class="text-left">
+      <h1>
+        <span id="sensor-null">NULL-Stone</span>
+      </h1>
+    </div>
+    <div ><p id="sensor-name">NUL-pól</p></div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render();
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+  }
+}
 
 class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i update
 
@@ -283,7 +312,6 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
 }
 
 
-
 class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
 
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
@@ -386,55 +414,55 @@ console.log(checkCookie());
 //nove fce pro HTML boxiky - tzv. LivingStone = každá fce samostatný
 LivingStone = {};
 
-LivingStone.Null = function (sensorID) {
-  //HTML boxík pro NIC
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-null" class="text-left">
-            <h1>
-              <span id="sensor-${sensorID}-null">NULL-Stone</span>
-            </h1>
-          </div>
-          <div ><p id="sensor-${sensorID}-name">NUL-pól</p></div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  $("#boxScreen").append(templateHTML);
-
-}
+// LivingStone.EmptyBox = function (sensorID) {
+//   //HTML boxík pro NIC
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent">
+//
+//           <div id="sensor-${sensorID}-module-null" class="text-left">
+//             <h1>
+//               <span id="sensor-${sensorID}-null">NULL-Stone</span>
+//             </h1>
+//           </div>
+//           <div ><p id="sensor-${sensorID}-name">NUL-pól</p></div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   $("#boxScreen").append(templateHTML);
+//
+// }
 
 //toto je původní - nahrazeno Class ... class Temperature extends Stone
 //
-LivingStone.Temperature = function (deviceItem) {
-  //HTML boxík pro teplotu
-  var sensorID = deviceItem.unid;
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-teplota" class="text-left">
-            <h1>
-              <span id="sensor-${sensorID}-teplota">-99</span>&deg;
-            </h1>
-          </div>
-          <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-
-}
+// LivingStone.Temperature = function (deviceItem) {
+//   //HTML boxík pro teplotu
+//   var sensorID = deviceItem.unid;
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent">
+//
+//           <div id="sensor-${sensorID}-module-teplota" class="text-left">
+//             <h1>
+//               <span id="sensor-${sensorID}-teplota">-99</span>&deg;
+//             </h1>
+//           </div>
+//           <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   //přidání boxku na stránku (do #boxScreen) na poslední místo
+//   $("#boxScreen").append(templateHTML);
+//
+// }
 
 LivingStone.Pir = function (sensorID) {
   //HTML boxík pro Pir Motion Alarm
@@ -612,57 +640,57 @@ LivingStone.Gate = function (sensorID) {
 
 }
 
-LivingStone.Light = function (sensorID) {
-  //HTML boxík pro Světlo
-
-  // <div id="sensor-${sensorID}-module-svetlo">
-    // <div style="font-size:2em; color:"White">
-        // <i class="far fa-lightbulb"></i>
-    // </div>
-  //</div>
-  //nově
-  //rozměr height=30, pozice a velikost viewBox="0 0 100 100"
-  // <svg id="sensor-${sensorID}-module-svetlo" height=30 viewBox="0 0 100 100">
-  //   <use xlink:href="fa-regular.svg#lightbulb"></use>
-  // </svg>
-
-  // <div style="font-size:2em; color:"White">
-  //     <svg rect x="0" y="0"  height="30" viewBox="0 0 100 100">
-  //       <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
-  //     </svg>
-  // </div>
-
-  //f0eb ikona svetla: https://fontawesome.com/icons/lightbulb?style=regular
-
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-            <div id="sensor-${sensorID}-module-svetlo">
-              <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
-             </div>
-          <div>
-              <p id="sensor-${sensorID}-name">Severní pól</p>
-          </div>
-
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  $("#boxScreen").append(templateHTML);
-  // $('#boxScreen').append(`<i class="pekneIkony">cecko &#xf0c0;</i>`);
-  // $('#boxScreen').append(`<i class="far fa-lightbulb"></i>`);
-
-
-  //co se stane při kliknutí
-  $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-    odeslatPUT($(this).attr("id"), "1");
-    Arduino.containerUpdate();  //refresh obrazovky
-  });
-
-}
+// LivingStone.Light = function (sensorID) {
+//   //HTML boxík pro Světlo
+//
+//   // <div id="sensor-${sensorID}-module-svetlo">
+//     // <div style="font-size:2em; color:"White">
+//         // <i class="far fa-lightbulb"></i>
+//     // </div>
+//   //</div>
+//   //nově
+//   //rozměr height=30, pozice a velikost viewBox="0 0 100 100"
+//   // <svg id="sensor-${sensorID}-module-svetlo" height=30 viewBox="0 0 100 100">
+//   //   <use xlink:href="fa-regular.svg#lightbulb"></use>
+//   // </svg>
+//
+//   // <div style="font-size:2em; color:"White">
+//   //     <svg rect x="0" y="0"  height="30" viewBox="0 0 100 100">
+//   //       <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
+//   //     </svg>
+//   // </div>
+//
+//   //f0eb ikona svetla: https://fontawesome.com/icons/lightbulb?style=regular
+//
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent">
+//             <div id="sensor-${sensorID}-module-svetlo">
+//               <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
+//              </div>
+//           <div>
+//               <p id="sensor-${sensorID}-name">Severní pól</p>
+//           </div>
+//
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   $("#boxScreen").append(templateHTML);
+//   // $('#boxScreen').append(`<i class="pekneIkony">cecko &#xf0c0;</i>`);
+//   // $('#boxScreen').append(`<i class="far fa-lightbulb"></i>`);
+//
+//
+//   //co se stane při kliknutí
+//   $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
+//     odeslatPUT($(this).attr("id"), "1");
+//     Arduino.containerUpdate();  //refresh obrazovky
+//   });
+//
+// }
 
 LivingStone.CameraAlarm = function (sensorID) {
 
@@ -705,96 +733,96 @@ LivingStoneUpdate = {};
 
 //toto je původní - nahrazeno Class ... class Temperature extends Stone
 //
-LivingStoneUpdate.Temperature = function (deviceItem)  {
-
-  var sensorID = deviceItem.unid;
-  //var tempVal = device[i].value;
-  //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
-  var tempVal = Number(deviceItem.value);
-
-  $('#sensor-' + sensorID + '-name').html(deviceItem.webname);
-  $('#sensor-' + sensorID + '-time').html(deviceItem.lrespiot);
-  $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
-
-  var temperatureScheme = deviceItem.subtype; //barevné schéma pro teplotu
-  switch (temperatureScheme) {
-    case SchemeAir: //air - vzduch
-      switch (true) {
-        case tempVal < 4:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-          break;
-        case tempVal < 16:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        case tempVal < 21:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        case tempVal < 31:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        case tempVal > 30:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        default:
-      } //switch boiler
-      break;
-    case SchemeBoiler: //boiler
-      switch (true) {
-      case tempVal < 4:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-        break;
-      case tempVal < 35:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 70:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 81:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal > 80:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      default:
-    } //switch boiler
-      break;
-    case SchemeWater: //water - swimming pool
-      switch (true) {
-      case tempVal < 4:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-        break;
-      case tempVal < 20:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 25:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 30:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal > 29:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      default:
-    } //switch swimming pool
-      break;
-  } //switch (temperatureScheme)
-}
+// LivingStoneUpdate.Temperature = function (deviceItem)  {
+//
+//   var sensorID = deviceItem.unid;
+//   //var tempVal = device[i].value;
+//   //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+//   var tempVal = Number(deviceItem.value);
+//
+//   $('#sensor-' + sensorID + '-name').html(deviceItem.webname);
+//   $('#sensor-' + sensorID + '-time').html(deviceItem.lrespiot);
+//   $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
+//
+//   var temperatureScheme = deviceItem.subtype; //barevné schéma pro teplotu
+//   switch (temperatureScheme) {
+//     case SchemeAir: //air - vzduch
+//       switch (true) {
+//         case tempVal < 4:
+//           $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+//           $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+//           break;
+//         case tempVal < 16:
+//           $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+//           $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//           break;
+//         case tempVal < 21:
+//           $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+//           $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//           break;
+//         case tempVal < 31:
+//           $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+//           $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//           break;
+//         case tempVal > 30:
+//           $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+//           $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//           break;
+//         default:
+//       } //switch boiler
+//       break;
+//     case SchemeBoiler: //boiler
+//       switch (true) {
+//       case tempVal < 4:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+//         break;
+//       case tempVal < 35:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       case tempVal < 70:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       case tempVal < 81:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       case tempVal > 80:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       default:
+//     } //switch boiler
+//       break;
+//     case SchemeWater: //water - swimming pool
+//       switch (true) {
+//       case tempVal < 4:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
+//         break;
+//       case tempVal < 20:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       case tempVal < 25:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       case tempVal < 30:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       case tempVal > 29:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       default:
+//     } //switch swimming pool
+//       break;
+//   } //switch (temperatureScheme)
+// }
 
 LivingStoneUpdate.Water = function (deviceItem) {
   var sensorID = deviceItem.unid;
@@ -818,28 +846,28 @@ LivingStoneUpdate.Water = function (deviceItem) {
   }
 }
 
-LivingStoneUpdate.Light = function (deviceItem) {
-
-//jestlize nastala chyba - tak orámečkovat a napsat chybu
-//vložit i do livingStones.všechny
-var sensorID = deviceItem.unid;
-
-
-    $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-
-    var tempVal = Number(deviceItem.value);
-    // console.log("hodnota tempVal je ", tempVal);
-    switch (true) {
-      case tempVal == 1:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      default:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-    }
-
-}
+// LivingStoneUpdate.Light = function (deviceItem) {
+//
+//   //jestlize nastala chyba - tak orámečkovat a napsat chybu
+//   //vložit i do livingStones.všechny
+//   var sensorID = deviceItem.unid;
+//
+//
+//     $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//
+//     var tempVal = Number(deviceItem.value);
+//     // console.log("hodnota tempVal je ", tempVal);
+//     switch (true) {
+//       case tempVal == 1:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//         break;
+//       default:
+//         $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+//         $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
+//     }
+//
+// }
 
 LivingStoneUpdate.Pir = function (deviceItem) {
   var sensorID = deviceItem.unid;
@@ -1449,7 +1477,6 @@ Arduino.containerShow = function() {
 
               temp.render();
               Arduino.devices[deviceItem.unid] = temp;
-              // console.log("temp",temp._deviceItem);
 
 
 
@@ -1475,7 +1502,13 @@ Arduino.containerShow = function() {
               LivingStoneUpdate.CameraAlarm (deviceItem);
               break;
             default:
-              LivingStone.Null(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
+              // LivingStone.EmptyBox(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
+
+              var temp = new EmptyBox ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
+
           } //switch
         }   //if sensorID
         else {
