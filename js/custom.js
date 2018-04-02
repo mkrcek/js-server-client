@@ -111,18 +111,16 @@ var LastServer = new TimeKeeper (new Date().getTime());
 
 //základní prvek, ze kterého se všechno dědí.
 //bude
-// - generování HTML obálky (pomocí .Append se pak přidá dovnitř obálky obsah )
-// - zrušení HTML-ID- a nahrazení práce s HTML class
 // - jak dělat, když nastane chyba čidla...
-// - osamostatnit funkčnost do souboru Class
 // - realizovat refresh čidla u každého čidla vzlášť a to pířmo ve Stone
 // - oříznutí textu při přetékání boxu
+// - detail Stone u Temperature po kliknutní
 
 
 //_________________________________________
 
 class Stone {
-  constructor($parent, deviceItem) {    //parent - HTML kam umísti se, deviceItem: který Stone se má založit
+  constructor($parent, deviceItem) {    //parent - #boxScreen HTML kam umísti se, deviceItem: který Stone se má založit
                                         // znak $ znamená označení elementu jako jQuery znak  #
     this.$parent = $parent;
     this._deviceItem = deviceItem;
@@ -161,6 +159,29 @@ class Stone {
     console.log('Not implemented');
 
   }
+
+  renderDetails(stoneSize) {     //velikost boxíku na obrazovce
+    // HTML vzor "boxíku" společný pro všechny STONE
+
+    console.log("toto je detail Stone");
+
+    this.$parent.empty();
+
+    // super.render(GRID_SM);
+    this.$element =
+    $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${stoneSize}">
+         <div id="sensor-boxContent" class="boxContent">
+
+         PPPPPP
+
+         </div>
+     </div>`);
+
+     this.$parent.append(this.$element);
+     // vloží boxík na HTML stránku za #boxScreen
+
+  }
+
 }
 
 class EmptyBox extends Stone {     //subTřída pro Svetlo  - zobrazení i update
@@ -288,6 +309,15 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
     } //switch (temperatureScheme)
   }
 
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+    //HTML boxík pro teplotu
+    console.log("detail přesmeruji");
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+
+  }
+
   render() {                          // METODA pro vykreslení HTML boxíku
     //HTML boxík pro teplotu
 
@@ -310,7 +340,21 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
+
+
+    //testování zobrazení detailu STONE
+
+    //CLICK: ošetření klikání na žárovku
+    this.$element.click(() => {
+      console.log("KLIKNUTí na DETAIL Temperature + kliku je: ",this.getId());
+      odeslatPUT(this.getId(), "1"); //odeslatPUT
+      this.renderDetails();
+    });
+
   }
+
+
+
 }
 
 class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
@@ -670,7 +714,7 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
 
     //je li nějaká hodnota, tedy např. počet obrázku
     if (deviceItem.value != "") {
-      console.log("A");
+
       this.$element.find("#sensor-name").html(deviceItem.webname);
       this.$element.find("#sensor-time").html(deviceItem.lrespiot);
 
@@ -680,7 +724,7 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
       //obervení boxku
       this.$element.find('#sensor-boxContent').css("background-color", "Red");
     } else {
-      console.log("BB");
+
       this.$element.find("#sensor-name").html("No Camera Alarm");
       this.$element.find("#sensor-time").html("");
       newUrl = "images/image-no-alarm.jpg";
