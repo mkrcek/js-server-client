@@ -661,6 +661,78 @@ class Weather extends Stone {     //subTřída pro Svetlo  - zobrazení i update
   }
 }
 
+class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    var newUrl = "";
+    this.deviceItem = deviceItem;
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+
+    //je li nějaká hodnota, tedy např. počet obrázku
+    if (deviceItem.value != "") {
+      console.log("A");
+      this.$element.find("#sensor-name").html(deviceItem.webname);
+      this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+
+      newUrl = deviceItem.subtype;  //adresa ze serveru
+      // console.log(newUrl);
+
+      //obervení boxku
+      this.$element.find('#sensor-boxContent').css("background-color", "Red");
+    } else {
+      console.log("BB");
+      this.$element.find("#sensor-name").html("No Camera Alarm");
+      this.$element.find("#sensor-time").html("");
+      newUrl = "images/image-no-alarm.jpg";
+
+      //smazne boxík z DOM
+      this.$element.remove();
+
+      //obarvení boxíku
+      this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+    }
+    this.$element.find("#sensor-cameraalarm-url").attr("src",newUrl);
+
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div>
+        <span id="sensor-name">Severní pól</span>
+        <span> | </span>
+        <i id="sensor-time">25:61</i>
+    </div>
+    <div id="sensor-module-cameraalarm" class="kameraBox kamera-value">
+        <div class="cameraalarm-value ">
+          <img id="sensor-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
+        </div>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_CAMAL);
+
+    this.$element.find('.boxContent').html(uniqueContent);
+
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+    //CLICK: ošetření klikání na žárovku
+    this.$element.click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+
+  }
+}
+
 
 
 // ********** KOD
@@ -974,39 +1046,39 @@ LivingStone = {};
 //
 // }
 
-LivingStone.CameraAlarm = function (sensorID) {
-
-  //HTML boxík pro Obrazek z kamery po alarmu
-  //bylo GRID_FUL
-    var templateHTML =
-    `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAMAL}">
-        <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
-
-            <div>
-                <span id="sensor-${sensorID}-name">Severní pól</span>
-                <span> | </span>
-                <i id="sensor-${sensorID}-time">25:61</i>
-            </div>
-            <div id="sensor-${sensorID}-module-cameraalarm" class="kameraBox kamera-value">
-                <div class="cameraalarm-value ">
-                  <img id="sensor-${sensorID}-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
-                </div>
-            </div>
-            <div>
-                <p id="sensor-${sensorID}-error">error time</p>
-            </div>
-
-        </div>
-    </div>`;
-
-    $("#boxScreen").append(templateHTML);
-
-    //co se stane při kliknutí
-    $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-      odeslatPUT($(this).attr("id"), "DELETE");
-      Arduino.containerUpdate();
-    });
-}
+// LivingStone.CameraAlarm = function (sensorID) {
+//
+//   //HTML boxík pro Obrazek z kamery po alarmu
+//   //bylo GRID_FUL
+//     var templateHTML =
+//     `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAMAL}">
+//         <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
+//
+//             <div>
+//                 <span id="sensor-${sensorID}-name">Severní pól</span>
+//                 <span> | </span>
+//                 <i id="sensor-${sensorID}-time">25:61</i>
+//             </div>
+//             <div id="sensor-${sensorID}-module-cameraalarm" class="kameraBox kamera-value">
+//                 <div class="cameraalarm-value ">
+//                   <img id="sensor-${sensorID}-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
+//                 </div>
+//             </div>
+//             <div>
+//                 <p id="sensor-${sensorID}-error">error time</p>
+//             </div>
+//
+//         </div>
+//     </div>`;
+//
+//     $("#boxScreen").append(templateHTML);
+//
+//     //co se stane při kliknutí
+//     $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
+//       odeslatPUT($(this).attr("id"), "DELETE");
+//       Arduino.containerUpdate();
+//     });
+// }
 
 
 
@@ -1196,39 +1268,39 @@ LivingStoneUpdate = {};
 //   $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
 // }
 
-LivingStoneUpdate.CameraAlarm = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  var newUrl = "";
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-
-  // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
-
-  //je li nějaká hodnota, tedy např. počet obrázku
-  if (deviceItem.value != "") {
-    $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-    $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-
-    newUrl = deviceItem.subtype;  //adresa ze serveru
-    // console.log(newUrl);
-
-
-    //obervení boxku
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-  } else {
-    $("#sensor-" + sensorID + "-name").html("No Camera Alarm");
-    $("#sensor-" + sensorID + "-time").html("");
-    newUrl = "images/image-no-alarm.jpg";
-
-    //smazne boxík z DOM
-    $("#sensor-" + sensorID + "-boxWrap").remove();
-
-    //obarvení boxíku
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-  }
-
-
-  $("#sensor-" + sensorID + "-cameraalarm-url").attr("src",newUrl);
-}
+// LivingStoneUpdate.CameraAlarm = function (deviceItem) {
+//   var sensorID = deviceItem.unid;
+//   var newUrl = "";
+//   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
+//
+//   // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
+//
+//   //je li nějaká hodnota, tedy např. počet obrázku
+//   if (deviceItem.value != "") {
+//     $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//     $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+//
+//     newUrl = deviceItem.subtype;  //adresa ze serveru
+//     // console.log(newUrl);
+//
+//
+//     //obervení boxku
+//     $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
+//   } else {
+//     $("#sensor-" + sensorID + "-name").html("No Camera Alarm");
+//     $("#sensor-" + sensorID + "-time").html("");
+//     newUrl = "images/image-no-alarm.jpg";
+//
+//     //smazne boxík z DOM
+//     $("#sensor-" + sensorID + "-boxWrap").remove();
+//
+//     //obarvení boxíku
+//     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+//   }
+//
+//
+//   $("#sensor-" + sensorID + "-cameraalarm-url").attr("src",newUrl);
+// }
 
 
 
@@ -1806,8 +1878,13 @@ Arduino.containerShow = function() {
 
               break;
             case DMCameraAlarm: //Obrazek z kamery po alarmu
-              LivingStone.CameraAlarm(sensorID);
-              LivingStoneUpdate.CameraAlarm (deviceItem);
+              // LivingStone.CameraAlarm(sensorID);
+              // LivingStoneUpdate.CameraAlarm (deviceItem);
+
+              var temp = new CameraAlarm ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
               break;
             default:
               // LivingStone.EmptyBox(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
@@ -1986,7 +2063,8 @@ Arduino.containerUpdate = function() {
                   // if($("#sensor-" + sensorID + "-boxWrap").length == 0) {
                   //     //it doesn't exist
                   //     }
-                  LivingStoneUpdate.CameraAlarm (deviceItem);
+                  // LivingStoneUpdate.CameraAlarm (deviceItem);
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
                   break;
 
               } //konec :switch:
