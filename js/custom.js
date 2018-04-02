@@ -116,7 +116,6 @@ var LastServer = new TimeKeeper (new Date().getTime());
 // - jak dělat, když nastane chyba čidla...
 // - osamostatnit funkčnost do souboru Class
 // - realizovat refresh čidla u každého čidla vzlášť a to pířmo ve Stone
-// - velikost BOXU const GRID_SM
 // - oříznutí textu při přetékání boxu
 
 
@@ -420,7 +419,7 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
 class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
 
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
-
+    var newUrl = "";
     this.deviceItem = deviceItem;
     // this.$element.find("#sensor-name").html(deviceItem.webname);
     // this.$element.find("#sensor-time").html(deviceItem.lrespiot);
@@ -430,7 +429,7 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
     this.$element.find('#sensor-boxContent').css("color", "Black ");
     this.$element.find("#sensor-name").html(deviceItem.webname);
     this.$element.find("#sensor-time").html(deviceItem.lrespiot);
-    d = new Date();
+    var d = new Date();
     newUrl = deviceItem.subtype + "?" + d.getTime();
     this.$element.find("#sensor-kamera-url").attr("src",newUrl);
 
@@ -460,8 +459,8 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
 
     this.$element.find('.boxContent').html(uniqueContent);
 
-    this.$element.find('.boxContent').removeClass("boxContent");
     this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
 
 
     //CLICK: ošetření klikání na žárovku
@@ -576,8 +575,8 @@ class Gate extends Stone {     //subTřída pro Svetlo  - zobrazení i update
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
-    this.$element.find('.boxContent').removeClass("boxContent");
     this.$element.find('.boxContent').addClass("boxContent-gate");
+    this.$element.find('.boxContent').removeClass("boxContent");
 
 
     //CLICK: ošetření klikání na tlačítko
@@ -603,22 +602,6 @@ class Gate extends Stone {     //subTřída pro Svetlo  - zobrazení i update
     });
 
 
-    //
-    // $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
-    //   //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-    //   //tak se provede to, co je ve funkci:
-    //   odeslatPUT($(this).attr("id"), DMbranaT1);
-    //   alert("Odeslán PUT 1 na sensor " + sensorID);
-    // });
-    // $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-    //   odeslatPUT($(this).attr("id"), DMbranaT2);
-    //   alert("Odeslán PUT 2 na sensor " + sensorID);
-    // });
-    // $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-    //   odeslatPUT($(this).attr("id"), DMbranaT3);
-    //   alert("Odeslán PUT 3 na sensor " + sensorID);
-    // });
-
     //METODA A:
       //jede krásně
       //to zajisti, ze scope this je stejny jako v bloku ktery je nadrazeny teto funkci, tzn. metode render()
@@ -632,6 +615,48 @@ class Gate extends Stone {     //subTřída pro Svetlo  - zobrazení i update
       // }.bind(this));
       //Timhle reknes funkci kterou bindujes, ze hodnotu this pro vsechna jeji volani chces nastavit na cokoliv ty potrebujes. v tomto pripade na this.
       //this je stale ve scope render funkci (neni obaleno jinou funkci) a tim padem odkazuje na instanci Light a ma getId()
+
+  }
+}
+
+class Weather extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    var newUrl = "";
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+
+    var d = new Date();
+    newUrl = deviceItem.subtype + "?" + d.getHours();
+    this.$element.find("#sensor-pocasi-url").attr("src",newUrl);
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-pocasi" class="pocasi-value">
+      <div class="cam-value ">
+        <img id="sensor-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
+      </div>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_WEAD);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    this.$element.find('.boxContent').addClass("boxContent-pocasi");
+    this.$element.find('.boxContent').removeClass("boxContent");
 
   }
 }
@@ -800,28 +825,28 @@ LivingStone = {};
 //
 // }
 
-LivingStone.Weather = function (sensorID) {
-  //HTML boxík pro Počasí
-  //bylo: GRID_MD
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_WEAD}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
-
-          <div id="sensor-${sensorID}-module-pocasi" class="pocasi-value">
-            <div class="cam-value ">
-              <img id="sensor-${sensorID}-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
-            </div>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-}
+// LivingStone.Weather = function (sensorID) {
+//   //HTML boxík pro Počasí
+//   //bylo: GRID_MD
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_WEAD}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
+//
+//           <div id="sensor-${sensorID}-module-pocasi" class="pocasi-value">
+//             <div class="cam-value ">
+//               <img id="sensor-${sensorID}-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
+//             </div>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   //přidání boxku na stránku (do #boxScreen) na poslední místo
+//   $("#boxScreen").append(templateHTML);
+// }
 
 // LivingStone.Water = function (sensorID) {
 //   //HTML boxík pro Vodu
@@ -1162,14 +1187,14 @@ LivingStoneUpdate = {};
 //   $("#sensor-" + sensorID + "-kamera-url").attr("src",newUrl);
 // }
 
-LivingStoneUpdate.Weather = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  d = new Date();
-  newUrl = deviceItem.subtype + "?" + d.getHours();
-  $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
-}
+// LivingStoneUpdate.Weather = function (deviceItem) {
+//   var sensorID = deviceItem.unid;
+//   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+//   d = new Date();
+//   newUrl = deviceItem.subtype + "?" + d.getHours();
+//   $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
+// }
 
 LivingStoneUpdate.CameraAlarm = function (deviceItem) {
   var sensorID = deviceItem.unid;
@@ -1772,8 +1797,13 @@ Arduino.containerShow = function() {
 
               break;
             case DMpocasi: //počasí
-              LivingStone.Weather(sensorID);
-              LivingStoneUpdate.Weather (deviceItem);
+              // LivingStone.Weather(sensorID);
+              // LivingStoneUpdate.Weather (deviceItem);
+
+              var temp = new Weather ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
               break;
             case DMCameraAlarm: //Obrazek z kamery po alarmu
               LivingStone.CameraAlarm(sensorID);
@@ -1932,7 +1962,10 @@ Arduino.containerUpdate = function() {
                   break;
 
                 case DMpocasi: //počasí
-                  LivingStoneUpdate.Weather (deviceItem);
+                  // LivingStoneUpdate.Weather (deviceItem);
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
+
+
                   break;
                 case DMCameraAlarm: //kamera s alarmovým obrazkem
 
