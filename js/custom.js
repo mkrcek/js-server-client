@@ -29,6 +29,7 @@ const DMmenuID4 = "10104";
 
 
 //počet sloupců na stránce
+//stoneSize: v Class Stone.render
 
 //<576px col-
 //≥576px col-sm-
@@ -140,11 +141,19 @@ class Stone {
     return this.deviceItem.unid;
   }
 
-  render() {
+  render(stoneSize) {     //velikost boxíku na obrazovce
     // HTML vzor "boxíku" společný pro všechny STONE
+    // this.$element =
+    // $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
+    //      <div id="sensor-boxContent" class="boxContent">
+    //
+    //      <!-- místo pro unikatní obsah kazdeho STONE -->
+    //
+    //      </div>
+    //  </div>`);
 
     this.$element =
-    $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
+    $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${stoneSize}">
          <div id="sensor-boxContent" class="boxContent">
 
          <!-- místo pro unikatní obsah kazdeho STONE -->
@@ -304,7 +313,7 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
       </div>`;
 
 
-    super.render();
+    super.render(GRID_SM);
     // zavola parent render metodu a vygeneruje container
 
     this.$element.find('.boxContent').html(uniqueContent);
@@ -347,7 +356,7 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
     </div>`;
 
 
-    super.render();
+    super.render(GRID_SM);
     // zavola parent render metodu a vygeneruje container
 
     this.$element.find('.boxContent').html(uniqueContent);
@@ -407,7 +416,7 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
     `;
 
 
-    super.render();
+    super.render(GRID_SM);
     // zavola parent render metodu a vygeneruje container
 
     this.$element.find('.boxContent').html(uniqueContent);
@@ -439,7 +448,7 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
   render() {                          // METODA pro vykreslení HTML boxíku
 
     var uniqueContent = `
-    <div>
+    <div class = "boxContent">
         <span id="sensor-name">Severní pól</span>
         <span> | </span>
         <i id="sensor-time">25:61</i>
@@ -455,17 +464,13 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
     `;
 
 
-    super.render();
-
-
-    // zavola parent render metodu a vygeneruje container
+    super.render(GRID_CAM);
 
     this.$element.find('.boxContent').html(uniqueContent);
 
-    // this.$element.find('#sensor-boxWrap').classList.remove("boxWrap ${GRID_SM}");
-    // this.$element.find('#sensor-boxWrap').classlist.replace("boxWrap ${GRID_SM}", "boxWrap ${GRID_CAM}");
+    this.$element.find('.boxContent').removeClass("boxContent");
+    this.$element.find('.boxContent').addClass("boxContent-camera");
 
-    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
     //CLICK: ošetření klikání na žárovku
     // this.$element.click(() => {
@@ -522,7 +527,7 @@ class Water extends Stone {     //subTřída pro Teplotu  - zobrazení i update
       `;
 
 
-    super.render();
+    super.render(GRID_SM);
     // zavola parent render metodu a vygeneruje container
 
     this.$element.find('.boxContent').html(uniqueContent);
