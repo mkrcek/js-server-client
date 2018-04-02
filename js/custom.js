@@ -143,14 +143,6 @@ class Stone {
 
   render(stoneSize) {     //velikost boxíku na obrazovce
     // HTML vzor "boxíku" společný pro všechny STONE
-    // this.$element =
-    // $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${GRID_SM}">
-    //      <div id="sensor-boxContent" class="boxContent">
-    //
-    //      <!-- místo pro unikatní obsah kazdeho STONE -->
-    //
-    //      </div>
-    //  </div>`);
 
     this.$element =
     $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${stoneSize}">
@@ -482,7 +474,6 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
   }
 }
 
-
 class Water extends Stone {     //subTřída pro Teplotu  - zobrazení i update
 
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
@@ -535,6 +526,117 @@ class Water extends Stone {     //subTřída pro Teplotu  - zobrazení i update
 
   }
 }
+
+class Gate extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+    if (tempVal == 0) {
+      this.$element.find("#sensor-brana-numb").html("ZAVŘENO");
+      this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+    } else {
+      this.$element.find("#sensor-brana-numb").html(tempVal + " % OTEVŘENO");
+      this.$element.find('#sensor-boxContent').css("background-color", "GoldenRod");
+    }
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-brana" class="text-left">
+        <h1>
+            <span id="sensor-brana-numb">-99</span>
+        </h1>
+    </div>
+    <div>
+        <p id="sensor-name">Severní pól</p>
+    </div>
+
+    <div class="btn-group btn-group-justified">
+      <a id="sensor-brana-but1" class="btn ">Otevřít</a>
+      <a id="sensor-brana-but2" class="btn ">Branka</a>
+      <a id="sensor-brana-but3" class="btn ">PULS</a>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_GATE);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    this.$element.find('.boxContent').removeClass("boxContent");
+    this.$element.find('.boxContent').addClass("boxContent-gate");
+
+
+    //CLICK: ošetření klikání na tlačítko
+    this.$element.find('#sensor-brana-but1').click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
+      alert("Odeslán PUT 1 na sensor " + this.getId());
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+    this.$element.find('#sensor-brana-but2').click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMbranaT2); //odeslatPUT
+      alert("Odeslán PUT 2 na sensor " + this.getId());
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+    this.$element.find('#sensor-brana-but3').click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMbranaT3); //odeslatPUT
+      alert("Odeslán PUT 3 na sensor " + this.getId());
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+
+    //
+    // $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
+    //   //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+    //   //tak se provede to, co je ve funkci:
+    //   odeslatPUT($(this).attr("id"), DMbranaT1);
+    //   alert("Odeslán PUT 1 na sensor " + sensorID);
+    // });
+    // $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
+    //   odeslatPUT($(this).attr("id"), DMbranaT2);
+    //   alert("Odeslán PUT 2 na sensor " + sensorID);
+    // });
+    // $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
+    //   odeslatPUT($(this).attr("id"), DMbranaT3);
+    //   alert("Odeslán PUT 3 na sensor " + sensorID);
+    // });
+
+    //METODA A:
+      //jede krásně
+      //to zajisti, ze scope this je stejny jako v bloku ktery je nadrazeny teto funkci, tzn. metode render()
+      //kde je this instance Light tridy.
+      // A na te uz muzes volat getId()
+
+    //METODA B:
+      // this.$element.click(function() {
+      //   console.log("ID2 kliku je: ",this.getId());
+      //   odeslatPUT(this.getId(), "1");
+      // }.bind(this));
+      //Timhle reknes funkci kterou bindujes, ze hodnotu this pro vsechna jeji volani chces nastavit na cokoliv ty potrebujes. v tomto pripade na this.
+      //this je stale ve scope render funkci (neni obaleno jinou funkci) a tim padem odkazuje na instanci Light a ma getId()
+
+  }
+}
+
+
 
 // ********** KOD
 
@@ -746,54 +848,54 @@ LivingStone.Weather = function (sensorID) {
 //   $("#boxScreen").append(templateHTML);
 // }
 
-LivingStone.Gate = function (sensorID) {
-  //HTML boxík pro Bránu
-  //bylo GRID_MD
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_GATE}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent-gate">
-
-          <div id="sensor-${sensorID}-module-brana" class="text-left">
-              <h1>
-                  <span id="sensor-${sensorID}-brana-numb">-99</span>
-              </h1>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-name">Severní pól</p>
-          </div>
-
-          <div class="btn-group btn-group-justified">
-            <a id="sensor-${sensorID}-brana-but1" class="btn ">Otevřít</a>
-            <a id="sensor-${sensorID}-brana-but2" class="btn ">Branka</a>
-            <a id="sensor-${sensorID}-brana-but3" class="btn ">PULS</a>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-
-  //ošetření kliknutí
-  $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
-    //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-    //tak se provede to, co je ve funkci:
-    odeslatPUT($(this).attr("id"), DMbranaT1);
-    alert("Odeslán PUT 1 na sensor " + sensorID);
-  });
-  $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-    odeslatPUT($(this).attr("id"), DMbranaT2);
-    alert("Odeslán PUT 2 na sensor " + sensorID);
-  });
-  $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-    odeslatPUT($(this).attr("id"), DMbranaT3);
-    alert("Odeslán PUT 3 na sensor " + sensorID);
-  });
-
-}
+// LivingStone.Gate = function (sensorID) {
+//   //HTML boxík pro Bránu
+//   //bylo GRID_MD
+//   var templateHTML =
+//   `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_GATE}">
+//       <div id="sensor-${sensorID}-boxContent" class="boxContent-gate">
+//
+//           <div id="sensor-${sensorID}-module-brana" class="text-left">
+//               <h1>
+//                   <span id="sensor-${sensorID}-brana-numb">-99</span>
+//               </h1>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-name">Severní pól</p>
+//           </div>
+//
+//           <div class="btn-group btn-group-justified">
+//             <a id="sensor-${sensorID}-brana-but1" class="btn ">Otevřít</a>
+//             <a id="sensor-${sensorID}-brana-but2" class="btn ">Branka</a>
+//             <a id="sensor-${sensorID}-brana-but3" class="btn ">PULS</a>
+//           </div>
+//           <div>
+//               <p id="sensor-${sensorID}-error">error time</p>
+//           </div>
+//
+//       </div>
+//   </div>`;
+//
+//   //přidání boxku na stránku (do #boxScreen) na poslední místo
+//   $("#boxScreen").append(templateHTML);
+//
+//   //ošetření kliknutí
+//   $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
+//     //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
+//     //tak se provede to, co je ve funkci:
+//     odeslatPUT($(this).attr("id"), DMbranaT1);
+//     alert("Odeslán PUT 1 na sensor " + sensorID);
+//   });
+//   $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
+//     odeslatPUT($(this).attr("id"), DMbranaT2);
+//     alert("Odeslán PUT 2 na sensor " + sensorID);
+//   });
+//   $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
+//     odeslatPUT($(this).attr("id"), DMbranaT3);
+//     alert("Odeslán PUT 3 na sensor " + sensorID);
+//   });
+//
+// }
 
 // LivingStone.Light = function (sensorID) {
 //   //HTML boxík pro Světlo
@@ -1031,22 +1133,23 @@ LivingStoneUpdate = {};
 //   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
 // }
 
-LivingStoneUpdate.Gate = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  var tempVal = Number(deviceItem.value);
-
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-  if (tempVal == 0) {
-    $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-  } else {
-    $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-  }
-
-}
+// LivingStoneUpdate.Gate = function (deviceItem) {
+//   var sensorID = deviceItem.unid;
+//   var tempVal = Number(deviceItem.value);
+//
+//   $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
+//   $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
+//
+//   $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
+//   if (tempVal == 0) {
+//     $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
+//     $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
+//   } else {
+//     $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
+//     $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
+//   }
+//
+// }
 
 // LivingStoneUpdate.Camera = function (deviceItem) {
 //   var sensorID = deviceItem.unid;
@@ -1652,8 +1755,12 @@ Arduino.containerShow = function() {
 
               break;
             case DMbrana: //brána
-              LivingStone.Gate(sensorID);
-              LivingStoneUpdate.Gate(deviceItem);
+              // LivingStone.Gate(sensorID);
+              // LivingStoneUpdate.Gate(deviceItem);
+              var temp = new Gate ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+
               break;
             case DMkamera: //kamera
               // LivingStone.Camera(sensorID);
@@ -1813,7 +1920,9 @@ Arduino.containerUpdate = function() {
                   break;
 
                 case DMbrana: //brána
-                  LivingStoneUpdate.Gate (deviceItem);
+                  // LivingStoneUpdate.Gate (deviceItem);
+
+                  Arduino.devices[deviceItem.unid].update(deviceItem);
                   break;
 
                 case DMkamera: //kamera (ne počasí)
