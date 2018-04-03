@@ -23,13 +23,15 @@ p span {
   font: inherit;
   font-size: 11px;
   margin-bottom: 0px;
+  overflow:hidden;
+  /* zalamování textu když by přetéká */
 }
 
 p  {
   font: inherit;
   font-size: 11px;
   margin-bottom: 0px;
-  overflow:hidden;  
+  overflow:hidden;
   /* zalamování textu když by přetéká */
 }
 

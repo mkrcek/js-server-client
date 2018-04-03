@@ -150,14 +150,123 @@ class Stone {
 
      this.$parent.append(this.$element);
      //vloží boxík na HTML stránku za #boxScreen
-
   }
 
   update(deviceItem) {
     console.log('Not implemented - generování update pro všechny společné boxíky');
-
   }
 
+
+  renderDetails(stoneSize) {     //detail boxíku - STONu
+    // HTML vzor "boxíku" společný pro všechny STONE
+
+
+    console.log("ID kliknutého Stonu: ",this.deviceItem.unid);
+    console.log("Detail kliknutého Stonu22: ", this.deviceItem);
+    console.log(this.deviceItem.value);
+
+
+    this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+
+    // super.render(GRID_SM);
+    this.$element =
+    $(`
+      <div onclick="" id="sensor-boxWrap" class="boxWrap ${stoneSize}">
+          <nav id="renderDetails" class="navbar fixed-top navbar-light bg-light btn-center-text">
+              <div onclick="" id="back" class="text-left" >
+                <i style="font-size:1.5rem; color:"Black" class="pekneIkony">&#xf053;</i>
+                <span>Back</span>
+              </div>
+
+              <div onclick="" id="name" class="text-center" >
+                <b><span>${this.deviceItem.webname}</span></b>    <!-- name of the stone -->
+              </div>
+
+              <div onclick="" id="back" class="text-right" >
+                <span>Done</span>
+              </div>
+          </nav>
+
+          <div id="sensor-boxContent" class="boxContent">
+
+             <!-- místo pro unikatní obsah kazdeho DETAILU STONE -->
+
+          </div>
+
+          <br>
+          <h2>Neaktualizované detaily:</h2>
+          <div class = "detailStoneTable">
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Položka</th>
+                    <th>Hodnota</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>unid</td>
+                    <td>${this.deviceItem.unid}</td>
+                  </tr>
+                  <tr>
+                    <td>webname</td>
+                    <td>${this.deviceItem.webname}</td>
+                  </tr>
+                  <tr>
+                    <td>webtype</td>
+                    <td>${this.deviceItem.webtype}</td>
+                  </tr>
+                  <tr>
+                    <td>subtype</td>
+                    <td>${this.deviceItem.subtype}</td>
+                  </tr>
+                  <tr>
+                    <td>value</td>
+                    <td>${this.deviceItem.value}</td>
+                  </tr>
+                  <tr>
+                    <td>error</td>
+                    <td>${this.deviceItem.error}</td>
+                  </tr>
+                  <tr>
+                    <td>weborder</td>
+                    <td>${this.deviceItem.weborder}</td>
+                  </tr>
+                  <tr>
+                    <td>lrespiot</td>
+                    <td>${this.deviceItem.lrespiot}</td>
+                  </tr>
+                  <tr>
+                    <td>priority</td>
+                    <td>${this.deviceItem.priority}</td>
+                  </tr>
+                  <tr>
+                    <td>invisible</td>
+                    <td>${this.deviceItem.invisible}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+
+    </div>
+     `);
+
+     this.$parent.append(this.$element);
+     this.$element.find('#back').css("color", "orange");
+     // vloží boxík na HTML
+
+     //CLICK: ošetření klikání na tlačítko
+     this.$element.find('#back').click(() => {
+       console.log("kliknuto BACK");
+       // odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
+       // alert("Odeslán PUT 1 na sensor " + this.getId());
+       this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+       Arduino.containerShow();     //vykreslení puvodní obrazovky
+       Arduino.containerUpdate();   //refresh obrazovky
+     });
+
+
+  }
 
   sensorErrorColorsOff(deviceItem) {
     // když se ukončí chyba sensoru, tak vrátí původní stav
@@ -312,17 +421,32 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
     } //switch (temperatureScheme)
   }
 
-  // renderDetails() {                          // METODA pro vykreslení HTML boxíku
-  //   //HTML boxík pro teplotu
-  //   console.log("detail přesmeruji");
-  //
-  //   super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
-  //   // zavola parent render metodu a vygeneruje container
-  //
-  // }
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+    var uniqueContent = `
+    <div id="sensor-module-teplota" class="text-center">
+        <h1>
+          <span id="sensor-teplota">-99</span>&deg;
+          <br>
+          <span id="sensor-name">Severní pól</span>
+
+        </h1>
+      </div>
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+
+  }
 
   render() {                          // METODA pro vykreslení HTML boxíku
     //HTML boxík pro teplotu
+
+    //TODO:
+    // změnint nadpis
+
 
     //unikátní obsah pro Stone - Teplota
     var uniqueContent = `
@@ -345,14 +469,13 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
 
 
 
-    // //testování zobrazení detailu STONE
-    //
-    // //CLICK: ošetření klikání na žárovku
-    // this.$element.click(() => {
-    //   console.log("KLIKNUTí na DETAIL Temperature + kliku je: ",this.getId());
-    //   odeslatPUT(this.getId(), "1"); //odeslatPUT
-    //   this.renderDetails();
-    // });
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na žárovku
+    this.$element.click(() => {
+      console.log("KLIKNUTí na DETAIL Temperature + kliku je: ",this.getId());
+      odeslatPUT(this.getId(), "1"); //odeslatPUT
+      this.renderDetails();
+    });
 
   }
 
@@ -776,8 +899,16 @@ window.onload = function() {
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.containerShow();
 
+  MenuStone.Home(DMmenuID1);
+  MenuStone.Zvonecek(DMmenuID2);
+  MenuStone.Email(DMmenuID4);
+  MenuStone.ServerTime(DMmenuID3);
+
+
+
   //vygeneruje OBSAH pro všechny HTML-BOXíky v JSON
   Arduino.containerUpdate();
+
 }
 
 
@@ -1227,7 +1358,6 @@ Arduino.containerShow = function() {
 
         if (sensorID != "0") { //pokud se nejedné o systémový ID
 
-          // console.log(deviceItem.unid + " - " + deviceItem.error);
           switch (sensorWebType) {
             case DMteplota: //teplota
               //pomocí Class
@@ -1271,27 +1401,16 @@ Arduino.containerShow = function() {
               Arduino.devices[deviceItem.unid] = temp;
               break;
             default:
-              // LivingStone.EmptyBox(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
               var temp = new EmptyBox ($("#boxScreen"), deviceItem);
               temp.render();
               Arduino.devices[deviceItem.unid] = temp;
           } //switch
+
+          // aktualizuj Stone NA reálnou hodnotu
+          Arduino.devices[deviceItem.unid].update(deviceItem);
+
         }   //if sensorID
-        else {
 
-            // ** Menu
-            MenuStone.Home(DMmenuID1);
-
-            MenuStone.Zvonecek(DMmenuID2);
-            MenuStone.Email(DMmenuID4);
-            MenuStone.ServerTime(DMmenuID3);
-
-            MenuStoneUpdate.Home(DMmenuID1, deviceItem);
-            MenuStoneUpdate.Zvonecek(DMmenuID2, deviceItem);
-            MenuStoneUpdate.Email(DMmenuID4,deviceItem);
-            MenuStoneUpdate.ServerTime(DMmenuID3, deviceItem);
-
-        }
       }); //konec forEach cyklu
 
 
