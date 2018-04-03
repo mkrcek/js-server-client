@@ -29,8 +29,8 @@ p  {
   font: inherit;
   font-size: 11px;
   margin-bottom: 0px;
-  /* overflow:hidden;   */
-  /* zalamování textu když by přetékal */
+  overflow:hidden;  
+  /* zalamování textu když by přetéká */
 }
 
 i  {
