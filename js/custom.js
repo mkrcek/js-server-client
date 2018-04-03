@@ -1480,8 +1480,8 @@ function formatNumber(x) {
 //zahraje zvuk
 function zvukoveZnameni (){
 
-  var x = document.getElementById("audioAlarm");
-  x.play();
+  // var x = document.getElementById("audioAlarm");
+  // x.play();
 
     //k dispozico jsou
     // alarm.mp3 - ale dlouhé
