@@ -10,7 +10,8 @@
 News
 
 - Kompletní přepsání LivingStones -–> do Class Stone
-- CSS: Zalamování textu na obrazovce ú boxíkách, .... když by přetéká přes prvek
+- CSS: Zalamování textu na obrazovce v boxíkách, .... když by přetéká přes prvek
+
 - Detail ANO u některých Stones (Temperature, PIR, Camera, Gate, Water, Weather)
 - Detail NE u (Light, CameraAlarm, EmptyBox)
 - GATE: změnšení ikony + Ovládání je v detailu
