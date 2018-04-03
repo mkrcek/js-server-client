@@ -242,7 +242,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
 		Value:     "0",
-		DevName:   "reálná teplota Arduino",
+		DevName:   "reálná teplota Arduino - které jede po trati 1234567788909875432234567876543234567876543345676543",
 		InVisible: 0,
 	}
 
@@ -505,7 +505,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 				} else {
 					fmt.Print("hoří ")
 					myHomeDeviceSetup[13].Value = "1"
-					// myHomeDeviceSetup[13].DevError = "hoří"
+					myHomeDeviceSetup[13].DevError = "hoří až se oči zelenají a k tomu se podívej do toho co je . 1234567890QWER TZUIOPLKJ HGFDSAYXC VVBNM"
 					myHomeDeviceSetup[13].DevTime = "2018-03-12 15:04:05"
 				}
 			}

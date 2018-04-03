@@ -29,6 +29,8 @@ p  {
   font: inherit;
   font-size: 11px;
   margin-bottom: 0px;
+  /* overflow:hidden;   */
+  /* zalamování textu když by přetékal */
 }
 
 i  {
@@ -79,8 +81,10 @@ h1 {
   height: 100px;
   font-size: 1vw; */
   /* margin: 3px; */
+  background-color: inherit;
   padding: 5px;
 }
+
 
 /* nejmenší box  1 x 1*/
 
