@@ -160,10 +160,12 @@ class Stone {
   renderDetails(stoneSize) {     //detail boxíku - STONu
     // HTML vzor "boxíku" společný pro všechny STONE
 
+    window.scrollTo(0, 0); //posune kurzor na začátek obrazovky - nahoru
 
-    console.log("ID kliknutého Stonu: ",this.deviceItem.unid);
-    console.log("Detail kliknutého Stonu22: ", this.deviceItem);
-    console.log(this.deviceItem.value);
+
+    // console.log("ID kliknutého Stonu: ",this.deviceItem.unid);
+    // console.log("Detail kliknutého Stonu22: ", this.deviceItem);
+    // console.log(this.deviceItem.value);
 
 
     this.$parent.empty(); //smazne všechen obsah - všechyn Stones
@@ -187,14 +189,15 @@ class Stone {
               </div>
           </nav>
 
+          <br>
           <div id="sensor-boxContent" class="boxContent">
 
              <!-- místo pro unikatní obsah kazdeho DETAILU STONE -->
 
           </div>
-
           <br>
-          <h2>Neaktualizované detaily:</h2>
+
+          <h1>Neaktualizováno: </h1>
           <div class = "detailStoneTable">
             <table class="table table-striped">
                 <thead>
@@ -422,6 +425,7 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
   }
 
   renderDetails() {                          // METODA pro vykreslení HTML boxíku
+
     var uniqueContent = `
     <div id="sensor-module-teplota" class="text-center">
         <h1>
@@ -470,10 +474,8 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
 
 
     //testování zobrazení detailu STONE
-    //CLICK: ošetření klikání na žárovku
+    //CLICK: ošetření klikání na Stone se přenese do detailu
     this.$element.click(() => {
-      console.log("KLIKNUTí na DETAIL Temperature + kliku je: ",this.getId());
-      odeslatPUT(this.getId(), "1"); //odeslatPUT
       this.renderDetails();
     });
 
@@ -555,9 +557,43 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
     this.deviceItem = deviceItem;
     this.$element.find("#sensor-name").html(deviceItem.webname);
     this.$element.find("#sensor-time").html(deviceItem.lrespiot);
-    this.$element.find("#sensor-boxContent").css("color", "Black");
+
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+
+      if ( tempVal != 0) {
+        this.$element.find('#sensor-boxContent').css("background-color", "Tomato");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+      } else {
+        this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+      }
+
   }
 
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+    var uniqueContent = `
+    <div id="sensor-module-alarm" class="text-center">
+        <div id="sensor-alarm-stav">
+        <h1>
+          <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
+          <br>
+          <p id="sensor-name"></p>
+          <span id="sensor-time"></span>
+          </h1>
+        </div>
+        <div >
+
+        </div>
+   </div>
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+
+  }
 
   render() {                          // METODA pro vykreslení HTML boxíku
 
@@ -583,6 +619,12 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na Stone se přenese do detailu
+    this.$element.click(() => {
+      this.renderDetails();
+    });
+
   }
 }
 
@@ -593,11 +635,40 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
     this.deviceItem = deviceItem;
 
     this.$element.find('#sensor-boxContent').css("color", "Black ");
+    this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
     this.$element.find("#sensor-name").html(deviceItem.webname);
     this.$element.find("#sensor-time").html(deviceItem.lrespiot);
     var d = new Date();
     newUrl = deviceItem.subtype + "?" + d.getTime();
     this.$element.find("#sensor-kamera-url").attr("src",newUrl);
+
+  }
+
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+    var uniqueContent = `
+    <div class = "boxContent">
+        <span id="sensor-name" class="text-center">Severní pól</span>
+        <span> | </span>
+        <i id="sensor-time">25:61</i>
+    </div>
+    <div id="sensor-module-kamera" class="kameraBox kamera-value">
+        <div class="cam-value ">
+          <img id="sensor-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
+        </div>
+    </div>
+
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //a roztáhne kameru na celou obrazovku
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
 
   }
 
@@ -628,6 +699,13 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
     this.$element.find('.boxContent').addClass("boxContent-camera");
     this.$element.find('.boxContent').removeClass("boxContent");
 
+
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na Stone se přenese do detailu
+    this.$element.click(() => {
+      this.renderDetails();
+    });
+
   }
 }
 
@@ -652,6 +730,25 @@ class Water extends Stone {     //subTřída pro Hladinu Vody  - zobrazení i up
         this.$element.find('#sensor-boxContent').css("background-color", "LightGreen");
         this.$element.find('#sensor-boxContent').css("color", "Black");
     }
+
+
+  }
+
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+    var uniqueContent = `
+    <div id="sensor-module-voda" class="text-center">
+        <h1>
+            <span id="sensor-voda-numb">-99</span>
+            <br>
+            <span id="sensor-name">Severní pól</span>
+        </h1>
+    </div>
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
 
   }
@@ -681,6 +778,12 @@ class Water extends Stone {     //subTřída pro Hladinu Vody  - zobrazení i up
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na Stone se přenese do detailu
+    this.$element.click(() => {
+      this.renderDetails();
+    });
+
   }
 }
 
@@ -698,44 +801,38 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
       this.$element.find("#sensor-brana-numb").html("ZAVŘENO");
       this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
     } else {
-      this.$element.find("#sensor-brana-numb").html(tempVal + " % OTEVŘENO");
+      this.$element.find("#sensor-brana-numb").html(tempVal + " %");
       this.$element.find('#sensor-boxContent').css("background-color", "GoldenRod");
     }
   }
 
 
-  render() {                          // METODA pro vykreslení HTML boxíku
-
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
     var uniqueContent = `
-    <div id="sensor-module-brana" class="text-left">
+    <div id="sensor-module-brana" class="text-center">
         <h1>
             <span id="sensor-brana-numb">-99</span>
+            <br>
+            <p id="sensor-name">Severní pól</p>
         </h1>
     </div>
-    <div>
-        <p id="sensor-name">Severní pól</p>
-    </div>
 
-    <div class="btn-group btn-group-justified">
-      <a id="sensor-brana-but1" class="btn ">Otevřít</a>
-      <a id="sensor-brana-but2" class="btn ">Branka</a>
-      <a id="sensor-brana-but3" class="btn ">PULS</a>
+    <div class="text-center">
+      <button type="button" id="sensor-brana-but1" class="btn btn-danger">Otevřít</button>
+      <button type="button" id="sensor-brana-but2" class="btn btn-success">Branka</button>
+      <button type="button" id="sensor-brana-but3" class="btn btn-dark">PULS</button>
+      <button type="button" id="sensor-brana-but4" class="btn btn-dark disabled">
+      <i style=" color:"Black" class="pekneIkony">&#xf023;</i></button>
     </div>
     <div>
         <p id="sensor-error">error time</p>
     </div>
     `;
 
-
-    super.render(GRID_GATE);
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
     // zavola parent render metodu a vygeneruje container
-
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
-
-    this.$element.find('.boxContent').addClass("boxContent-gate");
-    this.$element.find('.boxContent').removeClass("boxContent");
-
 
     //CLICK: ošetření klikání na tlačítko
     this.$element.find('#sensor-brana-but1').click(() => {
@@ -760,6 +857,74 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
     });
 
   }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-brana" class="text-left">
+        <h1>
+            <span id="sensor-brana-numb">-99</span>
+        </h1>
+    </div>
+    <div>
+        <p id="sensor-name">Severní pól</p>
+    </div>
+
+    <!--
+        <div class="btn-group btn-group-justified">
+          <a id="sensor-brana-but1" class="btn ">Otevřít</a>
+          <a id="sensor-brana-but2" class="btn ">Branka</a>
+          <a id="sensor-brana-but3" class="btn ">PULS</a>
+        </div>
+    -->
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    // super.render(GRID_GATE); //bříve - když byla tlačítka
+    super.render(GRID_SM);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    this.$element.find('.boxContent').addClass("boxContent-gate");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+    // //CLICK: ošetření klikání na tlačítko
+    // this.$element.find('#sensor-brana-but1').click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
+    //   alert("Odeslán PUT 1 na sensor " + this.getId());
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
+    //
+    // this.$element.find('#sensor-brana-but2').click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), DMbranaT2); //odeslatPUT
+    //   alert("Odeslán PUT 2 na sensor " + this.getId());
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
+    //
+    // this.$element.find('#sensor-brana-but3').click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), DMbranaT3); //odeslatPUT
+    //   alert("Odeslán PUT 3 na sensor " + this.getId());
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
+
+
+
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na Stone se přenese do detailu
+    this.$element.click(() => {
+      this.renderDetails();
+    });
+
+  }
 }
 
 class Weather extends Stone {     //subTřída pro Počasí  - zobrazení i update
@@ -775,6 +940,28 @@ class Weather extends Stone {     //subTřída pro Počasí  - zobrazení i upda
     var d = new Date();
     newUrl = deviceItem.subtype + "?" + d.getHours();
     this.$element.find("#sensor-pocasi-url").attr("src",newUrl);
+  }
+
+
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-pocasi" class="pocasi-value text-center">
+      <div class="cam-value ">
+        <img id="sensor-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
+      </div>
+    </div>
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //a roztáhne kameru na celou obrazovku
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
   }
 
 
@@ -800,6 +987,12 @@ class Weather extends Stone {     //subTřída pro Počasí  - zobrazení i upda
 
     this.$element.find('.boxContent').addClass("boxContent-pocasi");
     this.$element.find('.boxContent').removeClass("boxContent");
+
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na Stone se přenese do detailu
+    this.$element.click(() => {
+      this.renderDetails();
+    });
 
   }
 }

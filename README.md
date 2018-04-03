@@ -7,7 +7,19 @@
 
 ## 3.4.
 
-Kompletní přepsání LivingStones -–> do Class Stone
+News
+
+- Kompletní přepsání LivingStones -–> do Class Stone
+- CSS: Zalamování textu na obrazovce ú boxíkách, .... když by přetéká přes prvek
+- Detail ANO u některých Stones (Temperature, PIR, Camera, Gate, Water, Weather)
+- Detail NE u (Light, CameraAlarm, EmptyBox)
+- GATE: změnšení ikony + Ovládání je v detailu
+
+Oprava
+
+- PIR čidlo: když je value !=0 ....> tak se boxík obarví na barvu "Tomato"
+
+
 
 ## 30/3/
 
