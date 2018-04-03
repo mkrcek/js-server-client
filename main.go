@@ -15,8 +15,6 @@ import (
 
 const arduinoURL string = "http://192.168.0.70"
 
-
-
 //pro testování na čtení reálné teploty
 
 const DMteplota = "1"
@@ -56,7 +54,6 @@ const mujString = "/fuck-in/"
 
 func main() {
 
-
 	fmt.Println("starujem")
 
 	setupHomeDeviceData() //naplní vzorova data
@@ -65,9 +62,9 @@ func main() {
 
 	//http.HandleFunc("/select/hodnota/", HandleItem) //uprava dat z webu
 
-	http.HandleFunc( mujString + "doomaster/sensors/", HandleAllData) //vrati vsechna data - nebo jen položku za lomítkem
+	http.HandleFunc(mujString+"doomaster/sensors/", HandleAllData) //vrati vsechna data - nebo jen položku za lomítkem
 
-	http.Handle( "/", http.StripPrefix("/", http.FileServer(http.Dir(".")))) //webserver pro localhost
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(".")))) //webserver pro localhost
 
 	//http.Handle( "/fuck-in/", http.StripPrefix("/fuck-in/", http.FileServer(http.Dir(".")))) //webserver pro localhost
 
@@ -245,7 +242,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
 		Value:     "0",
-		DevName:   "reálná teplota Arduino",
+		DevName:   "reálná teplota Arduino - které jede po trati 1234567788909875432234567876543234567876543345676543",
 		InVisible: 0,
 	}
 
@@ -495,16 +492,20 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 			hodnoty = zobrazHodnotuPUT(w, r) //hodnoty + odpoved na server => OK  =200
 			t := time.Now()
 			t = t
+			fmt.Print("itemID je ")
+			fmt.Println(itemID)
 
 			//testování kliknutí na "světlo" se zobrazí alarma "čidlo hoří"
 			if itemID == 78901013 && hodnoty == "1" {
 				if myHomeDeviceSetup[13].Value == "1" {
+					fmt.Print("neboří ")
 					myHomeDeviceSetup[13].Value = "0"
-					 myHomeDeviceSetup[13].DevError = ""
+					myHomeDeviceSetup[13].DevError = ""
 					myHomeDeviceSetup[13].DevTime = t.Format("2006-01-02 15:04:05")
 				} else {
+					fmt.Print("hoří ")
 					myHomeDeviceSetup[13].Value = "1"
-					 myHomeDeviceSetup[13].DevError = "hoří"
+					myHomeDeviceSetup[13].DevError = "hoří až se oči zelenají a k tomu se podívej do toho co je . 1234567890QWER TZUIOPLKJ HGFDSAYXC VVBNM"
 					myHomeDeviceSetup[13].DevTime = "2018-03-12 15:04:05"
 				}
 			}
@@ -686,6 +687,7 @@ func ApiGetItem(w http.ResponseWriter, r *http.Request, itemID int) {
 
 	fmt.Println("*******GET HODNOTA********")
 	fmt.Println(DataToAPi)
+
 }
 
 func HandleOptionsCORS(w http.ResponseWriter, req *http.Request) {
@@ -711,61 +713,61 @@ func saveImageCam(URLimage, cisloObrazku string) error {
 
 	var funguj = false
 
-	if (funguj) {
+	if funguj {
 
-			//obrázek z kamery podle IP adresy
-			client := &http.Client{}
-			req, err := http.NewRequest("GET", URLimage, nil)
-			if err != nil {
-				return err
-			}
-			resp, err := client.Do(req)
-			if err != nil {
-				fmt.Println("***CHYBA****", err)
-				return err
-			}
-			defer resp.Body.Close()
-
-			//fmt.Println("přečteno")
-			if err != nil {
-				return err
-				//fmt.Println("1", errImage)
-				//log.Fatal(errImage)
-			}
-
-			//fmt.Println("obrazek načten")
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				fmt.Println("Chyba obrazku", err)
-				return err
-				//fmt.Println("2", errImage)
-				//log.Fatal(errImage)
-			}
-
-			//fmt.Println("obrazek readAll")
-			defer resp.Body.Close()
-
-			if err != nil {
-				return err
-				//fmt.Println("3", errImage)
-				//log.Fatal(errImage)
-			}
-
-			//uloží fotku na disk
-
-			//unikátní jméno podle času - teď nepotřebujeme
-			//actualTime := time.Now().Format("images/2006-01-02_15-04-05") + ".jpg"
-			//imageFileName := actualTime
-
-			imageFileName := "liveimages/image" + cisloObrazku + ".jpg"
-			err = ioutil.WriteFile(imageFileName, body, 0644)
-			if err != nil {
-				return err
-				//fmt.Println("4", errImage)
-				//log.Fatal(errImage)
-			}
-			//fmt.Println("Obrázek uložen")
+		//obrázek z kamery podle IP adresy
+		client := &http.Client{}
+		req, err := http.NewRequest("GET", URLimage, nil)
+		if err != nil {
 			return err
+		}
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println("***CHYBA****", err)
+			return err
+		}
+		defer resp.Body.Close()
+
+		//fmt.Println("přečteno")
+		if err != nil {
+			return err
+			//fmt.Println("1", errImage)
+			//log.Fatal(errImage)
+		}
+
+		//fmt.Println("obrazek načten")
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println("Chyba obrazku", err)
+			return err
+			//fmt.Println("2", errImage)
+			//log.Fatal(errImage)
+		}
+
+		//fmt.Println("obrazek readAll")
+		defer resp.Body.Close()
+
+		if err != nil {
+			return err
+			//fmt.Println("3", errImage)
+			//log.Fatal(errImage)
+		}
+
+		//uloží fotku na disk
+
+		//unikátní jméno podle času - teď nepotřebujeme
+		//actualTime := time.Now().Format("images/2006-01-02_15-04-05") + ".jpg"
+		//imageFileName := actualTime
+
+		imageFileName := "liveimages/image" + cisloObrazku + ".jpg"
+		err = ioutil.WriteFile(imageFileName, body, 0644)
+		if err != nil {
+			return err
+			//fmt.Println("4", errImage)
+			//log.Fatal(errImage)
+		}
+		//fmt.Println("Obrázek uložen")
+		return err
 	} else {
 		var err error
 		return err

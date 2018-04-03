@@ -29,6 +29,7 @@ const DMmenuID4 = "10104";
 
 
 //počet sloupců na stránce
+//stoneSize: v Class Stone.render
 
 //<576px col-
 //≥576px col-sm-
@@ -99,9 +100,658 @@ class TimeKeeper {
 //update hodnot: LastServer.time = NOVA_HODNOTA;
 //čtení hodnoty: console.log(LastServer.time);
 
+
 var LastServer = new TimeKeeper (new Date().getTime());
 
 
+
+//28.3. - převedení LivingStones na Třídy Stones a práce s nimi
+
+
+
+
+
+
+// *************** Generuje HTML boxíky na stránku ********
+
+
+
+//základní prvek, ze kterého se všechny ostatní Stones dědí.
+class Stone {
+  constructor($parent, deviceItem) {    //parent - #boxScreen HTML kam umísti se, deviceItem: který Stone se má založit
+                                        // znak $ znamená označení elementu jako jQuery znak  #
+    this.$parent = $parent;
+    this._deviceItem = deviceItem;
+  }
+
+  get deviceItem() {
+    return this._deviceItem;
+  }
+
+  set deviceItem(deviceItem) {
+    this._deviceItem = deviceItem;
+  }
+
+  getId() {
+    return this.deviceItem.unid;
+  }
+
+  render(stoneSize) {     //stoneSize: velikost boxíku na obrazovce
+    // HTML vzor "boxíku" společný pro všechny STONE
+
+    this.$element =
+    $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${stoneSize}">
+         <div id="sensor-boxContent" class="boxContent">
+
+         <!-- místo pro unikatní obsah kazdeho STONE -->
+
+         </div>
+     </div>`);
+
+     this.$parent.append(this.$element);
+     //vloží boxík na HTML stránku za #boxScreen
+
+  }
+
+  update(deviceItem) {
+    console.log('Not implemented - generování update pro všechny společné boxíky');
+
+  }
+
+
+  sensorErrorColorsOff(deviceItem) {
+    // když se ukončí chyba sensoru, tak vrátí původní stav
+
+    this.$element.find("#sensor-error").html("");
+    //barva okolí
+    this.$element.css( "background-color", "inherit" );
+  }
+
+  sensorErrorColorsOn(deviceItem) {     //
+    // když nastavene chyba sensoru, tak se obarví
+    this.deviceItem = deviceItem;
+    var sensorID = deviceItem.unid  ;
+    var serverDate = ServerDevices.sensors["0"].value;  //čas z poslední aktualizace serveru
+    var deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
+    var textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
+
+    //barva boxíku
+    this.$element.find("#sensor-error").html(textLostConTime);
+    this.$element.find('#sensor-error').css("color", "Red ");
+    this.$element.find('#sensor-boxContent').css("color", "DimGray ");
+    this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3 ");
+    //barva okolí
+    this.$element.css( "background-color", "red" );
+    //zapnutí audioAlarm
+    zvukoveZnameni();
+  }
+}
+
+class EmptyBox extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    console.log("EmptyBox is Not Implemented");
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-null" class="text-left">
+      <h1>
+        <span id="sensor-null">NULL-Stone</span>
+      </h1>
+    </div>
+    <div ><p id="sensor-name">NUL-pól</p></div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render();
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+  }
+}
+
+class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    this.deviceItem = deviceItem;
+    var sensorID = deviceItem.unid;
+
+    // console.log("Update Teploty pro ID: ", sensorID);
+
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+    this.$element.find('#sensor-teplota').html(formatNumber(tempVal));
+
+    var temperatureScheme = deviceItem.subtype; //barevné schéma pro teplotu
+    switch (temperatureScheme) {
+      case SchemeAir: //air - vzduch
+        switch (true) {
+          case tempVal < 4:
+            this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+            this.$element.find('#sensor-boxContent').css("color", "AliceBlue");
+            break;
+          case tempVal < 16:
+            this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          case tempVal < 21:
+            this.$element.find('#sensor-boxContent').css("background-color", "MediumOrchid");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          case tempVal < 31:
+            this.$element.find('#sensor-boxContent').css("background-color", "Orange");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          case tempVal > 30:
+            this.$element.find('#sensor-boxContent').css("background-color", "Red");
+            this.$element.find('#sensor-boxContent').css("color", "Black");
+            break;
+          default:
+        } //switch boiler
+        break;
+      case SchemeBoiler: //boiler
+        switch (true) {
+        case tempVal < 4:
+          this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          this.$element.find('#sensor-boxContent').css("color", "AliceBlue");
+          break;
+        case tempVal < 35:
+          this.$element.find('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal < 70:
+          this.$element.find('#sensor-boxContent').css("background-color", "MediumOrchid");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal < 81:
+          this.$element.find('#sensor-boxContent').css("background-color", "Orange");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal > 80:
+          this.$element.find('#sensor-boxContent').css("background-color", "Red");
+          this.$element.find('#sensor-boxContent').css("color", "Black");
+          break;
+        default:
+      } //switch boiler
+        break;
+      case SchemeWater: //water - swimming pool
+        switch (true) {
+        case tempVal < 4:
+          $('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-boxContent').css("color", "AliceBlue");
+          break;
+        case tempVal < 20:
+          $('#sensor-boxContent').css("background-color", "CornflowerBlue");
+          $('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal < 25:
+          $('#sensor-boxContent').css("background-color", "MediumOrchid");
+          $('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal < 30:
+          $('#sensor-boxContent').css("background-color", "Orange");
+          $('#sensor-boxContent').css("color", "Black");
+          break;
+        case tempVal > 29:
+          $('#sensor-boxContent').css("background-color", "Red");
+          $('#sensor-boxContent').css("color", "Black");
+          break;
+        default:
+      } //switch swimming pool
+        break;
+    } //switch (temperatureScheme)
+  }
+
+  // renderDetails() {                          // METODA pro vykreslení HTML boxíku
+  //   //HTML boxík pro teplotu
+  //   console.log("detail přesmeruji");
+  //
+  //   super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+  //   // zavola parent render metodu a vygeneruje container
+  //
+  // }
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+    //HTML boxík pro teplotu
+
+    //unikátní obsah pro Stone - Teplota
+    var uniqueContent = `
+      <div id="sensor-module-teplota" class="text-left">
+        <h1>
+          <span id="sensor-teplota">-99</span>&deg;
+        </h1>
+      </div>
+      <div ><p id="sensor-name">Severní pól</p></div>
+      <div>
+          <p id="sensor-error">error time</p>
+      </div>`;
+
+
+    super.render(GRID_SM);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+
+
+    // //testování zobrazení detailu STONE
+    //
+    // //CLICK: ošetření klikání na žárovku
+    // this.$element.click(() => {
+    //   console.log("KLIKNUTí na DETAIL Temperature + kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), "1"); //odeslatPUT
+    //   this.renderDetails();
+    // });
+
+  }
+
+
+
+}
+
+class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+    switch (true) {
+      case tempVal == 1:
+        this.$element.find('#sensor-boxContent').css("background-color", "GoldenRod");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+        break;
+      default:
+        this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+    }
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-svetlo">
+        <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
+    </div>
+    <div>
+        <p id="sensor-name">Severní pól</p>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>`;
+
+
+    super.render(GRID_SM);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+
+    //CLICK: ošetření klikání na žárovku
+    this.$element.click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), "1"); //odeslatPUT
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+    //METODA A:
+      //jede krásně
+      //to zajisti, ze scope this je stejny jako v bloku ktery je nadrazeny teto funkci, tzn. metode render()
+      //kde je this instance Light tridy.
+      // A na te uz muzes volat getId()
+
+    //METODA B:
+      // this.$element.click(function() {
+      //   console.log("ID2 kliku je: ",this.getId());
+      //   odeslatPUT(this.getId(), "1");
+      // }.bind(this));
+      //Timhle reknes funkci kterou bindujes, ze hodnotu this pro vsechna jeji volani chces nastavit na cokoliv ty potrebujes. v tomto pripade na this.
+      //this je stale ve scope render funkci (neni obaleno jinou funkci) a tim padem odkazuje na instanci Light a ma getId()
+
+  }
+}
+
+class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    this.$element.find("#sensor-name").html(deviceItem.webname);
+    this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    this.$element.find("#sensor-boxContent").css("color", "Black");
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-alarm" class="text-left">
+        <div id="sensor-alarm-stav">
+          <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
+        </div>
+    </div>
+    <div >
+      <p id="sensor-name">Severní pól</p>
+      <i id="sensor-time">25:61</i>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_SM);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+  }
+}
+
+class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    var newUrl = "";
+    this.deviceItem = deviceItem;
+
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+    this.$element.find("#sensor-name").html(deviceItem.webname);
+    this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    var d = new Date();
+    newUrl = deviceItem.subtype + "?" + d.getTime();
+    this.$element.find("#sensor-kamera-url").attr("src",newUrl);
+
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div class = "boxContent">
+        <span id="sensor-name">Severní pól</span>
+        <span> | </span>
+        <i id="sensor-time">25:61</i>
+    </div>
+    <div id="sensor-module-kamera" class="kameraBox kamera-value">
+        <div class="cam-value ">
+          <img id="sensor-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
+        </div>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_CAM);
+
+    this.$element.find('.boxContent').html(uniqueContent);
+
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+  }
+}
+
+class Water extends Stone {     //subTřída pro Hladinu Vody  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    this.deviceItem = deviceItem;
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+
+    this.$element.find("#sensor-name").html(deviceItem.webname);
+    this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+    this.$element.find("#sensor-voda-numb").html(tempVal + " %");
+
+    var temperatureScheme = Number(deviceItem.subtype); //barevné schéma pro teplotu
+
+    switch (true) {
+      case tempVal < temperatureScheme:
+        this.$element.find('#sensor-boxContent').css("background-color", "Red");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+        break;
+      default:
+        this.$element.find('#sensor-boxContent').css("background-color", "LightGreen");
+        this.$element.find('#sensor-boxContent').css("color", "Black");
+    }
+
+
+  }
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+    //HTML boxík pro Water
+
+    //unikátní obsah pro Stone - Water
+    var uniqueContent = `
+      <div id="sensor-module-voda" class="text-left">
+          <h1>
+              <span id="sensor-voda-numb">-99</span>
+          </h1>
+      </div>
+      <div>
+          <p id="sensor-name">Severní pól</p>
+      </div>
+      <div>
+          <p id="sensor-error">error time</p>
+      </div>
+      `;
+
+
+    super.render(GRID_SM);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+  }
+}
+
+class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+    if (tempVal == 0) {
+      this.$element.find("#sensor-brana-numb").html("ZAVŘENO");
+      this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+    } else {
+      this.$element.find("#sensor-brana-numb").html(tempVal + " % OTEVŘENO");
+      this.$element.find('#sensor-boxContent').css("background-color", "GoldenRod");
+    }
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-brana" class="text-left">
+        <h1>
+            <span id="sensor-brana-numb">-99</span>
+        </h1>
+    </div>
+    <div>
+        <p id="sensor-name">Severní pól</p>
+    </div>
+
+    <div class="btn-group btn-group-justified">
+      <a id="sensor-brana-but1" class="btn ">Otevřít</a>
+      <a id="sensor-brana-but2" class="btn ">Branka</a>
+      <a id="sensor-brana-but3" class="btn ">PULS</a>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_GATE);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    this.$element.find('.boxContent').addClass("boxContent-gate");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+
+    //CLICK: ošetření klikání na tlačítko
+    this.$element.find('#sensor-brana-but1').click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
+      alert("Odeslán PUT 1 na sensor " + this.getId());
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+    this.$element.find('#sensor-brana-but2').click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMbranaT2); //odeslatPUT
+      alert("Odeslán PUT 2 na sensor " + this.getId());
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+    this.$element.find('#sensor-brana-but3').click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMbranaT3); //odeslatPUT
+      alert("Odeslán PUT 3 na sensor " + this.getId());
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+  }
+}
+
+class Weather extends Stone {     //subTřída pro Počasí  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    var newUrl = "";
+    var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+
+    var d = new Date();
+    newUrl = deviceItem.subtype + "?" + d.getHours();
+    this.$element.find("#sensor-pocasi-url").attr("src",newUrl);
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-pocasi" class="pocasi-value">
+      <div class="cam-value ">
+        <img id="sensor-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
+      </div>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_WEAD);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    this.$element.find('.boxContent').addClass("boxContent-pocasi");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+  }
+}
+
+class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i update
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+    var newUrl = "";
+    this.deviceItem = deviceItem;
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+
+    //je li nějaká hodnota, tedy např. počet obrázku
+    if (deviceItem.value != "") {
+
+      this.$element.find("#sensor-name").html(deviceItem.webname);
+      this.$element.find("#sensor-time").html(deviceItem.lrespiot);
+
+      newUrl = deviceItem.subtype;  //adresa ze serveru
+      // console.log(newUrl);
+
+      //obervení boxku
+      this.$element.find('#sensor-boxContent').css("background-color", "Red");
+    } else {
+
+      this.$element.find("#sensor-name").html("No Camera Alarm");
+      this.$element.find("#sensor-time").html("");
+      newUrl = "images/image-no-alarm.jpg";
+
+      //smazne boxík z DOM
+      this.$element.remove();
+
+      //obarvení boxíku
+      this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+    }
+    this.$element.find("#sensor-cameraalarm-url").attr("src",newUrl);
+
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div>
+        <span id="sensor-name">Severní pól</span>
+        <span> | </span>
+        <i id="sensor-time">25:61</i>
+    </div>
+    <div id="sensor-module-cameraalarm" class="kameraBox kamera-value">
+        <div class="cameraalarm-value ">
+          <img id="sensor-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
+        </div>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    super.render(GRID_CAMAL);
+
+    this.$element.find('.boxContent').html(uniqueContent);
+
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+    //CLICK: ošetření klikání na žárovku
+    this.$element.click(() => {
+      console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
+      Arduino.containerUpdate();  //refresh obrazovky
+    });
+
+
+  }
+}
 
 
 
@@ -120,551 +770,14 @@ window.onload = function() {
   });
 
 
-// cookies test - zeptá se a vypíše
-console.log(checkCookie());
-
-
+  // cookies test - zeptá se a vypíše
+  console.log("Používaná kukina: ", checkCookie());
 
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.containerShow();
 
   //vygeneruje OBSAH pro všechny HTML-BOXíky v JSON
   Arduino.containerUpdate();
-}
-
-
-// *************** Generuje HTML boxíky na stránku ********
-
-//nove fce pro HTML boxiky - tzv. LivingStone = každá fce samostatný
-LivingStone = {};
-
-LivingStone.Null = function (sensorID) {
-  //HTML boxík pro NIC
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-null" class="text-left">
-            <h1>
-              <span id="sensor-${sensorID}-null">NULL-Stone</span>
-            </h1>
-          </div>
-          <div ><p id="sensor-${sensorID}-name">NUL-pól</p></div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  $("#boxScreen").append(templateHTML);
-
-}
-
-LivingStone.Temperature = function (deviceItem) {
-  //HTML boxík pro teplotu
-  var sensorID = deviceItem.unid;
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-teplota" class="text-left">
-            <h1>
-              <span id="sensor-${sensorID}-teplota">-99</span>&deg;
-            </h1>
-          </div>
-          <div ><p id="sensor-${sensorID}-name">Severní pól</p></div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-
-}
-
-LivingStone.Pir = function (sensorID) {
-  //HTML boxík pro Pir Motion Alarm
-
-  // var templateHTML =
-  // `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-  //     <div id="sensor-${sensorID}-boxContent" class="boxContent">
-  //
-  //         <div id="sensor-${sensorID}-module-alarm" class="text-left">
-  //           <i id="sensor-${sensorID}-alarm-stav" class="fas fa-exclamation-triangle text-danger"></i>
-  //         </div>
-  //         <div >
-  //           <p id="sensor-${sensorID}-name">Severní pól</p>
-  //           <i id="sensor-${sensorID}-time">25:61</i>
-  //         </div>
-  //         <div>
-  //             <p id="sensor-${sensorID}-error">error time</p>
-  //         </div>
-  //
-  //     </div>
-  // </div>`;
-  //https://fontawesome.com/icons/exclamation-triangle?style=solid
-
-  // <svg rect x="0" y="0"  height=25 viewBox="0 0 100 100">
-  //   <use xlink:href="fontawesome/fa-solid.svg#exclamation-triangle"></use>
-  // </svg>
-  //
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-alarm" class="text-left">
-              <div id="sensor-${sensorID}-alarm-stav">
-                <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
-              </div>
-          </div>
-          <div >
-            <p id="sensor-${sensorID}-name">Severní pól</p>
-            <i id="sensor-${sensorID}-time">25:61</i>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-}
-
-LivingStone.Camera = function (sensorID) {
-  //HTML boxík pro Kameru
-  //bylo GRID_FUL
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
-
-          <div>
-              <span id="sensor-${sensorID}-name">Severní pól</span>
-              <span> | </span>
-              <i id="sensor-${sensorID}-time">25:61</i>
-          </div>
-          <div id="sensor-${sensorID}-module-kamera" class="kameraBox kamera-value">
-              <div class="cam-value ">
-                <img id="sensor-${sensorID}-kamera-url" style="width:100%" src="images/image.jpg" alt="haha" class="img-fluid">
-              </div>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-
-}
-
-LivingStone.Weather = function (sensorID) {
-  //HTML boxík pro Počasí
-  //bylo: GRID_MD
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_WEAD}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent-pocasi">
-
-          <div id="sensor-${sensorID}-module-pocasi" class="pocasi-value">
-            <div class="cam-value ">
-              <img id="sensor-${sensorID}-pocasi-url" style="width:90%" src="images/image.jpg" alt="pocasi" class="img-responsive">
-            </div>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-}
-
-LivingStone.Water = function (sensorID) {
-  //HTML boxík pro Vodu
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-
-          <div id="sensor-${sensorID}-module-voda" class="text-left">
-              <h1>
-                  <span id="sensor-${sensorID}-voda-numb">-99</span>
-              </h1>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-name">Severní pól</p>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-}
-
-LivingStone.Gate = function (sensorID) {
-  //HTML boxík pro Bránu
-  //bylo GRID_MD
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_GATE}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent-gate">
-
-          <div id="sensor-${sensorID}-module-brana" class="text-left">
-              <h1>
-                  <span id="sensor-${sensorID}-brana-numb">-99</span>
-              </h1>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-name">Severní pól</p>
-          </div>
-
-          <div class="btn-group btn-group-justified">
-            <a id="sensor-${sensorID}-brana-but1" class="btn ">Otevřít</a>
-            <a id="sensor-${sensorID}-brana-but2" class="btn ">Branka</a>
-            <a id="sensor-${sensorID}-brana-but3" class="btn ">PULS</a>
-          </div>
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  //přidání boxku na stránku (do #boxScreen) na poslední místo
-  $("#boxScreen").append(templateHTML);
-
-  //ošetření kliknutí
-  $(document).on("click", "#sensor-" + sensorID + "-brana-but1", function() {
-    //až jednou nastane - že stranka bude vykreslena a "click" na toto ID (id=sensor-"+i+"-boxWrap)
-    //tak se provede to, co je ve funkci:
-    odeslatPUT($(this).attr("id"), DMbranaT1);
-    alert("Odeslán PUT 1 na sensor " + sensorID);
-  });
-  $(document).on("click", "#sensor-" + sensorID + "-brana-but2", function() {
-    odeslatPUT($(this).attr("id"), DMbranaT2);
-    alert("Odeslán PUT 2 na sensor " + sensorID);
-  });
-  $(document).on("click", "#sensor-" + sensorID + "-brana-but3", function() {
-    odeslatPUT($(this).attr("id"), DMbranaT3);
-    alert("Odeslán PUT 3 na sensor " + sensorID);
-  });
-
-}
-
-LivingStone.Light = function (sensorID) {
-  //HTML boxík pro Světlo
-
-  // <div id="sensor-${sensorID}-module-svetlo">
-    // <div style="font-size:2em; color:"White">
-        // <i class="far fa-lightbulb"></i>
-    // </div>
-  //</div>
-  //nově
-  //rozměr height=30, pozice a velikost viewBox="0 0 100 100"
-  // <svg id="sensor-${sensorID}-module-svetlo" height=30 viewBox="0 0 100 100">
-  //   <use xlink:href="fa-regular.svg#lightbulb"></use>
-  // </svg>
-
-  // <div style="font-size:2em; color:"White">
-  //     <svg rect x="0" y="0"  height="30" viewBox="0 0 100 100">
-  //       <use xlink:href="fontawesome/fa-regular.svg#lightbulb"></use>
-  //     </svg>
-  // </div>
-
-  //f0eb ikona svetla: https://fontawesome.com/icons/lightbulb?style=regular
-
-  var templateHTML =
-  `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_SM}">
-      <div id="sensor-${sensorID}-boxContent" class="boxContent">
-            <div id="sensor-${sensorID}-module-svetlo">
-              <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
-             </div>
-          <div>
-              <p id="sensor-${sensorID}-name">Severní pól</p>
-          </div>
-
-          <div>
-              <p id="sensor-${sensorID}-error">error time</p>
-          </div>
-
-      </div>
-  </div>`;
-
-  $("#boxScreen").append(templateHTML);
-  // $('#boxScreen').append(`<i class="pekneIkony">cecko &#xf0c0;</i>`);
-  // $('#boxScreen').append(`<i class="far fa-lightbulb"></i>`);
-
-
-  //co se stane při kliknutí
-  $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-    odeslatPUT($(this).attr("id"), "1");
-    Arduino.containerUpdate();  //refresh obrazovky
-  });
-
-}
-
-LivingStone.CameraAlarm = function (sensorID) {
-
-  //HTML boxík pro Obrazek z kamery po alarmu
-  //bylo GRID_FUL
-    var templateHTML =
-    `<div onclick="" id="sensor-${sensorID}-boxWrap" class="boxWrap ${GRID_CAMAL}">
-        <div id="sensor-${sensorID}-boxContent" class="boxContent-camera">
-
-            <div>
-                <span id="sensor-${sensorID}-name">Severní pól</span>
-                <span> | </span>
-                <i id="sensor-${sensorID}-time">25:61</i>
-            </div>
-            <div id="sensor-${sensorID}-module-cameraalarm" class="kameraBox kamera-value">
-                <div class="cameraalarm-value ">
-                  <img id="sensor-${sensorID}-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
-                </div>
-            </div>
-            <div>
-                <p id="sensor-${sensorID}-error">error time</p>
-            </div>
-
-        </div>
-    </div>`;
-
-    $("#boxScreen").append(templateHTML);
-
-    //co se stane při kliknutí
-    $(document).on("click", "#sensor-" + sensorID + "-boxContent", function() {
-      odeslatPUT($(this).attr("id"), "DELETE");
-      Arduino.containerUpdate();
-    });
-}
-
-
-
-// *************** Generuje OBSAH pro boxíky na stránce ********
-LivingStoneUpdate = {};
-
-LivingStoneUpdate.Temperature = function (deviceItem)  {
-
-  var sensorID = deviceItem.unid;
-  //var tempVal = device[i].value;
-  //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
-  var tempVal = Number(deviceItem.value);
-
-  $('#sensor-' + sensorID + '-name').html(deviceItem.webname);
-  $('#sensor-' + sensorID + '-time').html(deviceItem.lrespiot);
-  $('#sensor-' + sensorID + '-teplota').html(formatNumber(tempVal));
-
-  var temperatureScheme = deviceItem.subtype; //barevné schéma pro teplotu
-  switch (temperatureScheme) {
-    case SchemeAir: //air - vzduch
-      switch (true) {
-        case tempVal < 4:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-          break;
-        case tempVal < 16:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        case tempVal < 21:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        case tempVal < 31:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        case tempVal > 30:
-          $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-          $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-          break;
-        default:
-      } //switch boiler
-      break;
-    case SchemeBoiler: //boiler
-      switch (true) {
-      case tempVal < 4:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-        break;
-      case tempVal < 35:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 70:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 81:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal > 80:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      default:
-    } //switch boiler
-      break;
-    case SchemeWater: //water - swimming pool
-      switch (true) {
-      case tempVal < 4:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "AliceBlue");
-        break;
-      case tempVal < 20:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "CornflowerBlue");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 25:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "MediumOrchid");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal < 30:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Orange");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      case tempVal > 29:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      default:
-    } //switch swimming pool
-      break;
-  } //switch (temperatureScheme)
-}
-
-LivingStoneUpdate.Water = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  var tempVal = Number(deviceItem.value);
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  $("#sensor-" + sensorID + "-voda-numb").html(tempVal + " %");
-  // $("#sensor-" + sensorID + "-voda").height(tempVal + "%");
-
-  //změna barvy po dosažení hodnoty v Subtype
-  var temperatureScheme = Number(deviceItem.subtype); //barevné schéma pro teplotu
-
-  switch (true) {
-    case tempVal < temperatureScheme:
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-      break;
-    default:
-      $('#sensor-' + sensorID + '-boxContent').css("background-color", "LightGreen");
-      $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-  }
-}
-
-LivingStoneUpdate.Light = function (deviceItem) {
-
-//jestlize nastala chyba - tak orámečkovat a napsat chybu
-//vložit i do livingStones.všechny
-var sensorID = deviceItem.unid;
-
-
-    $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-
-    var tempVal = Number(deviceItem.value);
-    //console.log(tempVal);
-    switch (true) {
-      case tempVal == 1:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-        break;
-      default:
-        $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-        $('#sensor-' + sensorID + '-boxContent').css("color", "Black");
-    }
-
-}
-
-LivingStoneUpdate.Pir = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-}
-
-LivingStoneUpdate.Gate = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  var tempVal = Number(deviceItem.value);
-
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-  if (tempVal == 0) {
-    $("#sensor-" + sensorID + "-brana-numb").html("ZAVŘENO");
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-  } else {
-    $("#sensor-" + sensorID + "-brana-numb").html(tempVal + " % OTEVŘENO");
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "GoldenRod");
-  }
-
-}
-
-LivingStoneUpdate.Camera = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
-  d = new Date();
-  newUrl = deviceItem.subtype + "?" + d.getTime();
-  $("#sensor-" + sensorID + "-kamera-url").attr("src",newUrl);
-}
-
-LivingStoneUpdate.Weather = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-  $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-  d = new Date();
-  newUrl = deviceItem.subtype + "?" + d.getHours();
-  $("#sensor-" + sensorID + "-pocasi-url").attr("src",newUrl);
-}
-
-LivingStoneUpdate.CameraAlarm = function (deviceItem) {
-  var sensorID = deviceItem.unid;
-  var newUrl = "";
-  $('#sensor-' + sensorID + '-boxContent').css("color", "Black ");
-
-  // $("#sensor-" + sensorID + "-time").addClass("top-left"); //zobrazení času v rohu obrázku
-
-  //je li nějaká hodnota, tedy např. počet obrázku
-  if (deviceItem.value != "") {
-    $("#sensor-" + sensorID + "-name").html(deviceItem.webname);
-    $("#sensor-" + sensorID + "-time").html(deviceItem.lrespiot);
-
-    newUrl = deviceItem.subtype;  //adresa ze serveru
-    // console.log(newUrl);
-
-
-    //obervení boxku
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "Red");
-  } else {
-    $("#sensor-" + sensorID + "-name").html("No Camera Alarm");
-    $("#sensor-" + sensorID + "-time").html("");
-    newUrl = "images/image-no-alarm.jpg";
-
-    //smazne boxík z DOM
-    $("#sensor-" + sensorID + "-boxWrap").remove();
-
-    //obarvení boxíku
-    $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3");
-  }
-
-
-  $("#sensor-" + sensorID + "-cameraalarm-url").attr("src",newUrl);
 }
 
 
@@ -1012,14 +1125,7 @@ function myTimer() {
 
 //odešle PUT na server s jménem a hodnotou
 function odeslatPUT(jmenoSenzoru, hodota) {
-  //oříznutí jen na číslo senzoru: tedy z sensor-123456-xxx => 123456
   const url = `${jmenoSenzoru}`;
-  console.log(url);
-
-  poradiPomlcky = jmenoSenzoru.search("-");
-  jmenoSenzoru = jmenoSenzoru.substring(poradiPomlcky + 1);
-  poradiPomlcky = jmenoSenzoru.search("-");
-  jmenoSenzoru = jmenoSenzoru.substring(0, poradiPomlcky);
 
   //odešle PUT s hodnotou "value" + cookies
   Arduino.axios.put('/' + jmenoSenzoru  + `?`+checkCookie(), {
@@ -1059,56 +1165,15 @@ function zvukoveZnameni (){
     // voice.mp3 -  fajn
     //v index.HTML k nastaveni
 
-    // if x.onplaying = function() {
-    //     alert("The video is now playing");
-    // };
-
-  // if (coZahrat == "alarm") {
-  //   $("#audioAlarm").attr("src","audio/voice.mp3");
-    // x.loop = true;
-    // x.play();
-  //
-  // } else {
-  //
-  // }
-
 }
 
-//když nastavene chyba sensoru, tak se obarví
-function sensorErrorColorsOn (deviceItem){
 
 
-  var sensorID = deviceItem.unid;
-  var serverDate = ServerDevices.sensors["0"].value;  //čas z poslední aktualizace serveru
-  var deviceDate = deviceItem.lrespiot; //cas z device, LivingStone
-  var textLostConTime = deviceItem.error + " | " +timeCountDown(deviceDate, serverDate, false);
-  // console.log(textLostConTime);
-
-  $("#sensor-" + sensorID + "-error").html(textLostConTime);
-  $('#sensor-' + sensorID + '-error').css("color", "Red ");
-  $('#sensor-' + sensorID + '-boxContent').css("color", "DimGray ");
-  $('#sensor-' + sensorID + '-boxContent').css("background-color", "#F3F3F3 ");
-  $('#sensor-' + sensorID + '-boxWrap').css("background-color", "Red ");
-
-//zapnutí audioAlarm
-  zvukoveZnameni();
-
-}
-
-//když není chyba sensoru, tak se obarví
-function sensorErrorColorsOff (deviceItem){
-  var sensorID = deviceItem.unid;
-
-  $("#sensor-" + sensorID + "-error").html("");
-  // $('#sensor-' + sensorID + '-boxWrap').css("background-color", "White");
-  $('#sensor-' + sensorID + '-boxWrap').css('background-color','inherit'); //průhledá barva - lepší než transparent. Zdědí barvu z předchudce - tedy prvnku nad tím - tedy boxScreen (si myslím)
-
-}
 
 
 // ****************** hlavní fce *********************
 
-
+Arduino.devices = {};     //uložiště všech Stones na obrazovce... Class Stone
 
 
 //vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON
@@ -1117,16 +1182,10 @@ Arduino.containerShow = function() {
   var sensorType = "";
   var sensorID = "0"; //cislo senzoru UNID
 
-
-
-
-// ** LivingStones
-
-//pošle GET s kukinou za otazníkem
+  //pošle GET s cookie za otazníkem
   Arduino.axios.get("/"  + `?`+checkCookie())
     .then(function(response) {
       var device = response.data;
-
 
       // setřídění obsah pole (LivingStone) podle weborder
       device = device.sort(function(a, b) {
@@ -1171,39 +1230,51 @@ Arduino.containerShow = function() {
           // console.log(deviceItem.unid + " - " + deviceItem.error);
           switch (sensorWebType) {
             case DMteplota: //teplota
-              LivingStone.Temperature(deviceItem);  //vytvoří HTML
-              LivingStoneUpdate.Temperature (deviceItem); //naplní obsahem
+              //pomocí Class
+              var temp = new Temperature($("#boxScreen"), deviceItem);    //udělá nový objekt
+              temp.render();                                              //zobrazí na obrazovce - nový DOM
+              Arduino.devices[deviceItem.unid] = temp;                    //uloží do "globální proměné" s klíčm deviceItem.unid pro snadnější vyhledávání - viz update
               break;
             case DMvoda: //voda
-              LivingStone.Water(sensorID);
-              LivingStoneUpdate.Water (deviceItem);
+              var temp = new Water ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             case DMsvetlo: //svetlo
-              LivingStone.Light(sensorID);
-              LivingStoneUpdate.Light (deviceItem);
+              var temp = new Light ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             case DMalarm: //alarm - PIR
-              LivingStone.Pir(sensorID);
-              LivingStoneUpdate.Pir(deviceItem);
+              var temp = new Pir ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             case DMbrana: //brána
-              LivingStone.Gate(sensorID);
-              LivingStoneUpdate.Gate(deviceItem);
+              var temp = new Gate ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             case DMkamera: //kamera
-              LivingStone.Camera(sensorID);
-              LivingStoneUpdate.Camera (deviceItem);
+              var temp = new Camera ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             case DMpocasi: //počasí
-              LivingStone.Weather(sensorID);
-              LivingStoneUpdate.Weather (deviceItem);
+              var temp = new Weather ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             case DMCameraAlarm: //Obrazek z kamery po alarmu
-              LivingStone.CameraAlarm(sensorID);
-              LivingStoneUpdate.CameraAlarm (deviceItem);
+              var temp = new CameraAlarm ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
               break;
             default:
-              LivingStone.Null(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
+              // LivingStone.EmptyBox(sensorID);   //pokud náhodou bude něco úplně nestandardního - bez LivingStonu
+              var temp = new EmptyBox ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
           } //switch
         }   //if sensorID
         else {
@@ -1247,10 +1318,11 @@ Arduino.containerUpdate = function() {
   Arduino.axios.get('/' + `?`+checkCookie())
     .then(function(response) {
 
-      //nastavení barvy pozadí - když jsou data-tak bílé
+      //nastavení barvy pozadí - když jsou data z JSON opět k dispozic, tak pozadí na bílou
       $("body").css("background-color", "White");
 
       var device = response.data;
+
 
 
       //uz zbytečně - nějak nepoužívám :-()
@@ -1265,151 +1337,71 @@ Arduino.containerUpdate = function() {
 
       //průchod objekty
       $.each( deviceObject, function( sensorID, deviceItem ) {
-      // device.forEach(function(deviceItem) {
 
-        // sensorID = deviceItem.unid;
-        // console.log(sensorID);
-
-        sensorWebType = deviceItem.webtype;
-
-        //pokud je chyba a zároveň se nejedná o systémovou informaci
-
-        //obarvit senzor když NENÍ chyba
-         // console.log("A1");
-        if (deviceItem.error!=null && deviceItem.error != "" && deviceItem.unid != "0" ) {
-            //obarvit senzor když je chyba
-            sensorErrorColorsOn (deviceItem);
-
-
+        if (deviceItem.unid == "0") {
+            //0 = systémové UNID - neaktualizuje se obsah
+            //Uděla update menu podle systemovych parametru
+            MenuStoneUpdate.Home(DMmenuID1, deviceItem);
+            MenuStoneUpdate.Zvonecek(DMmenuID2, deviceItem);
+            MenuStoneUpdate.Email(DMmenuID4,deviceItem);
+            MenuStoneUpdate.ServerTime(DMmenuID3, deviceItem);
         } else {
-            //obarvit senzor když NENÍ chyba
-            sensorErrorColorsOff (deviceItem);
+            // aktualizuj Stone, které má klíč deviceItem.unid .... jak prosté :-)
+            Arduino.devices[deviceItem.unid].update(deviceItem);
+        }
 
-          // konec Device ERROR      //OM_______________Omen přidal misto - níže. zbytečné - pokračuji i když BYLA chyba
+         //obarvit senzor když je chyba
+        if (deviceItem.error!=null && deviceItem.error != "" && deviceItem.unid != "0" ) {
+             Arduino.devices[deviceItem.unid].sensorErrorColorsOn(deviceItem);
+        }
 
-              if (deviceItem.unid == "0") {
-                //Uděla update menu podle systemovych parametru
-
-                // ** Menu
-                MenuStoneUpdate.Home(DMmenuID1, deviceItem);
-                MenuStoneUpdate.Zvonecek(DMmenuID2, deviceItem);
-                MenuStoneUpdate.Email(DMmenuID4,deviceItem);
-                MenuStoneUpdate.ServerTime(DMmenuID3, deviceItem);
-              }
-
-              //podle typu se naplní hodnoty
-              switch (sensorWebType) {
-                case "-1": //Pokud se jedná o systémove UNID = systemovy cas - nedělej nic
-                break;
-
-                case DMteplota: //teplota
-                  LivingStoneUpdate.Temperature (deviceItem);
-                  break;
-
-                case DMvoda: //voda
-                  LivingStoneUpdate.Water(deviceItem);
-                  break;
-
-                case DMsvetlo: //světlo
-                  LivingStoneUpdate.Light (deviceItem);
-                  break;
-
-                case DMalarm: //alarm - PIR
-                  LivingStoneUpdate.Pir (deviceItem);
-                  break;
-
-                case DMbrana: //brána
-                  LivingStoneUpdate.Gate (deviceItem);
-                  break;
-
-                case DMkamera: //kamera (ne počasí)
-                  LivingStoneUpdate.Camera (deviceItem);
-                  break;
-
-                case DMpocasi: //počasí
-                  LivingStoneUpdate.Weather (deviceItem);
-                  break;
-                case DMCameraAlarm: //kamera s alarmovým obrazkem
-
-                //testování - jestli ještě prvek na webu (DOM) existuje.
-
-
-                  //pomocí JS ... POZOR - ID bez #, je to JS ne jQuery
-
-                  jmenoPrvku = "sensor-" + sensorID + "-boxWrap";
-                  // console.log(jmenoPrvku);
-                  if(document.getElementById(jmenoPrvku)) {
-                    // console.log("EXISTUJE");
-                  } else {
-                    // console.log("NEEXISTUJE");
-                  }
-
-
-                  // if($("#sensor-" + sensorID + "-boxWrap").length == 0) {
-                  //     //it doesn't exist
-                  //     }
-                  LivingStoneUpdate.CameraAlarm (deviceItem);
-                  break;
-
-              } //konec :switch:
-
-
-        }  // konec Device ERROR - Omen zakomentoval MM__________
+         //Vrátit zpět - senzor když není chyba
+        if ((deviceItem.error == "" && deviceItem.unid != "0") || (deviceItem.error ==null && deviceItem.unid != "0" )) {
+           Arduino.devices[deviceItem.unid].sensorErrorColorsOff(deviceItem);
+        }
 
       }); //konec forEach cyklus
 
 
       //zapamatování si posledního stavu
       //následně např. porovnávám, co má smysl měni
-
       ServerDevices.sensors = deviceObject;
       LastDevices = ServerDevices;
-      // console.log(LastDevices);
-
 
       //aktualizace času, kdy byl server naposledny aktivní
       LastServer.time = new Date().getTime();
 
     })
-    // .else {
-    //   console.log("ELSE");
-    // }
+
     .catch(function(error) {
-      console.log("TATO CHYBA");
 
-        // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
-        if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
-          //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
-          $("body").css("background-color", "Red");
+      console.log("Nastala chyba při update - catch: ");
 
-          //zahraje audioAlarm
-          zvukoveZnameni();
+      // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
+      if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
+        //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
+        $("body").css("background-color", "Red");
+        zvukoveZnameni(); //zahraje audioAlarm
+      }
 
+      //zobrazení chyby
+      if (error.response) {
+        // The request was made and the server responded with a status code that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+      }
+      console.log(error.config);
 
-        }
-
-
-
-
-        if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-    console.log(error.config);
-
-
-    });
+    });     //konec catch
 
 }
 
