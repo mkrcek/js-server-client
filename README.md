@@ -1,9 +1,13 @@
-# Doomaster: CLASS days 2018 
+# Doomaster: CLASS Easter 2018
 
 
 ----------
 
 ## Co nového ve verzi
+
+## 3.4.
+
+Kompletní přepsání LivingStones -–> do Class Stone
 
 ## 30/3/
 
