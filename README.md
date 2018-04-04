@@ -27,7 +27,7 @@ Update:
 
 Změna kódu:
 
-- Osamostatnění stones.js (všechyn living-stones pohromadě)
+- Osamostatnění stones.js (všechny living-stones pohromadě)
 
 ## 3.4.
 
