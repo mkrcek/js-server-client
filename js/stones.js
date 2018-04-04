@@ -140,6 +140,26 @@ class Stone {
                     <td>invisible</td>
                     <td>${this.deviceItem.invisible}</td>
                   </tr>
+                  <tr>
+                    <td>Garage: door</td>
+                    <td>${this.deviceItem.door}</td>
+                  </tr>
+                  <tr>
+                    <td>CurrentDoorState</td>
+                    <td>${this.deviceItem.CurrentDoorState}</td>
+                  </tr>
+                  <tr>
+                    <td>TargetDoorState</td>
+                    <td>${this.deviceItem.TargetDoorState}</td>
+                  </tr>
+                  <tr>
+                    <td>TargetDoorOpen</td>
+                    <td>${this.deviceItem.TargetDoorOpen}</td>
+                  </tr>
+                  <tr>
+                    <td>ObstructionDetected</td>
+                    <td>${this.deviceItem.ObstructionDetected}</td>
+                  </tr>
                 </tbody>
               </table>
           </div>
@@ -730,24 +750,39 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
 
     //CLICK: ošetření klikání na tlačítko
     this.$element.find('#sensor-brana-but1').click(() => {
-      console.log("ID kliku je: ",this.getId());
+      // console.log("ID kliku je: ",this.getId());
       odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
-      alert("Odeslán PUT 1 na sensor " + this.getId());
-      Arduino.containerUpdate();  //refresh obrazovky
+      // alert("Odeslán PUT 1 na sensor " + this.getId());
+      // Arduino.containerUpdate();  //refresh obrazovky
+
+      console.log("Odcházím z detailu");
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
     });
 
     this.$element.find('#sensor-brana-but2').click(() => {
-      console.log("ID kliku je: ",this.getId());
+      // console.log("ID kliku je: ",this.getId());
       odeslatPUT(this.getId(), DMbranaT2); //odeslatPUT
-      alert("Odeslán PUT 2 na sensor " + this.getId());
-      Arduino.containerUpdate();  //refresh obrazovky
+      // alert("Odeslán PUT 2 na sensor " + this.getId());
+      // Arduino.containerUpdate();  //refresh obrazovky
+
+      console.log("Odcházím z detailu");
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
     });
 
     this.$element.find('#sensor-brana-but3').click(() => {
-      console.log("ID kliku je: ",this.getId());
+      // console.log("ID kliku je: ",this.getId());
       odeslatPUT(this.getId(), DMbranaT3); //odeslatPUT
-      alert("Odeslán PUT 3 na sensor " + this.getId());
-      Arduino.containerUpdate();  //refresh obrazovky
+      // alert("Odeslán PUT 3 na sensor " + this.getId());
+      // Arduino.containerUpdate();  //refresh obrazovky
+
+      console.log("Odcházím z detailu");
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
     });
 
   }
@@ -787,30 +822,6 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
 
     this.$element.find('.boxContent').addClass("boxContent-gate");
     this.$element.find('.boxContent').removeClass("boxContent");
-
-    // //CLICK: ošetření klikání na tlačítko
-    // this.$element.find('#sensor-brana-but1').click(() => {
-    //   console.log("ID kliku je: ",this.getId());
-    //   odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
-    //   alert("Odeslán PUT 1 na sensor " + this.getId());
-    //   Arduino.containerUpdate();  //refresh obrazovky
-    // });
-    //
-    // this.$element.find('#sensor-brana-but2').click(() => {
-    //   console.log("ID kliku je: ",this.getId());
-    //   odeslatPUT(this.getId(), DMbranaT2); //odeslatPUT
-    //   alert("Odeslán PUT 2 na sensor " + this.getId());
-    //   Arduino.containerUpdate();  //refresh obrazovky
-    // });
-    //
-    // this.$element.find('#sensor-brana-but3').click(() => {
-    //   console.log("ID kliku je: ",this.getId());
-    //   odeslatPUT(this.getId(), DMbranaT3); //odeslatPUT
-    //   alert("Odeslán PUT 3 na sensor " + this.getId());
-    //   Arduino.containerUpdate();  //refresh obrazovky
-    // });
-
-
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
@@ -962,6 +973,150 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
 
   }
 }
+
+
+class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
+
+  // má úplně jinou strukuru json! Není třeba VALUE !! a všechny nové údaje jsou čísla.
+  // {
+  //   "door": 47,
+  //   "CurrentDoorState": 4,
+  //   "TargetDoorState": 1,
+  //   "TargetDoorOpen": 0,
+  //   "ObstructionDetected": true
+  // }
+
+  update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
+    this.deviceItem = deviceItem;
+    var tempVal = Number(deviceItem.door); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
+    // console.log(tempVal);
+    //je číslo. Zatím ??
+
+    this.$element.find('#sensor-name').html(deviceItem.webname);    //
+    this.$element.find('#sensor-time').html(deviceItem.lrespiot);
+
+    this.$element.find('#sensor-boxContent').css("color", "Black ");
+    if (tempVal == 0) {
+      this.$element.find("#sensor-brana-numb").html("ZAVŘENO");
+      this.$element.find('#sensor-boxContent').css("background-color", "#F3F3F3");
+    } else {
+      this.$element.find("#sensor-brana-numb").html(tempVal + " %");
+      this.$element.find('#sensor-boxContent').css("background-color", "GoldenRod");
+    }
+  }
+
+
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+    var uniqueContent = `
+    <div id="sensor-module-brana" class="text-center">
+        <h1>
+            <span id="sensor-brana-numb">-99</span>
+            <br>
+            <p id="sensor-name">Severní pól</p>
+        </h1>
+    </div>
+
+    <div class="text-center">
+      <button type="button" id="sensor-brana-but1" class="btn btn-danger">Otevřít</button>
+      <button type="button" id="sensor-brana-but2" class="btn btn-success disabled">
+        <i style=" color:"Black" class="pekneIkony">&#xf023;</i>
+      </button>
+      <button type="button" id="sensor-brana-but3" class="btn btn-dark">Zavřít</button>
+      <button type="button" id="sensor-brana-but4" class="btn btn-dark disabled">
+        <i style=" color:"Black" class="pekneIkony">&#xf023;</i>
+      </button>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //CLICK: ošetření klikání na tlačítko
+    this.$element.find('#sensor-brana-but1').click(() => {
+      // console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMgarageT1); //odeslatPUT
+      // alert("Odeslán PUT 0 na sensor " + this.getId());
+      // Arduino.containerUpdate();  //refresh obrazovky
+
+      console.log("Odcházím z detailu");
+      // odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
+      // alert("Odeslán PUT 1 na sensor " + this.getId());
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
+
+    });
+
+    // this.$element.find('#sensor-brana-but2').click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), DMgarageT2); //odeslatPUT
+    //   alert("Odeslán PUT 2 na sensor " + this.getId());
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
+
+    this.$element.find('#sensor-brana-but3').click(() => {
+      // console.log("ID kliku je: ",this.getId());
+      odeslatPUT(this.getId(), DMgarageT3); //odeslatPUT
+      // alert("Odeslán PUT 1 na sensor " + this.getId());
+      // Arduino.containerUpdate();  //refresh obrazovky
+
+      console.log("Odcházím z detailu");
+      // odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
+      // alert("Odeslán PUT 1 na sensor " + this.getId());
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
+    });
+
+  }
+
+
+  render() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-brana" class="text-left">
+        <h1>
+            <span id="sensor-brana-numb">-99</span>
+        </h1>
+    </div>
+    <div>
+        <p id="sensor-name">Severní pól</p>
+    </div>
+    <div>
+        <p id="sensor-error">error time</p>
+    </div>
+    `;
+
+
+    // super.render(GRID_GATE); //bříve - když byla tlačítka
+    super.render(GRID_SM);
+    // zavola parent render metodu a vygeneruje container
+
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    this.$element.find('.boxContent').addClass("boxContent-gate");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+    //testování zobrazení detailu STONE
+    //CLICK: ošetření klikání na Stone se přenese do detailu
+    this.$element.click(() => {
+      this.renderDetails();
+    });
+
+  }
+}
+
+
+
+
+
 
 
 

@@ -25,20 +25,26 @@ const DMvoda = "5"
 const DMsvetlo = "6"
 const DMbrana = "7"
 const DMpocasi = "8"
+const DMGarage = "9"
 
 const numberOfRows = 15
 
 type DeviceSetup struct {
-	DevId       string `json:"unid"`     //OK
-	DevOrder    int    `json:"weborder"` //OK
-	DevPriority int    `json:"priority"` //OK
-	DevType     string `json:"webtype"`  //OK
-	Subtype     string `json:"subtype"`  //OK
-	DevTime     string `json:"lrespiot"` //OK
-	Value       string `json:"value"`    //OK
-	DevName     string `json:"webname"`  //OK
-	InVisible   int    `json:"invisible"`
-	DevError    string `json:"error"` //
+	DevId               string `json:"unid"`     //OK
+	DevOrder            int    `json:"weborder"` //OK
+	DevPriority         int    `json:"priority"` //OK
+	DevType             string `json:"webtype"`  //OK
+	Subtype             string `json:"subtype"`  //OK
+	DevTime             string `json:"lrespiot"` //OK
+	Value               string `json:"value"`    //OK
+	DevName             string `json:"webname"`  //OK
+	InVisible           int    `json:"invisible"`
+	DevError            string `json:"error"` //
+	Door                int    `json:"door"`
+	CurrentDoorState    int    `json:"CurrentDoorState"`
+	TargetDoorState     int    `json:"TargetDoorState"`
+	TargetDoorOpen      int    `json:"TargetDoorOpen"`
+	ObstructionDetected bool   `json:"ObstructionDetected"`
 }
 
 var hodnotaPut = DeviceSetup{ //testovaci
@@ -221,14 +227,19 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	//brana
 	myHomeDeviceSetup[11] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
-		DevId:       "1169927890411881817723",
-		DevOrder:    12,      //bylo 11
-		DevPriority: 0,       //****1/31
-		DevType:     DMbrana, //brána
-		DevTime:     t.Format("2006-01-02 15:04:05"),
-		Value:       "44",
-		DevName:     "4 - Brána 2",
-		InVisible:   0,
+		DevId:               "1169927890411881817723",
+		DevOrder:            12,       //bylo 11
+		DevPriority:         0,        //****1/31
+		DevType:             DMGarage, //garáž
+		DevTime:             t.Format("2006-01-02 15:04:05"),
+		Value:               "44",
+		DevName:             "Garáž",
+		InVisible:           0,
+		Door:                111,
+		CurrentDoorState:    0,
+		TargetDoorState:     0,
+		TargetDoorOpen:      0,
+		ObstructionDetected: false,
 	}
 
 	//teplota zahrada3
@@ -242,7 +253,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 		DevTime:     t.Format("2006-01-02 15:04:05"),
 		//Value:     	 strconv.FormatFloat(deviceReadTempHum(0), 'f', 2, 32),
 		Value:     "0",
-		DevName:   "reálná teplota Arduino - které jede po trati 1234567788909875432234567876543234567876543345676543",
+		DevName:   "reálná teplota Arduino - které jede po trati ",
 		InVisible: 0,
 	}
 
@@ -340,6 +351,8 @@ func ApiGetAll(w http.ResponseWriter, r *http.Request) {
 		//	myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second()%2)
 		case DMalarm:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(t.Second() % 2)
+		case DMGarage:
+			myHomeDeviceSetup[i].Door = t.Second()
 		case DMbrana:
 			myHomeDeviceSetup[i].Value = strconv.Itoa(time.Now().Second() * 100 / 60)
 

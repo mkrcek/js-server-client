@@ -20,6 +20,11 @@ const DMbranaT1 = "1";
 const DMbranaT2 = "2";
 const DMbranaT3 = "3";
 
+
+const DMgarageT1 = "0";
+const DMgarageT2 = "";
+const DMgarageT3 = "1";
+
 // ** Menu
 
 const DMmenuID1 = "10101";
@@ -645,6 +650,11 @@ Arduino.containerShow = function() {
               temp.render();
               Arduino.devices[deviceItem.unid] = temp;
               break;
+            case DMgarage: //Obrazek z kamery po alarmu
+              var temp = new Garage ($("#boxScreen"), deviceItem);
+              temp.render();
+              Arduino.devices[deviceItem.unid] = temp;
+              break;
             default:
               var temp = new EmptyBox ($("#boxScreen"), deviceItem);
               temp.render();
@@ -799,7 +809,7 @@ function getCookie(cname) {
 }
 
 function deleteCookie(cname) {
-  //implementace pri kliknutí na ServerTime, v dolním menu
+  //implementace smazání Cookie při kliknutí na ServerTime, v dolním menu
     document.cookie = cname + "=;" + " expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 

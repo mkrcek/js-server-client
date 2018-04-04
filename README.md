@@ -10,13 +10,19 @@
 NEW:
 
 - Detail pro PIR: zavedení lchvalue: nastavuje se při změně zatím pouze ESP PIR "motion", pokud se změní hodnota
+- Cookie: smazání Cookie při kliknutí na ServerTime, v dolním
 
-- Cookie: smazání Cookie při kliknutí na ServerTime, v dolním menu
+- Garáž: nový LivingStone
+- Garáž: DMgarage = "9" |
+- Garáž: Informace: GET: čte hodnoty otevření (door) + další 4 údaje, které zobrazí je v Detailu
+- Garáž: Ovládání: PUT: Tlačítka na ovládání -> Otevřít: value="0", Zavřít: value = "1"
 
 Update:
 
 - Detail: odsazení od horní lišty, nastavitelné v CSS.detailStoneScreen
 - Detail: Přejmenování Back na Zpět
+
+- Detail Brána + Garáž: Pri kliknutí na tlačítko se Detail uzavře a vrátí se na hlavní stránku
 
 
 Změna kódu:
