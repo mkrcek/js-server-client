@@ -810,7 +810,8 @@ function getCookie(cname) {
 
 function deleteCookie(cname) {
   //implementace smazání Cookie při kliknutí na ServerTime, v dolním menu
-    document.cookie = cname + "=;" + " expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = cname + "=;" + " expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // document.cookie = cname + "=;" + " expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 
 function checkCookie() {

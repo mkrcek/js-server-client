@@ -9,6 +9,9 @@
 
 NEW:
 
+Oprava:
+- Oprava mazání "kukiny" při použití adresáře v url
+
 - Detail pro PIR: zavedení lchvalue: nastavuje se při změně zatím pouze ESP PIR "motion", pokud se změní hodnota
 - Cookie: smazání Cookie při kliknutí na ServerTime, v dolním
 
@@ -28,6 +31,7 @@ Update:
 Změna kódu:
 
 - Osamostatnění stones.js (všechny living-stones pohromadě)
+
 
 ## 3.4.
 
