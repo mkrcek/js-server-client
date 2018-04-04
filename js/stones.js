@@ -1040,7 +1040,7 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
     //CLICK: ošetření klikání na tlačítko
     this.$element.find('#sensor-brana-but1').click(() => {
       // console.log("ID kliku je: ",this.getId());
-      odeslatPUT(this.getId(), DMgarageT1); //odeslatPUT
+      odeslatPUT(this.getId(), DMgarageT1); //odeslatPUT - 0 = otevřít
       // alert("Odeslán PUT 0 na sensor " + this.getId());
       // Arduino.containerUpdate();  //refresh obrazovky
 
@@ -1062,7 +1062,7 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
 
     this.$element.find('#sensor-brana-but3').click(() => {
       // console.log("ID kliku je: ",this.getId());
-      odeslatPUT(this.getId(), DMgarageT3); //odeslatPUT
+      odeslatPUT(this.getId(), DMgarageT3); //odeslatPUT - 1=zavřít
       // alert("Odeslán PUT 1 na sensor " + this.getId());
       // Arduino.containerUpdate();  //refresh obrazovky
 

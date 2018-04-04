@@ -13,7 +13,7 @@ NEW:
 - Cookie: smazání Cookie při kliknutí na ServerTime, v dolním
 
 - Garáž: nový LivingStone
-- Garáž: DMgarage = "9" |
+- Garáž: DMgarage = "9"
 - Garáž: Informace: GET: čte hodnoty otevření (door) + další 4 údaje, které zobrazí je v Detailu
 - Garáž: Ovládání: PUT: Tlačítka na ovládání -> Otevřít: value="0", Zavřít: value = "1"
 

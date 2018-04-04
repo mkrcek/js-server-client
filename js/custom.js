@@ -21,9 +21,9 @@ const DMbranaT2 = "2";
 const DMbranaT3 = "3";
 
 
-const DMgarageT1 = "0";
+const DMgarageT1 = "0";   //otevřít
 const DMgarageT2 = "";
-const DMgarageT3 = "1";
+const DMgarageT3 = "1";   //zavřít
 
 // ** Menu
 
