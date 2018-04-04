@@ -5,6 +5,24 @@
 
 ## Co nového ve verzi
 
+## 4.4.
+
+NEW:
+
+- Detail pro PIR: zavedení lchvalue: nastavuje se při změně zatím pouze ESP PIR "motion", pokud se změní hodnota
+
+- Cookie: smazání Cookie při kliknutí na ServerTime, v dolním menu
+
+Update:
+
+- Detail: odsazení od horní lišty, nastavitelné v CSS.detailStoneScreen
+- Detail: Přejmenování Back na Zpět
+
+
+Změna kódu:
+
+- Osamostatnění stones.js (všechyn living-stones pohromadě)
+
 ## 3.4.
 
 News
