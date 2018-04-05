@@ -13,6 +13,16 @@
 - CSS: 4 sloupce pro všechna rozlišení
 - CSS: uprava velikosti Stones na "čtverec"
 - CSS: dynamicka velikost fontů
+- _
+- Detail: kliknutím kamkoliv do tabulky, se vrátím zpět na seznam Stones
+- _
+- Kliknutím na každý Stones se zobrazí detail. V něm je pak ovládání brány, garáže, ale i žárovky a CameraAlarmu
+- nová barva menu
+
+NEW:
+
+- ikona při umístění odkazu na plochu
+
 
 ## 4.4.
 

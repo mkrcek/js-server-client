@@ -141,7 +141,8 @@ var LastServer = new TimeKeeper (new Date().getTime());
 window.Arduino = {};
 
 window.onload = function() {
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/1996/doomaster/sensors/';
+  // var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
         //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
   Arduino.axios = axios.create({
@@ -153,22 +154,25 @@ window.onload = function() {
   // cookies test - zeptá se a vypíše
   console.log("Používaná kukina: ", checkCookie());
 
+  empyWholePage();
+
+}
+
+
+function empyWholePage() {
+  $("#boxScreen").empty();  //smazne všechen obsah - všechny Stones
+  $("#bottomMenu").empty(); //smazne všechen obsah - všechny MENU
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
   Arduino.containerShow();
 
   MenuStone.Home(DMmenuID1);
   MenuStone.Zvonecek(DMmenuID2);
-  MenuStone.Email(DMmenuID4);
+  // MenuStone.Email(DMmenuID4);
   MenuStone.ServerTime(DMmenuID3);
-
-
 
   //vygeneruje OBSAH pro všechny HTML-BOXíky v JSON
   Arduino.containerUpdate();
-
 }
-
-
 
 
 // *************** Generuje HTML boxíky pro MENU ********
@@ -195,7 +199,7 @@ MenuStone.Home = function (menuID) {
     var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
-      <i style="font-size:3.5vmax; color:"Black" class="pekneIkony">&#xf015;</i>
+      <i style="font-size:1.5rem; color:"Black" class="pekneIkony">&#xf015;</i>
       <span id="menu-${menuID}-homeButton">HOME</span>
     </div>
     `;

@@ -36,6 +36,11 @@ class Stone {
 
      this.$parent.append(this.$element);
      //vloží boxík na HTML stránku za #boxScreen
+
+     //CLICK: ošetření klikání na Stone se přenese do detailu ()
+     this.$element.click(() => {
+       this.renderDetails();
+     });
   }
 
   update(deviceItem) {
@@ -56,38 +61,56 @@ class Stone {
     // console.log(this.deviceItem.value);
 
 
-    this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+    this.$parent.empty(); //smazne všechen obsah - všechyn Stones: #boxScreen HTML
+    $("#bottomMenu").empty();   //smaze všechno dolní menu
 
     // super.render(GRID_SM);
+
+    this.$menu =
+    $(`
+      <nav id="renderDetails" class="navbar fixed-bottom navbar-warning bg-warning btn-center-text">
+          <div onclick="" id="back" class="text-left" >
+            <i style="font-size:3.5vmax; color:"Black" class="pekneIkony">&#xf053;</i>
+            <span>Zpět</span>
+          </div>
+
+
+          <div onclick="" id="done" class="text-right" >
+            <span>Done</span>
+          </div>
+      </nav>
+    `);
 
     this.$element =
     $(`
       <div onclick="" id="sensor-boxWrap" class="detailStoneScreen boxWrap ${stoneSize}" >
-          <nav id="renderDetails" class="navbar fixed-top navbar-light bg-light btn-center-text">
-              <div onclick="" id="back" class="text-left" >
+
+          <nav id="renderDetails" class="navbar fixed-top navbar-warning bg-warning btn-center-text">
+              <div onclick="" id="back2" class="text-left" >
                 <i style="font-size:3.5vmax; color:"Black" class="pekneIkony">&#xf053;</i>
                 <span>Zpět</span>
               </div>
 
               <div onclick="" id="name" class="text-center" >
-                <b><span>${this.deviceItem.webname}</span></b>    <!-- name of the stone -->
+                <b><span>${this.deviceItem.webname}</span></b>
               </div>
 
-              <div onclick="" id="back" class="text-right" >
+              <div onclick="" id="done2" class="text-right" >
                 <span>Done</span>
               </div>
           </nav>
 
           <br>
-          <div id="sensor-boxContent" class="boxContent">
+          <div id="sensor-boxContent" class="boxContent" >
 
              <!-- místo pro unikatní obsah kazdeho DETAILU STONE -->
 
           </div>
           <br>
 
-          <h1>Neaktualizováno: </h1>
+
           <div class = "detailStoneTable">
+            <h1>Neaktualizováno: </h1>
             <table class="table table-striped">
                 <thead>
                   <tr>
@@ -168,19 +191,35 @@ class Stone {
      `);
 
      this.$parent.append(this.$element);
-     this.$element.find('#back').css("color", "CornflowerBlue");
+     this.$element.find('#back2').css("color", "Black");
+     this.$element.find('#done2').css("color", "Gainsboro ");
+
+     $("#bottomMenu").append(this.$menu);
+     this.$menu.find('#back').css("color", "Black");
+     this.$menu.find('#done').css("color", "Gainsboro ");
 
      // // vloží boxík na HTML
 
-     //CLICK: ošetření klikání na tlačítko
-     this.$element.find('#back').click(() => {
+
+     //CLICK: ošetření klikání na tlačítko BACK
+     this.$element.find('#back2').click(() => {
        console.log("kliknuto BACK");
-       // odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
-       // alert("Odeslán PUT 1 na sensor " + this.getId());
-       this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-       Arduino.containerShow();     //vykreslení puvodní obrazovky
-       Arduino.containerUpdate();   //refresh obrazovky
+       empyWholePage();
      });
+
+     //CLICK: ošetření klikání na tlačítko BACK
+     this.$menu.find('#back').click(() => {
+       console.log("kliknuto BACK");
+       empyWholePage();
+     });
+
+
+      //CLICK: ošetření klikání na "detaily v tabulce"
+      this.$element.find('.detailStoneTable').click(() => {
+        console.log("kliknuto BACK");
+        empyWholePage();
+      });
+
 
 
   }
@@ -389,9 +428,9 @@ class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i u
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
-    this.$element.click(() => {
-      this.renderDetails();
-    });
+    // this.$element.click(() => {
+    //   this.renderDetails();
+    // });
 
   }
 
@@ -419,6 +458,37 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
   }
 
 
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div id="sensor-module-svetlo" class="text-center">
+        <h1>
+          <i style="font-size:5vmax; color:"Black" class="pekneIkony">&#xf0eb;</i>
+          <br>
+          <span id="sensor-name">Light</span>
+        </h1>
+    </div>
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //CLICK: ošetření klikání na žárovku
+
+    this.$element.find('#sensor-module-svetlo').click(() => {
+      odeslatPUT(this.getId(), "1"); //odeslatPUT
+
+      console.log("Odcházím z detailu");
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
+    });
+
+
+  }
+
   render() {                          // METODA pro vykreslení HTML boxíku
 
     var uniqueContent = `
@@ -440,12 +510,12 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
 
-    //CLICK: ošetření klikání na žárovku
-    this.$element.click(() => {
-      console.log("ID kliku je: ",this.getId());
-      odeslatPUT(this.getId(), "1"); //odeslatPUT
-      Arduino.containerUpdate();  //refresh obrazovky
-    });
+    // //CLICK: ošetření klikání na žárovku
+    // this.$element.click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), "1"); //odeslatPUT
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
 
     //METODA A:
       //jede krásně
@@ -535,9 +605,9 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
-    this.$element.click(() => {
-      this.renderDetails();
-    });
+    // this.$element.click(() => {
+    //   this.renderDetails();
+    // });
 
   }
 }
@@ -616,9 +686,9 @@ class Camera extends Stone {     //subTřída pro Kameru  - zobrazení i update
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
-    this.$element.click(() => {
-      this.renderDetails();
-    });
+    // this.$element.click(() => {
+    //   this.renderDetails();
+    // });
 
   }
 }
@@ -694,9 +764,9 @@ class Water extends Stone {     //subTřída pro Hladinu Vody  - zobrazení i up
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
-    this.$element.click(() => {
-      this.renderDetails();
-    });
+    // this.$element.click(() => {
+    //   this.renderDetails();
+    // });
 
   }
 }
@@ -734,19 +804,19 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
     <div class="text-center">
       <button type="button" id="sensor-brana-but1" class="btn btn-danger">Otevřít</button>
       <button type="button" id="sensor-brana-but2" class="btn btn-success">Branka</button>
-      <button type="button" id="sensor-brana-but3" class="btn btn-dark">PULS</button>
-      <button type="button" id="sensor-brana-but4" class="btn btn-dark disabled">
-      <i style=" color:"Black" class="pekneIkony">&#xf023;</i></button>
+      <button type="button" id="sensor-brana-but3" class="btn btn-lg btn-dark">PULS</button>
     </div>
-    <div>
-        <p id="sensor-error">error time</p>
-    </div>
+
     `;
 
     super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
     // zavola parent render metodu a vygeneruje container
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //a větší prostor na tlačítka
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
 
     //CLICK: ošetření klikání na tlačítko
     this.$element.find('#sensor-brana-but1').click(() => {
@@ -825,9 +895,9 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
-    this.$element.click(() => {
-      this.renderDetails();
-    });
+    // this.$element.click(() => {
+    //   this.renderDetails();
+    // });
 
   }
 }
@@ -895,9 +965,9 @@ class Weather extends Stone {     //subTřída pro Počasí  - zobrazení i upda
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
-    this.$element.click(() => {
-      this.renderDetails();
-    });
+    // this.$element.click(() => {
+    //   this.renderDetails();
+    // });
 
   }
 }
@@ -936,6 +1006,53 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
 
   }
 
+  renderDetails() {                          // METODA pro vykreslení HTML boxíku
+
+    var uniqueContent = `
+    <div class="text-center">
+        <span id="sensor-name">Severní pól</span>
+        <span> | </span>
+        <i id="sensor-time">25:61</i>
+    </div>
+    <div id="sensor-module-cameraalarm" class="kameraBox kamera-value">
+        <div class="cameraalarm-value ">
+          <img id="sensor-cameraalarm-url" style="width:100%" src="images/image-no-alarm.jpg" alt="alarm" class="img-fluid">
+        </div>
+    </div>
+
+    <div class="text-center">
+      <button type="button" id="delete" class="btn btn-dark">Smazat</button>
+      </div>
+
+    `;
+
+    super.renderDetails("col-12 col-sm-12 col-md-12 col.xl-12");
+    // zavola parent render metodu a vygeneruje container
+    this.$element.find('.boxContent').html(uniqueContent);
+    // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+
+    //a roztáhne kameru na celou obrazovku
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
+
+    //CLICK: ošetření klikání "smazat""
+    this.$element.find('#delete').click(() => {
+      odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
+      console.log("Odcházím z detailu");
+      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      Arduino.containerShow();     //vykreslení puvodní obrazovky
+      Arduino.containerUpdate();   //refresh obrazovky
+    });
+
+    //
+    // this.$element.click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), "1"); //odeslatPUT
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
+
+  }
 
   render() {                          // METODA pro vykreslení HTML boxíku
 
@@ -963,17 +1080,16 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
     this.$element.find('.boxContent').addClass("boxContent-camera");
     this.$element.find('.boxContent').removeClass("boxContent");
 
-    //CLICK: ošetření klikání na žárovku
-    this.$element.click(() => {
-      console.log("ID kliku je: ",this.getId());
-      odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
-      Arduino.containerUpdate();  //refresh obrazovky
-    });
+    // //CLICK: ošetření klikání na žárovku
+    // this.$element.click(() => {
+    //   console.log("ID kliku je: ",this.getId());
+    //   odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
+    //   Arduino.containerUpdate();  //refresh obrazovky
+    // });
 
 
   }
 }
-
 
 class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
 
@@ -1019,13 +1135,8 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
 
     <div class="text-center">
       <button type="button" id="sensor-brana-but1" class="btn btn-danger">Otevřít</button>
-      <button type="button" id="sensor-brana-but2" class="btn btn-success disabled">
-        <i style=" color:"Black" class="pekneIkony">&#xf023;</i>
-      </button>
+
       <button type="button" id="sensor-brana-but3" class="btn btn-dark">Zavřít</button>
-      <button type="button" id="sensor-brana-but4" class="btn btn-dark disabled">
-        <i style=" color:"Black" class="pekneIkony">&#xf023;</i>
-      </button>
     </div>
     <div>
         <p id="sensor-error">error time</p>
@@ -1036,6 +1147,10 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
     // zavola parent render metodu a vygeneruje container
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
+    //a větší prostor na tlačítka
+    this.$element.find('.boxContent').addClass("boxContent-camera");
+    this.$element.find('.boxContent').removeClass("boxContent");
 
     //CLICK: ošetření klikání na tlačítko
     this.$element.find('#sensor-brana-but1').click(() => {

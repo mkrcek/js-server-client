@@ -56,7 +56,7 @@ var hodnotaPut = DeviceSetup{ //testovaci
 //pocet zarizeni
 var myHomeDeviceSetup = make([]DeviceSetup, numberOfRows) //alokuje tabulku s hodnotama
 
-const mujString = "/fuck-in/"
+const mujString = "/jednadevetdevetsest/"
 
 func main() {
 
@@ -70,7 +70,7 @@ func main() {
 
 	http.HandleFunc(mujString+"doomaster/sensors/", HandleAllData) //vrati vsechna data - nebo jen položku za lomítkem
 
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(".")))) //webserver pro localhost
+	http.Handle("/", http.StripPrefix(mujString, http.FileServer(http.Dir(".")))) //webserver pro localhost
 
 	//http.Handle( "/fuck-in/", http.StripPrefix("/fuck-in/", http.FileServer(http.Dir(".")))) //webserver pro localhost
 
@@ -518,7 +518,7 @@ func HandleAllData(w http.ResponseWriter, r *http.Request) { //vrati vsechna dat
 				} else {
 					fmt.Print("hoří ")
 					myHomeDeviceSetup[13].Value = "1"
-					myHomeDeviceSetup[13].DevError = "hoří až se oči zelenají a k tomu se podívej do toho co je . 1234567890QWER TZUIOPLKJ HGFDSAYXC VVBNM"
+					// myHomeDeviceSetup[13].DevError = "hoří až se oči zelenají a k tomu se podívej do toho co je . 1234567890QWER TZUIOPLKJ HGFDSAYXC VVBNM"
 					myHomeDeviceSetup[13].DevTime = "2018-03-12 15:04:05"
 				}
 			}
