@@ -42,15 +42,24 @@ const DMmenuID4 = "10104";
 //≥992px col.lg-
 //≥1200px col.xl-
 
-const GRID_SM = "col-3 col-sm-2 col-md-3 col.xl-2"; //teplota
+// do 4.4.2018
+// const GRID_SM = "col-3 col-sm-2 col-md-3 col.xl-2"; //teplota
+// const GRID_MD = "col-8 col-sm-6"; //např.počasí - nepoužito
+// const GRID_FUL = "col-12 col-sm-6"; //kamera - napoužito
+//
+// const GRID_CAM = "col-12 col-sm-12 col-lg-6"; //kamera
+// const GRID_CAMAL = "col-12 col-sm-6 col-md-6"; //kamera alarm
+// const GRID_WEAD = "col-12 col-sm-6 col-md-4"; //weather
+// const GRID_GATE = "col-12 col-sm-6 col-md-4"; //brána
+
+const GRID_SM = "col-3 col-sm-3 col-md-3 col.xl-3"; //teplota
 const GRID_MD = "col-8 col-sm-6"; //např.počasí - nepoužito
-const GRID_FUL = "col-12 col-sm-6"; //kamera - napoužito
+const GRID_FUL = "col-12 col-sm-12"; //kamera - napoužito
 
-const GRID_CAM = "col-12 col-sm-12 col-lg-6"; //kamera
-const GRID_CAMAL = "col-12 col-sm-6 col-md-6"; //kamera alarm
+const GRID_CAM = "col-12 col-sm-12 col-lg-12"; //kamera
+const GRID_CAMAL = "col-12 col-sm-12 col-md-12"; //kamera alarm
 const GRID_WEAD = "col-12 col-sm-6 col-md-4"; //weather
-const GRID_GATE = "col-12 col-sm-6 col-md-4"; //brána
-
+const GRID_GATE = "col-3 col-sm-3 col-md-3 col.xl-3"; //brána
 
 //uchování předešlého stavu obsahu všech LivingStones
 //následně např. porovnávám, co má smysl měnit
@@ -132,7 +141,7 @@ var LastServer = new TimeKeeper (new Date().getTime());
 window.Arduino = {};
 
 window.onload = function() {
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/1996/doomaster/sensors/';
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
         //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
   Arduino.axios = axios.create({
