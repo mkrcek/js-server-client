@@ -5,12 +5,21 @@
 
 ## Co nového ve verzi
 
+
+## 5.4.
+
+Úpravy
+- nastavení pro DOOMASTER_SYSTEM.INI
+- 
+
 ## 4.4.
 
-NEW:
 
 Oprava:
+
 - Oprava mazání "kukiny" při použití adresáře v url
+
+NEW:
 
 - Detail pro PIR: zavedení lchvalue: nastavuje se při změně zatím pouze ESP PIR "motion", pokud se změní hodnota
 - Cookie: smazání Cookie při kliknutí na ServerTime, v dolním

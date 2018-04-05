@@ -132,7 +132,7 @@ var LastServer = new TimeKeeper (new Date().getTime());
 window.Arduino = {};
 
 window.onload = function() {
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/fuck-in/doomaster/sensors/';
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/1996/doomaster/sensors/';
         //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
   Arduino.axios = axios.create({
