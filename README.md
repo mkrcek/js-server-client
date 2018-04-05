@@ -10,7 +10,9 @@
 
 Úpravy
 - nastavení pro DOOMASTER_SYSTEM.INI
-- 
+- CSS: 4 sloupce pro všechna rozlišení
+- CSS: uprava velikosti Stones na "čtverec"
+- CSS: dynamicka velikost fontů
 
 ## 4.4.
 

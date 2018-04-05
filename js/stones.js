@@ -27,7 +27,7 @@ class Stone {
 
     this.$element =
     $(`<div onclick="" id="sensor-boxWrap" class="boxWrap ${stoneSize}">
-         <div id="sensor-boxContent" class="boxContent">
+         <div id="sensor-boxContent" class="boxContent ">
 
          <!-- místo pro unikatní obsah kazdeho STONE -->
 
@@ -65,7 +65,7 @@ class Stone {
       <div onclick="" id="sensor-boxWrap" class="detailStoneScreen boxWrap ${stoneSize}" >
           <nav id="renderDetails" class="navbar fixed-top navbar-light bg-light btn-center-text">
               <div onclick="" id="back" class="text-left" >
-                <i style="font-size:1.5rem; color:"Black" class="pekneIkony">&#xf053;</i>
+                <i style="font-size:3.5vmax; color:"Black" class="pekneIkony">&#xf053;</i>
                 <span>Zpět</span>
               </div>
 
@@ -168,7 +168,7 @@ class Stone {
      `);
 
      this.$parent.append(this.$element);
-     this.$element.find('#back').css("color", "orange");
+     this.$element.find('#back').css("color", "CornflowerBlue");
 
      // // vloží boxík na HTML
 
@@ -423,7 +423,7 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
 
     var uniqueContent = `
     <div id="sensor-module-svetlo">
-        <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf0eb;</i>
+        <i style="font-size:3.5vmax; color:"Black" class="pekneIkony">&#xf0eb;</i>
     </div>
     <div>
         <p id="sensor-name">Severní pól</p>
@@ -489,7 +489,7 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
     <div id="sensor-module-alarm" class="text-center">
         <div id="sensor-alarm-stav">
         <h1>
-          <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
+          <i style="font-size:3vmax; color:"Black" class="pekneIkony">&#xf071;</i>
           <br>
           <p id="sensor-name"></p>
           <span id="sensor-time"></span>
@@ -514,7 +514,7 @@ class Pir extends Stone {     //subTřída pro PIR  - zobrazení i update
     var uniqueContent = `
     <div id="sensor-module-alarm" class="text-left">
         <div id="sensor-alarm-stav">
-          <i style="font-size:2rem; color:"Black" class="pekneIkony">&#xf071;</i>
+          <i style="font-size:3vmax; color:"Black" class="pekneIkony">&#xf071;</i>
         </div>
     </div>
     <div >
@@ -820,8 +820,8 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
-    this.$element.find('.boxContent').addClass("boxContent-gate");
-    this.$element.find('.boxContent').removeClass("boxContent");
+    // this.$element.find('.boxContent').addClass("boxContent-gate");
+    // this.$element.find('.boxContent').removeClass("boxContent");
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu
@@ -1101,8 +1101,8 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
-    this.$element.find('.boxContent').addClass("boxContent-gate");
-    this.$element.find('.boxContent').removeClass("boxContent");
+    // this.$element.find('.boxContent').addClass("boxContent-gate");
+    // this.$element.find('.boxContent').removeClass("boxContent");
 
     //testování zobrazení detailu STONE
     //CLICK: ošetření klikání na Stone se přenese do detailu

@@ -195,7 +195,7 @@ MenuStone.Home = function (menuID) {
     var templateHTML =
     `
     <div onclick="" id="menu-${menuID}-menuContent" class="text-left" >
-      <i style="font-size:1.5rem; color:"Black" class="pekneIkony">&#xf015;</i>
+      <i style="font-size:3.5vmax; color:"Black" class="pekneIkony">&#xf015;</i>
       <span id="menu-${menuID}-homeButton">HOME</span>
     </div>
     `;
