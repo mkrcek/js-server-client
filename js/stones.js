@@ -39,18 +39,44 @@ class Stone {
 
      //CLICK: ošetření klikání na Stone se přenese do detailu ()
      this.$element.click(() => {
+       myPageUpdate = this.deviceItem.unid;
        this.renderDetails();
      });
   }
 
   update(deviceItem) {
-    console.log('Not implemented - generování update pro všechny společné boxíky');
+    console.log('generování update pro všechny společné boxíky');
   }
 
+  updateDetails(deviceItem) {
+    // console.log('generování update pro všechny společné boxíky');
+
+    //najde a vloží do HTML všechny promené, uložené ve Stone a předané v JSON
+
+
+
+
+
+    Object.keys(deviceItem).forEach( function(key) {
+      // console.log(key," :" , stoneVariables[key]);
+
+
+      $("#" + key).html(deviceItem[key]);
+      // $("#unid").html("SSSSS");
+
+      // $("#tableBody").append(`
+      //   <tr>
+      //     <td>${key}</td>
+      //     <td>${stoneVariables[key]}</td>
+      //   </tr>
+      //   `);
+    });
+  }
 
   renderDetails(stoneSize) {     //detail boxíku - STONu
     // HTML vzor "boxíku" společný pro všechny STONE
 
+    console.log("rendruji detail");
     window.scrollTo(0, 0); //posune kurzor na začátek obrazovky - nahoru
 
 
@@ -118,71 +144,8 @@ class Stone {
                     <th>Hodnota</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>unid</td>
-                    <td>${this.deviceItem.unid}</td>
-                  </tr>
-                  <tr>
-                    <td>webname</td>
-                    <td>${this.deviceItem.webname}</td>
-                  </tr>
-                  <tr>
-                    <td>webtype</td>
-                    <td>${this.deviceItem.webtype}</td>
-                  </tr>
-                  <tr>
-                    <td>subtype</td>
-                    <td>${this.deviceItem.subtype}</td>
-                  </tr>
-                  <tr>
-                    <td>value</td>
-                    <td>${this.deviceItem.value}</td>
-                  </tr>
-                  <tr>
-                    <td>error</td>
-                    <td>${this.deviceItem.error}</td>
-                  </tr>
-                  <tr>
-                    <td>weborder</td>
-                    <td>${this.deviceItem.weborder}</td>
-                  </tr>
-                  <tr>
-                    <td>lrespiot</td>
-                    <td>${this.deviceItem.lrespiot}</td>
-                  </tr>
-                  <tr>
-                    <td>lchvalue</td>
-                    <td>${this.deviceItem.lchvalue}</td>
-                  </tr>
-                  <tr>
-                    <td>priority</td>
-                    <td>${this.deviceItem.priority}</td>
-                  </tr>
-                  <tr>
-                    <td>invisible</td>
-                    <td>${this.deviceItem.invisible}</td>
-                  </tr>
-                  <tr>
-                    <td>Garage: door</td>
-                    <td>${this.deviceItem.door}</td>
-                  </tr>
-                  <tr>
-                    <td>CurrentDoorState</td>
-                    <td>${this.deviceItem.CurrentDoorState}</td>
-                  </tr>
-                  <tr>
-                    <td>TargetDoorState</td>
-                    <td>${this.deviceItem.TargetDoorState}</td>
-                  </tr>
-                  <tr>
-                    <td>TargetDoorOpen</td>
-                    <td>${this.deviceItem.TargetDoorOpen}</td>
-                  </tr>
-                  <tr>
-                    <td>ObstructionDetected</td>
-                    <td>${this.deviceItem.ObstructionDetected}</td>
-                  </tr>
+                <tbody id="tableBody">
+                  <!-- místo pro unikatní obsah kazdeho promené STONE z JSON -->
                 </tbody>
               </table>
           </div>
@@ -190,13 +153,30 @@ class Stone {
     </div>
      `);
 
+
+     //vloží základní kostru detailu
      this.$parent.append(this.$element);
      this.$element.find('#back2').css("color", "Black");
      this.$element.find('#done2').css("color", "Gainsboro ");
 
+     //najde a vloží do HTML všechny promené, uložené ve Stone a předané v JSON
+     var stoneVariables = this.deviceItem;
+     Object.keys(stoneVariables).forEach( function(key) {
+       // console.log(key," :" , stoneVariables[key]);
+       $("#tableBody").append(`
+         <tr>
+           <td>${key}</td>
+           <td id="${key}">${stoneVariables[key]}</td>
+         </tr>
+         `);
+     });
+
+     // vloží MENU
      $("#bottomMenu").append(this.$menu);
      this.$menu.find('#back').css("color", "Black");
      this.$menu.find('#done').css("color", "Gainsboro ");
+
+
 
      // // vloží boxík na HTML
 
@@ -286,6 +266,7 @@ class EmptyBox extends Stone {     //subTřída pro Svetlo  - zobrazení i updat
 class Temperature extends Stone {     //subTřída pro Teplotu  - zobrazení i update
 
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
+
     this.deviceItem = deviceItem;
     var sensorID = deviceItem.unid;
 
@@ -443,6 +424,8 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
   update(deviceItem) {                // METODA pro aktualizaci - update obsahu
 
     this.deviceItem = deviceItem;
+
+
     var tempVal = Number(deviceItem.value); //protože tempVal je typu STRING musím jej převést na číslo. Zejména pro porovnávíní větší menší
     this.$element.find('#sensor-name').html(deviceItem.webname);    //
     this.$element.find('#sensor-time').html(deviceItem.lrespiot);
@@ -475,15 +458,19 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
 
-    //CLICK: ošetření klikání na žárovku
+    // Object.keys(deviceItem).forEach( function(key) {
+    //   console.log(key," :" , deviceItem[key]);
+    // });
+    //cyklus pomocí forEach a třídou
+    // https://sta]ckoverflow.com/questions/31096596/why-is-foreach-not-a-function-for-this-map/31096661
 
-    this.$element.find('#sensor-module-svetlo').click(() => {
+
+    //CLICK: ošetření klikání na žárovku
+    this.$element.find('#sensor-boxContent').click(() => {
       odeslatPUT(this.getId(), "1"); //odeslatPUT
 
       console.log("Odcházím z detailu");
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      empyWholePage();
     });
 
 
@@ -508,6 +495,7 @@ class Light extends Stone {     //subTřída pro Svetlo  - zobrazení i update
 
     this.$element.find('.boxContent').html(uniqueContent);
     // najde ve wrap boxu  boxCOntent a zmeni mu obsah
+
 
 
     // //CLICK: ošetření klikání na žárovku
@@ -826,9 +814,7 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
       // Arduino.containerUpdate();  //refresh obrazovky
 
       console.log("Odcházím z detailu");
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      empyWholePage();
     });
 
     this.$element.find('#sensor-brana-but2').click(() => {
@@ -838,9 +824,7 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
       // Arduino.containerUpdate();  //refresh obrazovky
 
       console.log("Odcházím z detailu");
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      empyWholePage();
     });
 
     this.$element.find('#sensor-brana-but3').click(() => {
@@ -850,9 +834,7 @@ class Gate extends Stone {     //subTřída pro Bránu  - zobrazení i update
       // Arduino.containerUpdate();  //refresh obrazovky
 
       console.log("Odcházím z detailu");
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      empyWholePage();
     });
 
   }
@@ -1040,9 +1022,7 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
     this.$element.find('#delete').click(() => {
       odeslatPUT(this.getId(), "DELETE"); //odeslatPUT
       console.log("Odcházím z detailu");
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      empyWholePage();
     });
 
     //
@@ -1136,7 +1116,7 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
     <div class="text-center">
       <button type="button" id="sensor-brana-but1" class="btn btn-danger">Otevřít</button>
 
-      <button type="button" id="sensor-brana-but3" class="btn btn-dark">Zavřít</button>
+      <button type="button" id="sensor-brana-but3" class="btn btn-lg btn-dark">Zavřít</button>
     </div>
     <div>
         <p id="sensor-error">error time</p>
@@ -1160,11 +1140,12 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
       // Arduino.containerUpdate();  //refresh obrazovky
 
       console.log("Odcházím z detailu");
+      empyWholePage();
       // odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
       // alert("Odeslán PUT 1 na sensor " + this.getId());
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      // this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      // Arduino.containerShow();     //vykreslení puvodní obrazovky
+      // Arduino.containerUpdate();   //refresh obrazovky
 
     });
 
@@ -1182,11 +1163,12 @@ class Garage extends Stone {     //subTřída pro Garáž  - zobrazení i update
       // Arduino.containerUpdate();  //refresh obrazovky
 
       console.log("Odcházím z detailu");
+      empyWholePage();
       // odeslatPUT(this.getId(), DMbranaT1); //odeslatPUT
       // alert("Odeslán PUT 1 na sensor " + this.getId());
-      this.$parent.empty(); //smazne všechen obsah - všechyn Stones
-      Arduino.containerShow();     //vykreslení puvodní obrazovky
-      Arduino.containerUpdate();   //refresh obrazovky
+      // this.$parent.empty(); //smazne všechen obsah - všechyn Stones
+      // Arduino.containerShow();     //vykreslení puvodní obrazovky
+      // Arduino.containerUpdate();   //refresh obrazovky
     });
 
   }

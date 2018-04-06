@@ -94,48 +94,29 @@ const TimeOutRed = 5000;
 
 
 
+//co se má akualizovat - jen detaily nebo celá strana všechny livingStones
+class WhatToUpdate {
+  constructor (myUpdate) {
+    this._myUpdate = myUpdate;
+  }
 
-//test a DEMO class na měření času místo globální proměné
-//uchovává globální čas
-class TimeKeeper {
-  constructor(myTime) {
-    this._myTime = myTime;
+  get myUpdate () {
+    return this._myUpdate;
   }
-  // Getter
-  get time() {
-    return this._myTime;
-  }
-  //Setter
-  set time (newTime) {
-        this._myTime = newTime;
+
+  set myUpdate(myUpdate) {
+    this._myUpdate = myUpdate;
   }
 }
-//inicializace: let LastServer = new TimeKeeper (HODNOTA);
-//update hodnot: LastServer.time = NOVA_HODNOTA;
-//čtení hodnoty: console.log(LastServer.time);
+const ALL = "vsechno";
+const DETAILS = "detaily";
+
+var myPageUpdate = new WhatToUpdate ();
+myPageUpdate = ALL;       //cedy celou stránku a všechny stones (ne detail)
+console.log(myPageUpdate);
 
 
-var LastServer = new TimeKeeper (new Date().getTime());
-
-
-
-//28.3. - převedení LivingStones na Třídy Stones a práce s nimi
-
-
-
-
-
-
-// *************** Generuje HTML boxíky na stránku ********
-// *****
-// zde byl Class pro všechyn Stone - teĎ v stomostatném souboru stones.js
-// ***
-
-
-
-
-
-// ********** KOD
+// ********** KOD hlavní **********
 
 
 window.Arduino = {};
@@ -150,16 +131,19 @@ window.onload = function() {
     timeout: 3000       //nastavení timeout, po kterém je pak hlášena chyba - červené pozadí -ztracená komunikace se serverem
   });
 
-
   // cookies test - zeptá se a vypíše
   console.log("Používaná kukina: ", checkCookie());
 
-  empyWholePage();
+  empyWholePage();    //smaže celou obrazovku a vygeneruje obsah - pro livingStones i Menu
 
 }
 
 
+//smaže celou obrazovku a vygeneruje obsah - pro livingStones i Menu
 function empyWholePage() {
+
+  myPageUpdate = ALL;   //zapne aktualizace celá stránky
+
   $("#boxScreen").empty();  //smazne všechen obsah - všechny Stones
   $("#bottomMenu").empty(); //smazne všechen obsah - všechny MENU
   //vygeneruje HTML pro všechny BOXíky, které jsou požadovány v JSON
@@ -171,6 +155,7 @@ function empyWholePage() {
   MenuStone.ServerTime(DMmenuID3);
 
   //vygeneruje OBSAH pro všechny HTML-BOXíky v JSON
+  console.log("EEEMPTYYY");
   Arduino.containerUpdate();
 }
 
@@ -314,7 +299,6 @@ MenuStoneUpdate.Zvonecek = function (menuID, deviceItem)  {
   }
 }
 
-
 MenuStoneUpdate.ServerTime = function (menuID, deviceItem)  {
 
   var sensorID = deviceItem.unid;
@@ -387,7 +371,6 @@ MenuStoneUpdate.ServerTime = function (menuID, deviceItem)  {
 
 }
 
-
 MenuStoneUpdate.Email = function (menuID, deviceItem)  {
   $("#menu-" + menuID + "-email").html("");
   $('#menu-' + menuID + '-menuContent').css("color", "DimGray ");
@@ -396,99 +379,8 @@ MenuStoneUpdate.Email = function (menuID, deviceItem)  {
 
 
 
-// *****  pomocné
 
-
-
-
-timeCountDown = function (lastDate, serverDate, longText) {
-  //vrátí string, ve kterém je rozdíl času oproti jinému času (serverový / frontendový / ..)
-  //lastDate je formatu Date
-  //serverDate je formátu Date (počítá se rozdíl do "distance")
-  //longText je true => Výstup: dlouhý formát => 12 dní 4 hodiny 22 minut 2 sekundy
-  //longText je false => Výstup: krátký formát => 292:22:02
-  //užití: jak_dlouho_je_to = timeCountDown("2018-03-1 18:06:05", deviceObjectLast["0"].lrespiot, false);
-
-  var t = lastDate.split(/[- :]/);
-  // Apply each element to the Date function
-  var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
-  var historyTime = new Date(d);
-
-  var t2 = serverDate.split(/[- :]/);
-  // Apply each element to the Date function
-  var d2 = new Date(t2[0], t2[1]-1, t2[2], t2[3], t2[4], t2[5]);
-  var currentTime = new Date(d2);
-
-  // var currentTime = new Date(serverDate);
-  var distance =  currentTime - historyTime;
-
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-  if (longText == true) {
-    //dlouhý tvar vystupního textu
-    switch (true) {
-      case days == 0:
-        days = "";
-        break;
-      case days == 1:
-        days += " den";
-        break;
-      case (days>1 && days <5):
-        days += " dny";
-        break;
-      case days>4:
-        days += " dní";
-        break;
-      default:
-    }
-    switch (true) {
-      case hours == 0:
-        hours = "";
-        break;
-      case hours == 1:
-        hours += " hodinu";
-        break;
-      case (hours > 1 && hours < 5):
-        hours += " hodniny";
-        break;
-      case hours > 4:
-        hours += " hodnin";
-        break;
-      default:
-    }
-  return (days + " " + hours + " " + minutes + " " + seconds);
-  } //pokud je chtěná dlouhá odpověd Jinak
-  else {
-
-    var hours = Math.floor((distance / ( 1000 * 60 * 60 )));
-    //vysledny tvar ma být v hhh:mm:ss
-
-    if (hours == 0) {
-      hours = "";
-    } else {
-      hours += ":"
-    }
-
-    if (minutes < 10) {
-        minutes = "0" + minutes.toString();
-    }
-    if (seconds < 10) {
-        seconds = "0" + seconds.toString();
-    }
-    return (hours + minutes + ":" + seconds);
-  }
-
-}
-
-
-
-
-
-// *************** pomocné fce ********
-
+// ****************** hlavní fce *********************
 
 // spusteni funkcí kazdou senkundu
 
@@ -496,78 +388,27 @@ var myVar = setInterval(function() {
   myTimer()
 }, 1000);
 
-
-
 function myTimer() {
   // Arduino.hodiny();
-  // Arduino.showAlarmCam(); //test AlertCam
-  Arduino.containerUpdate(); //box na obrazovce
-}
 
-
-
-//HODINY zobrazení reálných hodin na zařízení
-// Arduino.hodiny = function() {
-//   var d = new Date();
-//   var t = d.toLocaleTimeString();
-//   document.getElementById("hodiny").innerHTML = t; //hodiny
-// }
-
-
-
-
-
-//odešle PUT na server s jménem a hodnotou
-function odeslatPUT(jmenoSenzoru, hodota) {
-  const url = `${jmenoSenzoru}`;
-
-  //odešle PUT s hodnotou "value" + cookies
-  Arduino.axios.put('/' + jmenoSenzoru  + `?`+checkCookie(), {
-      value: hodota
-    })
-    .then(function(response) {
-      console.log('Odeslán PUT s URL /' + jmenoSenzoru + " s hodnotou " + hodota);
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-}
-
-
-//převede des. číslo na Sting na 2 pozice, a dá des. čárku (9.321 -> "9,3")
-function formatNumber(x) {
-  const POCET_DESETIN = 1;
-  //převede vždy na 2 des. místa
-  x = x.toFixed(POCET_DESETIN);
-  //vráti hodnutu zalomenou podle jazykového nastavení. Natvrdo CZ
-  //nejede - musím udělat upravu ručně
-  //  const LANGUAGE = 'cs-CZ';
-  //s = x.toLocaleString(LANGUAGE);
-  s = x.replace(".", ",")
-  return s;
-}
-
-//zahraje zvuk
-function zvukoveZnameni (){
-
-  // var x = document.getElementById("audioAlarm");
-  // x.play();
-
-    //k dispozico jsou
-    // alarm.mp3 - ale dlouhé
-    // beep.mp3 - fajn
-    // voice.mp3 -  fajn
-    //v index.HTML k nastaveni
+  //co se má aktualizovat
+  switch (myPageUpdate) {
+    case ALL:     //uktualizuji všechny položky
+        // console.log("vsechno");
+        Arduino.containerUpdate(); //box na obrazovce
+      break;
+    default:    //aktualizuji pouze jednu položky - která se vrací jako string  myPageUpdate
+        // console.log("detail");
+        Arduino.detailUpdate(myPageUpdate);
+  }
 
 }
 
 
 
 
-
-// ****************** hlavní fce *********************
-
-Arduino.devices = {};     //uložiště všech Stones na obrazovce... Class Stone
+//uložiště všech Stones na obrazovce... Class Stone
+Arduino.devices = {};
 
 
 //vygeneruje HTML pro všechny livingStones (BOXíky), které jsou požadovány v JSON
@@ -718,10 +559,6 @@ Arduino.containerUpdate = function() {
 
       var device = response.data;
 
-
-
-      //uz zbytečně - nějak nepoužívám :-()
-
       //pravidelné načítání stavu obsahu všech LivingStones
       //jako objekt s klíčem unid a obsahem LivingStonu
       //následně např. porovnávám, co má smysl měnit
@@ -803,59 +640,72 @@ Arduino.containerUpdate = function() {
 
 
 
-// Zjištění cookies z prohlížeče
+//vygeneruje obsah pro detail  livingStonu (BOXíky), které jsou aktualizované v JSON
+Arduino.detailUpdate = function(UnidDetails) {
 
-function setCookie(cname,cvalue,exdays) {
-    var d = new Date();
-    //počet dnů - v našem případě 30 dní
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires=" + d.toGMTString();
-    // document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    document.cookie = cname + "=" + cvalue + ";" + expires;
+    newURL = "";
+    // newURL = '/' + `?`+checkCookie() + `&unid=` + UnidDetails;   //v budoucnu pro poptávku jen jednoho JSON
+    newURL = '/' + `?`+checkCookie() + "A";
+
+    //pošle GET s kukinou za otazníkem
+  Arduino.axios.get(newURL)
+    .then(function(response) {
+
+      //nastavení barvy pozadí - když jsou data z JSON opět k dispozic, tak pozadí na bílou
+      $("body").css("background-color", "White");
+
+      var device = response.data;
+
+
+
+      //pravidelné načítání stavu obsahu všech LivingStones
+      //jako objekt s klíčem unid a obsahem LivingStonu
+      //následně např. porovnávám, co má smysl měnit
+      var deviceObject = device.reduce(function(map, obj) {
+          map[obj.unid] = obj;
+          return map;
+      }, {});
+
+      var myUnidDetails = "";
+      myUnidDetails = UnidDetails;
+
+      Arduino.devices[UnidDetails].updateDetails(deviceObject[myUnidDetails]);    //všechny detaily
+      Arduino.devices[UnidDetails].update(deviceObject[myUnidDetails]);           //a lehce zbytečně i vlastní Stone - používaný v detailu- Šlo by to u jinak :-)
+
+      //aktualizace času, kdy byl server naposledny aktivní
+      LastServer.time = new Date().getTime();
+
+    })
+
+
+    .catch(function(error) {
+
+      console.log("Nastala chyba při update - catch: ");
+
+      // Při výpadků serveru zobrazovat červené pozadí po 5 sekundách
+      if ((new Date().getTime() - LastServer.time) > TimeOutRed) {
+        //nastavení barvy pozadí - když NEjsou data-tak ČERVENÉ
+        $("body").css("background-color", "Red");
+        zvukoveZnameni(); //zahraje audioAlarm
+      }
+
+      //zobrazení chyby
+      if (error.response) {
+        // The request was made and the server responded with a status code that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+      }
+      console.log(error.config);
+
+    });     //konec catch
+
 }
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function deleteCookie(cname) {
-  //implementace smazání Cookie při kliknutí na ServerTime, v dolním menu
-    document.cookie = cname + "=;" + " expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    // document.cookie = cname + "=;" + " expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-}
-
-function checkCookie() {
-    var user = getCookie("username");
-    // console.log("user " + user);
-    if (user != "") {
-        // alert("Welcome again " +s user);
-    } else {
-       user = prompt("Tvuj otisks:","");
-       if (user != "" && user != null) {
-           setCookie("username", user, 30); //expirace za 30 dnís
-       }
-    }
-    return user;
-}
-
-
-
-
-
-//hodí se
-//smaže boxík
-//$("#sensor-" + sensorID + "-boxWrap").empty();
-//odstraní boxík
-//  $("#sensor-" + sensorID + "-boxWrap").remove();

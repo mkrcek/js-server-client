@@ -84,7 +84,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	myHomeDeviceSetup[0] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
 		DevId:       "5678900",
-		DevOrder:    0,   // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
+		DevOrder:    40,  // generování néhodného čísla pořadí : rand.Intn(numberOfRows+100),
 		DevPriority: 0,   //****1/31
 		DevType:     "1", //teplota
 		Subtype:     "1", // vzduch
@@ -98,7 +98,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	myHomeDeviceSetup[1] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
 		DevId:       "678901",
-		DevOrder:    4,
+		DevOrder:    30,
 		DevPriority: 0,   //****1/31
 		DevType:     "5", //voda
 		DevTime:     t.Format("2006-01-02 15:04:05"),
@@ -111,7 +111,7 @@ func setupHomeDeviceData() { //vytvori prvni obsah - prvni vzorova data
 	myHomeDeviceSetup[2] = DeviceSetup{
 		//DevSerTime:  t.Format("2006-01-02 15:04:05"),
 		DevId:       "78902",
-		DevOrder:    5,
+		DevOrder:    20,
 		DevPriority: 0,   //****1/31
 		DevType:     "6", //světlo
 		DevTime:     t.Format("2006-01-02 15:04:05"),

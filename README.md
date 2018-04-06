@@ -6,6 +6,17 @@
 ## Co nového ve verzi
 
 
+## 6.4.
+
+OPRAVA:
+- Nastavení timeout na 3000ms, po kterém je pak hlášena chyba - červené pozadí -ztracená komunikace se serverem. Bylo neuvěřitelných 100 000ms
+- Po kliknutí na ovládání v detailu (žárovka, brána, garáž) se aktualizuje menu
+
+
+Úpravy
+- rozdělení kodu z custom.js do nového dmtools.js
+
+
 ## 5.4.
 
 Úpravy
