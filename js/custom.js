@@ -141,13 +141,13 @@ var LastServer = new TimeKeeper (new Date().getTime());
 window.Arduino = {};
 
 window.onload = function() {
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/1996/doomaster/sensors/';
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
   // var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
         //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
   Arduino.axios = axios.create({
     baseURL: mojeUrl,
-    timeout: 100000
+    timeout: 3000       //nastavení timeout, po kterém je pak hlášena chyba - červené pozadí -ztracená komunikace se serverem
   });
 
 
@@ -582,6 +582,7 @@ Arduino.containerShow = function() {
       var device = response.data;
 
       // setřídění obsah pole (LivingStone) podle weborder
+      // console.log("před: ", device);
       device = device.sort(function(a, b) {
         // return a.weborder - b.weborder;
         if (a.weborder < b.weborder)
@@ -591,6 +592,7 @@ Arduino.containerShow = function() {
         return 0;
       });
 
+      // console.log("Po: ", device);
       //načtení POPRVÉ stavu obsahu všech LivingStones
       //následně např. porovnávám, co má smysl měnit
       //jako objekt - historický stav LivingStonu
@@ -705,6 +707,12 @@ Arduino.containerUpdate = function() {
   Arduino.axios.get('/' + `?`+checkCookie())
     .then(function(response) {
 
+//       console.log(response.data);
+// console.log(response.status);
+// console.log(response.statusText);
+// console.log(response.headers);
+// console.log(response.config);
+
       //nastavení barvy pozadí - když jsou data z JSON opět k dispozic, tak pozadí na bílou
       $("body").css("background-color", "White");
 
@@ -759,6 +767,7 @@ Arduino.containerUpdate = function() {
       LastServer.time = new Date().getTime();
 
     })
+
 
     .catch(function(error) {
 
