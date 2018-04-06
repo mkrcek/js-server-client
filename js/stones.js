@@ -49,27 +49,13 @@ class Stone {
   }
 
   updateDetails(deviceItem) {
-    // console.log('generování update pro všechny společné boxíky');
+    // console.log('generování update detailu');
 
     //najde a vloží do HTML všechny promené, uložené ve Stone a předané v JSON
 
-
-
-
-
     Object.keys(deviceItem).forEach( function(key) {
       // console.log(key," :" , stoneVariables[key]);
-
-
       $("#" + key).html(deviceItem[key]);
-      // $("#unid").html("SSSSS");
-
-      // $("#tableBody").append(`
-      //   <tr>
-      //     <td>${key}</td>
-      //     <td>${stoneVariables[key]}</td>
-      //   </tr>
-      //   `);
     });
   }
 

@@ -122,7 +122,7 @@ console.log(myPageUpdate);
 window.Arduino = {};
 
 window.onload = function() {
-  var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
+  var mojeUrl = window.location.protocol + "//" + window.location.host + '/1996/doomaster/sensors/';
   // var mojeUrl = window.location.protocol + "//" + window.location.host + '/jednadevetdevetsest/doomaster/sensors/';
         //mojeUrl: 'http://192.168.99.223:1818/doomaster/sensors/',
 
@@ -424,16 +424,28 @@ Arduino.containerShow = function() {
 
       // setřídění obsah pole (LivingStone) podle weborder
       // console.log("před: ", device);
+      // device = device.sort(function(a, b) {
+      //   // return a.weborder - b.weborder;
+      //   if (a.weborder < b.weborder)
+      //     return -1;
+      //   if (a.weborder > b.weborder)
+      //     return 1;
+      //   return 0;
+      // });
+
+console.log("Před: ", device);
+
       device = device.sort(function(a, b) {
-        // return a.weborder - b.weborder;
-        if (a.weborder < b.weborder)
-          return -1;
-        if (a.weborder > b.weborder)
-          return 1;
-        return 0;
+        return a.weborder - b.weborder;
+        // if (a.weborder < b.weborder)
+        //   return -1;
+        // if (a.weborder > b.weborder)
+        //   return 1;
+        // return 0;
       });
 
-      // console.log("Po: ", device);
+
+      console.log("Po: ", device);
       //načtení POPRVÉ stavu obsahu všech LivingStones
       //následně např. porovnávám, co má smysl měnit
       //jako objekt - historický stav LivingStonu

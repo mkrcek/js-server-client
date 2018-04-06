@@ -11,7 +11,11 @@
 OPRAVA:
 - Nastavení timeout na 3000ms, po kterém je pak hlášena chyba - červené pozadí -ztracená komunikace se serverem. Bylo neuvěřitelných 100 000ms
 - Po kliknutí na ovládání v detailu (žárovka, brána, garáž) se aktualizuje menu
+- Změna algoritmu pro setřídění pořadí. Uvidíme kde jede a kde ne.
 
+NEW:
+- DETAIL: živá aktualizace detailu LivingStone
+- aktualizace detailu: NEaktualizují se vsechny položky, jen aktuaální  
 
 Úpravy
 - rozdělení kodu z custom.js do nového dmtools.js
