@@ -5,6 +5,15 @@
 
 ## Co nového ve verzi
 
+## 30.4.
+
+- cookie: při zadání "" se vygeneruje nové jméno
+- cookie: xpirace na 60 dní
+
+- CameraAlarm: zrušení zobrazení času v nadpisu, nad obrázkem
+
+
+
 
 ## 6.4.
 
@@ -15,7 +24,7 @@ OPRAVA:
 
 NEW:
 - DETAIL: živá aktualizace detailu LivingStone
-- aktualizace detailu: NEaktualizují se vsechny položky, jen aktuaální  
+- Aktualizace při Detailu : NEaktualizují se vsechny LivingStones, jen aktuaální  
 
 Úpravy
 - rozdělení kodu z custom.js do nového dmtools.js

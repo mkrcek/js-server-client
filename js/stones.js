@@ -1025,8 +1025,10 @@ class CameraAlarm extends Stone {     //subTřída pro Kameru  - zobrazení i up
     var uniqueContent = `
     <div>
         <span id="sensor-name">Severní pól</span>
-        <span> | </span>
-        <i id="sensor-time">25:61</i>
+        <!--
+          <span> | </span>
+          <i id="sensor-time">25:61</i>
+         -->
     </div>
     <div id="sensor-module-cameraalarm" class="kameraBox kamera-value">
         <div class="cameraalarm-value ">

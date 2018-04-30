@@ -217,9 +217,15 @@ function checkCookie() {
         // alert("Welcome again " +s user);
     } else {
        user = prompt("Tvuj otisks:","");
-       if (user != "" && user != null) {
-           setCookie("username", user, 30); //expirace za 30 dnís
+       if (user == "") {
+         //pokud uživatel nic nezadá, nastavi se user na uvedenou hodnotu
+         user = `pruzina`;
        }
+       if (user != "" && user != null) {
+       // if ( user != null) {
+           setCookie("username", user, 60); //expirace za 30 dní
+       }
+
     }
     return user;
 }
