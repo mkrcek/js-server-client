@@ -21,8 +21,10 @@ body {
 
 p span {
   font: inherit;
-  font-size: 11px;
+  /* font-size: 11px; */
   font-size: 2vmax;
+  font-size: 3vw;
+
   /* https://stackoverflow.com/questions/16056591/font-scaling-based-on-width-of-container */
 
   margin-bottom: 0px;
@@ -32,8 +34,9 @@ p span {
 
 p  {
   font: inherit;
-  font-size: 11px;
+  /* font-size: 11px; */
   font-size: 2vmax;
+  font-size: 3vw;
   margin-bottom: 0px;
   overflow:hidden;
   /* zalamování textu když by přetéká */
@@ -43,6 +46,7 @@ i  {
   font: inherit;
   font-size: 11px;
   font-size: 2vmax;
+  font-size: 3vw;
   margin-bottom: 0px;
   overflow:hidden;
 }
@@ -50,6 +54,7 @@ i  {
 h1 {
   font-size: 20px;
   font-size: 3.5vmax;
+  font-size: 5vw;
   margin-top: 0px;
   margin-bottom: 0px;
   overflow:hidden;
@@ -58,6 +63,7 @@ h1 {
 td {
   font-size: 10px;
   font-size: 2vmax;
+  font-size: 3vw;
 }
 
 .hodiny {
@@ -110,7 +116,7 @@ td {
   /* border-radius: 10%; */
   border-radius: 10px;
   /* height: 106px; */
-  height: 90px;
+  /* height: 90px; */
   /* width: 106px; */
   /* font-size: 14px; */
   /* standardně je 1rem */
@@ -119,7 +125,9 @@ td {
   /* line-height:1.5; */
   /* background-color: rgba(192, 192, 192, 0.2); */
   background-color: #F3F3F3;
-  height: 25vw;
+  height: 23vw;
+  width: 23vw;
+  /* nutvo vyřešit se sírkou obrazovky. Ted to někdy přetíká - když je pás po stranách */
   /* výška jako 25% viditelné šířky */
 
 }
@@ -181,6 +189,7 @@ td {
 .button {
   padding: 15px 25px;
   font-size: 24px;
+  font-size: 2vw;
   text-align: center;
   cursor: pointer;
   outline: none;

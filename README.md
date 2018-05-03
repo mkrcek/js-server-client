@@ -5,6 +5,12 @@
 
 ## Co nového ve verzi
 
+## 3.5.
+
+- změna fontů (podle velikosti obrazovky)
+- čtveraté living stones (podle velikosti obrazovky)
+- (u větších rozlišení obrazovky se čtverce lehce překrývají)
+
 ## 30.4.
 
 - cookie: při zadání "" se vygeneruje nové jméno
